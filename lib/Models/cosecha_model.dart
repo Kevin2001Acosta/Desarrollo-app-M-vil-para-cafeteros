@@ -22,16 +22,10 @@ class CosechaModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    if (idCosecha != null) {
-      data['id_cosecha'] = idCosecha;
-    }
+    data['id_cosecha'] = idCosecha;
     data['fecha_inicio'] = fechaInicio.toIso8601String().substring(0, 10);
-    if (fechaFin != null) {
-      data['fecha_fin'] = fechaFin?.toIso8601String().substring(0, 10);
-    }
-    if (kilosTotales != null) {
-      data['kilos_totales'] = kilosTotales;
-    }
+    data['fecha_fin'] = fechaFin?.toIso8601String().substring(0, 10);
+    data['kilos_totales'] = kilosTotales;
     return data;
   }
 }

@@ -13,9 +13,7 @@ class TrabajadorModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    if (idTrabajador != null) {
-      data['id_trabajador'] = idTrabajador;
-    }
+    data['id_trabajador'] = idTrabajador;
     data['nombre'] = nombre;
     return data;
   }
