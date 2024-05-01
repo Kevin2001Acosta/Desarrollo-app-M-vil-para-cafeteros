@@ -19,9 +19,9 @@ class RecogidaModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'jornal': jornal,
+      'jornal':? jornal,
       'fecha_inicio': fechaInicio.toIso8601String().substring(0, 10),
-      'fecha_fin': fechaFin?.toIso8601String().substring(0, 10),
+      'fecha_fin': fechaFin.toIso8601String().substring(0, 10),
       'kilos_totales': kilosTotales,
       'precio_kilo': precioKilo,
       'id_cosecha': idCosecha,
