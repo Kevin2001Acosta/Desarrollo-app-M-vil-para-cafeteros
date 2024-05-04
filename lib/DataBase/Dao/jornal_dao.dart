@@ -11,16 +11,16 @@ class JornalDao {
   }
 
   Future<int> insert(JornalModel jornal) async {
-    return await database.insert('jornal', jornal.toJson());
+    return await database.insert('Jornal', jornal.toJson());
   }
 
   Future<void> update(JornalModel jornal) async {
-    await database.update('jornal', jornal.toJson(),
+    await database.update('Jornal', jornal.toJson(),
         where: 'id_jornal = ?', whereArgs: [jornal.idJornal]);
   }
 
   Future<void> delete(JornalModel jornal) async {
-    await database.delete('jornal',
+    await database.delete('Jornal',
         where: 'id_jornal = ?', whereArgs: [jornal.idJornal]);
   }
 }
