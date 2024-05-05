@@ -129,6 +129,7 @@ class _RecogidaPageState extends State<RecogidaPage> {
     final recogidaIniciada = context.watch<RecogidaProvider>().recogidaIniciada;
     final idCosecha = context.watch<CosechaProvider>().idCosecha;
     print('$recogidaIniciada build');
+    print('$idCosecha build');
 
     setState(() {
       this.recogidaIniciada = recogidaIniciada;

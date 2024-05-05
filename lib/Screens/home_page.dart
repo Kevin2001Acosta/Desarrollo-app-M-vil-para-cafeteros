@@ -53,6 +53,34 @@ class MyHomePage extends StatelessWidget {
             );
           }),
         ),
+        drawer: Drawer(
+          child: SizedBox(
+            width: 150,
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  child: const Text('Menú Principal'),
+                ),
+                ListTile(
+                  title: const Text('Registrar trabajador'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: const Text('Registrar recogida'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
         body: const Center(
           child: Text(
             'Bienvenido a la pagina principal',

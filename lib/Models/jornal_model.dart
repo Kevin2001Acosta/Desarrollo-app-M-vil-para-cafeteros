@@ -1,18 +1,19 @@
 class JornalModel {
   int? idJornal;
   int pagoTrabajador;
-  String? descripcion
-  DateTime? fecha;
+  String? descripcion;
+  DateTime fecha;
   int idTrabajador;
   int idSemana;
 
-  JornalModel(
-      {this.idJornal,
-      required this.pagoTrabajador,
-      this.descripcion,
-      this.fecha,
-      required this.idTrabajador,
-      required this.idSemana,});
+  JornalModel({
+    this.idJornal,
+    required this.pagoTrabajador,
+    this.descripcion,
+    required this.fecha,
+    required this.idTrabajador,
+    required this.idSemana,
+  });
 
   factory JornalModel.fromJson(Map<String, dynamic> json) {
     return JornalModel(
@@ -25,10 +26,9 @@ class JornalModel {
     );
   }
 
-
   Map<String, dynamic> toJson() {
     return {
-      'id_jornal':? idJornal,
+      'id_jornal': idJornal,
       'pago_trabajador': pagoTrabajador,
       'descripcion': descripcion,
       'fecha': fecha.toIso8601String().substring(0, 10),
