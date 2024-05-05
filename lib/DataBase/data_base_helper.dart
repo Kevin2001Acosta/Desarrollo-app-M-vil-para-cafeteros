@@ -38,7 +38,6 @@ class DatabaseHelper {
     FOREIGN KEY (id_cosecha) REFERENCES Cosecha(id_cosecha)
     FOREIGN KEY (id_gastos) REFERENCES Gastos(id_gastos)
     );
-
     ''');
       await db.execute('''
     CREATE TABLE Trabaja (
@@ -51,19 +50,18 @@ class DatabaseHelper {
     FOREIGN KEY (id_trabajador) REFERENCES Trabajador(id_trabajador),
     FOREIGN KEY (id_recogida) REFERENCES Recogida(id_recogida)
     );
-
     ''');
       await db.execute('''
     CREATE TABLE Gastos (
     id_gastos INTEGER PRIMARY KEY AUTOINCREMENT,
     nombre TEXT NOT NULL CHECK(nombre IN (
-	'Jornales',
-	'Compra de abono',
-	'Transporte',
-	'Servicios',
-	'Beneficio',
-	'Recolecta de café',
-	'Impuestos')),
+    'Jornales',
+    'Compra de abono',
+    'Transporte',
+    'Servicios',
+    'Beneficio',
+    'Recolecta de café',
+    'Impuestos')),
     valor INTEGER,
     fecha DATE,
     );
@@ -76,7 +74,6 @@ class DatabaseHelper {
     id_gastos INTEGER,
     FOREIGN KEY (id_gastos) REFERENCES Gastos(id_gastos),
     );
-
     ''');
       await db.execute('''
     CREATE TABLE Jornal (
@@ -84,10 +81,11 @@ class DatabaseHelper {
     pago_trabajador INTEGER,
     descripcion TEXT NOT NULL,
     fecha DATE NOT NULL,
+    id_trabajador INTEGER,
+    id_semana INTEGER,
     FOREIGN KEY (id_trabajador) REFERENCES Trabajador(id_trabajador),
     FOREIGN KEY (id_semana) REFERENCES M_Semana(id_semana)
     );
-
     ''');
       await db.execute('''
     CREATE TABLE Ventas_Cafe (

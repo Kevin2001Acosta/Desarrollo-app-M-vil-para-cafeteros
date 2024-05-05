@@ -1,7 +1,7 @@
 class JornalModel {
   int? idJornal;
   int pagoTrabajador;
-  String? descripcion;
+  String descripcion;
   DateTime fecha;
   int idTrabajador;
   int idSemana;
@@ -9,7 +9,7 @@ class JornalModel {
   JornalModel({
     this.idJornal,
     required this.pagoTrabajador,
-    this.descripcion,
+    required this.descripcion,
     required this.fecha,
     required this.idTrabajador,
     required this.idSemana,
@@ -17,7 +17,7 @@ class JornalModel {
 
   factory JornalModel.fromJson(Map<String, dynamic> json) {
     return JornalModel(
-      idJornal: json['id'],
+      idJornal: json['id_jornal'],
       pagoTrabajador: json['pago_trabajador'],
       descripcion: json['descripcion'],
       fecha: DateTime.parse(json['fecha']),
