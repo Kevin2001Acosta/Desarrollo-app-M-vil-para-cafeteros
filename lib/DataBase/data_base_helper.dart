@@ -27,6 +27,21 @@ class DatabaseHelper {
     kilos_totales INTEGER);
     ''');
       await db.execute('''
+    CREATE TABLE Gastos (
+    id_gastos INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL CHECK(nombre IN (
+    'Jornales',
+    'Compra de abono',
+    'Transporte',
+    'Servicios',
+    'Beneficio',
+    'Recolecta de café',
+    'Impuestos')),
+    valor INTEGER,
+    fecha DATE
+    );
+    ''');
+      await db.execute('''
     CREATE TABLE Recogida (
     id_recogida INTEGER PRIMARY KEY AUTOINCREMENT,
     jornal INTEGER CHECK(jornal IN (0, 1)),
@@ -35,7 +50,8 @@ class DatabaseHelper {
     kilos_totales INTEGER,
     precio_kilo INTEGER,
     id_cosecha INTEGER NOT NULL,
-    FOREIGN KEY (id_cosecha) REFERENCES Cosecha(id_cosecha)
+    id_gastos INTEGER ,
+    FOREIGN KEY (id_cosecha) REFERENCES Cosecha(id_cosecha),
     FOREIGN KEY (id_gastos) REFERENCES Gastos(id_gastos)
     );
     ''');
@@ -52,27 +68,12 @@ class DatabaseHelper {
     );
     ''');
       await db.execute('''
-    CREATE TABLE Gastos (
-    id_gastos INTEGER PRIMARY KEY AUTOINCREMENT,
-    nombre TEXT NOT NULL CHECK(nombre IN (
-    'Jornales',
-    'Compra de abono',
-    'Transporte',
-    'Servicios',
-    'Beneficio',
-    'Recolecta de café',
-    'Impuestos')),
-    valor INTEGER,
-    fecha DATE,
-    );
-    ''');
-      await db.execute('''
     CREATE TABLE M_Semana (
     id_semana INTEGER PRIMARY KEY AUTOINCREMENT,
     fecha_inicio DATE,
     fecha_fin DATE,
     id_gastos INTEGER,
-    FOREIGN KEY (id_gastos) REFERENCES Gastos(id_gastos),
+    FOREIGN KEY (id_gastos) REFERENCES Gastos(id_gastos)
     );
     ''');
       await db.execute('''
@@ -95,7 +96,7 @@ class DatabaseHelper {
     kilos_vendidos INTEGER,
     fecha DATE,
     id_cosecha INTEGER,
-    FOREIGN KEY (id_cosecha) REFERENCES Cosecha(id_cosecha),
+    FOREIGN KEY (id_cosecha) REFERENCES Cosecha(id_cosecha)
     );
     ''');
     });

@@ -85,8 +85,6 @@ class _RecogidaPageState extends State<RecogidaPage> {
         // ! cancelar el dialogo y no hacer nada
         break;
     }
-
-    // Todo: este codigo siguiente debo ponerlo dentro del case de arriba
     // ? como hago para que se cree la recogida como yo quiero.
 
     if (result != null) {
@@ -101,10 +99,6 @@ class _RecogidaPageState extends State<RecogidaPage> {
           ));
     }
   }
-  // nuevo problema finalizé una recogida y no se pudo actualizar por que puso los valores que no era.
-  // ahora debo hacer algo para ingresar desde otra parte sin crear una nueva cosecha
-  // para eso debo pedir el id de la cosecha metiendola en un estado de provider
-  // luego el botón de entrar directamente a la recogida y finalizarla.
 
   void finalizarRecogida() async {
     final recogida = await RecogidaDao().recogidaIniciada();
