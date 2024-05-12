@@ -12,7 +12,7 @@ class CosechaModel {
 
   factory CosechaModel.fromJson(Map<String, dynamic> json) {
     return CosechaModel(
-      idCosecha: json['id'],
+      idCosecha: json['id_cosecha'],
       fechaInicio: DateTime.parse(json['fecha_inicio']),
       fechaFin:
           json['fecha_fin'] != null ? DateTime.parse(json['fecha_fin']) : null,

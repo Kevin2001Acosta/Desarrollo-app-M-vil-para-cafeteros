@@ -4,7 +4,7 @@ class RecogidaModel {
   DateTime fechaInicio;
   DateTime? fechaFin;
   int? kilosTotales;
-  int precioKilo;
+  int? precioKilo;
   int idCosecha;
 
   RecogidaModel({
@@ -13,7 +13,7 @@ class RecogidaModel {
     required this.fechaInicio,
     this.fechaFin,
     this.kilosTotales,
-    required this.precioKilo,
+    this.precioKilo,
     required this.idCosecha,
   });
 

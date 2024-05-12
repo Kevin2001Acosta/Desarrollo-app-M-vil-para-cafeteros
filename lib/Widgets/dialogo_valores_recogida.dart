@@ -4,7 +4,7 @@ import 'package:cafetero/Screens/trabajo_recogida_page.dart';
 
 Future<Map<String, dynamic>?> mostrarDialogoRecogida(
     BuildContext context, Recogida tipo) {
-  final precioDiaController = TextEditingController();
+  //final precioDiaController = TextEditingController();
   final precioKiloController = TextEditingController();
   return showDialog<Map<String, dynamic>>(
     context: context,
@@ -15,17 +15,6 @@ Future<Map<String, dynamic>?> mostrarDialogoRecogida(
           height: 150.0,
           child: Column(
             children: <Widget>[
-              if (tipo == Recogida.alDia)
-                TextField(
-                  controller: precioDiaController,
-                  decoration: const InputDecoration(
-                    labelText: 'Precio del día',
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    // Guarda el valor en alguna parte
-                  },
-                ),
               if (tipo == Recogida.kiliado)
                 TextField(
                   controller: precioKiloController,
@@ -55,7 +44,6 @@ Future<Map<String, dynamic>?> mostrarDialogoRecogida(
             onPressed: () {
               // Aquí puedes recoger las respuestas y los precios y devolverlos
               Navigator.of(context).pop({
-                'precioDia': precioDiaController.text,
                 'precioKilo': precioKiloController.text,
               });
             },

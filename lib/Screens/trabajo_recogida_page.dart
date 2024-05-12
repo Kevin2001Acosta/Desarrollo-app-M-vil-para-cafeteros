@@ -1,5 +1,6 @@
 import 'package:cafetero/DataBase/Dao/recogida_dao.dart';
 import 'package:cafetero/Models/recogida_model.dart';
+import 'package:cafetero/Widgets/recogida_kilos_trabajo.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ class _RecogidaPageState extends State<RecogidaPage> {
   Map<String, dynamic>? result;
   bool recogidaIniciada = false;
   int? idCosecha;
+  Map<String, dynamic>? infoRecogida;
 
   @override
   void initState() {
@@ -72,9 +74,7 @@ class _RecogidaPageState extends State<RecogidaPage> {
     );
     switch (sol) {
       case Recogida.alDia:
-        if (!context.mounted) return;
-        result = await mostrarDialogoRecogida(context, Recogida.alDia);
-        // ? puedo hacer que aquí mismo se cree otro dialogo para ingresar el precio del dia?
+        result = {'precioDia': 50000};
         break;
       case Recogida.kiliado:
         if (!context.mounted) return;
@@ -90,40 +90,48 @@ class _RecogidaPageState extends State<RecogidaPage> {
     if (result != null) {
       // Aquí puedes iniciar la recogida con los datos recogidos
       // llamado a bd hecho
+      final jornals = result!['precioDia'] == null ? 0 : 1;
       if (!context.mounted) return;
       context.read<RecogidaProvider>().iniciarRecogida(RecogidaModel(
-            jornal: 0,
+            jornal: jornals,
             idCosecha: idCosecha!,
             fechaInicio: DateTime.now(),
-            precioKilo: 800,
+            precioKilo:
+                jornals == 1 ? null : int.tryParse(result!['precioKilo']),
           ));
+      context.read<RecogidaProvider>().cargarEstadoRecogida();
+      print('$result jornal: $jornals cosecha: $idCosecha');
     }
   }
 
   void finalizarRecogida() async {
     final recogida = await RecogidaDao().recogidaIniciada();
+    final RecogidaModel recogidaFinal = RecogidaModel(
+      idRecogida: recogida[0]['id_recogida'],
+      fechaInicio: DateTime.parse(recogida[0]['fecha_inicio'] as String),
+      fechaFin: DateTime.now(),
+      idCosecha: recogida[0]['id_cosecha'] as int,
+      jornal: recogida[0]['jornal'] as int,
+      precioKilo: recogida[0]['precio_kilo'] as int?,
+      // Todo: Falta calcular y enviar los kilos totales recogidos
+    );
     if (recogida.isNotEmpty && recogida.length == 1) {
       if (!context.mounted) return;
-      context.read<RecogidaProvider>().finalizarRecogida(RecogidaModel(
-            idRecogida: recogida[0]['id_recogida'],
-            fechaInicio: DateTime.parse(recogida[0]['fecha_inicio'] as String),
-            fechaFin: DateTime.now(),
-            idCosecha: recogida[0]['id_cosecha'] as int,
-            jornal: 0,
-            precioKilo: recogida[0]['precio_kilo'] as int,
-            // Todo: Falta calcular y enviar los kilos totales recogidos
-          ));
+      context.read<RecogidaProvider>().finalizarRecogida(recogidaFinal);
+      context.read<RecogidaProvider>().cargarEstadoRecogida();
+      print(recogidaFinal);
     }
-    print(recogidaIniciada);
-    print(recogida.length);
+    print('numero de recodigas abiertas: ${recogida.length}');
   }
 
   @override
   Widget build(BuildContext context) {
     final recogidaIniciada = context.watch<RecogidaProvider>().recogidaIniciada;
     final idCosecha = context.watch<CosechaProvider>().idCosecha;
-    print('$recogidaIniciada build');
-    print('$idCosecha build');
+    final infoRecogida = context.watch<RecogidaProvider>().infoUltimaRecogida;
+    final jornal = infoRecogida != null ? infoRecogida['jornal'] : null;
+    print('hay recogida iniciada?: $recogidaIniciada');
+    print('Id de la cosecha abierta $idCosecha');
 
     setState(() {
       this.recogidaIniciada = recogidaIniciada;
@@ -139,21 +147,31 @@ class _RecogidaPageState extends State<RecogidaPage> {
       body: Center(
         child: Column(
           children: <Widget>[
-            recogidaIniciada
-                ? ElevatedButton(
-                    onPressed: finalizarRecogida,
-                    child: Text('Finalizar Recogida',
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Theme.of(context).colorScheme.onSecondary)),
-                  )
-                : ElevatedButton(
-                    onPressed: iniciarRecogida,
-                    child: Text('Iniciar Recogida',
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Theme.of(context).colorScheme.onSecondary)),
-                  ),
+            Visibility(
+              visible: recogidaIniciada,
+              child: ElevatedButton(
+                onPressed: finalizarRecogida,
+                child: Text('Finalizar Recogida',
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: Theme.of(context).colorScheme.onSecondary)),
+              ),
+            ),
+            Visibility(
+              visible: !recogidaIniciada,
+              child: ElevatedButton(
+                onPressed: iniciarRecogida,
+                child: Text('Iniciar Recogida',
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: Theme.of(context).colorScheme.onSecondary)),
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            if (jornal == 0)
+              RecogidaKilosTrabajoW(
+                  idRecogida: infoRecogida!['id_recogida'] as int),
+            if (jornal == 1) const Text('Recogida al dia'),
           ],
         ),
       ),
