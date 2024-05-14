@@ -6,8 +6,6 @@ class CosechaDao {
 
   Future<List<CosechaModel>> readAll() async {
     final data = await database.query('Cosecha');
-    print('Datos desde la base de datos');
-    print(data);
     return data.map((e) => CosechaModel.fromJson(e)).toList();
   }
 
