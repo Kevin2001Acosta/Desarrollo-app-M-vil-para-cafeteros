@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
+import 'package:cafetero/DataBase/Dao/trabajador_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
+import 'package:cafetero/Models/trabajador_model.dart';
 import 'package:cafetero/Screens/trabajo_recogida_page.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
 import 'package:cafetero/provider/recogida_provider.dart';
@@ -63,7 +65,9 @@ class MyHomePage extends StatelessWidget {
   }
 
   Future<void> finalizarCosecha(
-      BuildContext context, bool recogidaIniciada) async {
+      BuildContext context, bool recogidaIniciada) async { 
+        final trabajador = TrabajadorModel(nombre : "Andrea");
+        await TrabajadorDao().insert(trabajador);
     peticion();
     if (!recogidaIniciada) {
       List<Map<String, dynamic>> cosechaIniciada =
