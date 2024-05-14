@@ -4,8 +4,10 @@ import 'package:flutter/foundation.dart';
 
 class RecogidaProvider with ChangeNotifier {
   bool _recogidaIniciada = false;
+  Map<String, dynamic>? _infoUltimaRecogida;
 
   bool get recogidaIniciada => _recogidaIniciada;
+  Map<String, dynamic>? get infoUltimaRecogida => _infoUltimaRecogida;
 
   RecogidaProvider() {
     cargarEstadoRecogida();
@@ -13,6 +15,7 @@ class RecogidaProvider with ChangeNotifier {
 
   Future<void> cargarEstadoRecogida() async {
     var inicio = await RecogidaDao().recogidaIniciada();
+    _infoUltimaRecogida = inicio.isNotEmpty ? inicio.first : null;
     _recogidaIniciada = inicio.isNotEmpty;
     notifyListeners();
   }

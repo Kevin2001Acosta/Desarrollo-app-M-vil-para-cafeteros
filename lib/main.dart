@@ -29,9 +29,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: const ColorScheme(
           primary: Color.fromARGB(255, 131, 155,
-              42), // un marrón oscuro, evocando el color del café
+              42), // un verde brillante, evocando el color del café
           secondary: Color(
-              0xFF6B4226), // un verde brillante, evocando el color de las hojas de café
+              0xFF6B4226), // un marron oscuro, evocando el color de las hojas de café
           surface: Color(
               0xFFC9D1B3), // un verde claro, para fondos de componentes de la interfaz de usuario
           background: Color(
