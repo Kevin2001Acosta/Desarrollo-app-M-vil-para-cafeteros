@@ -1,16 +1,43 @@
+import 'dart:io';
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
 import 'package:cafetero/Screens/trabajo_recogida_page.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
+import 'package:cafetero/provider/recogida_provider.dart';
 //import 'package:cafetero/provider/recogida_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 //import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' as parser;
+// url de pdf info café: https://federaciondecafeteros.org/app/uploads/2019/10/precio_cafe.pdf
 
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key});
 
-  final String title;
+  // scrapping para obtener el precio del café
+  void peticion() async {
+    try {
+      final response = await http.get(
+          Uri.parse('https://federaciondecafeteros.org/wp/publicaciones/'));
+
+      if (response.statusCode == 200) {
+        final document = parser.parse(response.body);
+        final priceElement = document.querySelector('li > strong');
+
+        if (priceElement != null) {
+          final price = priceElement.text;
+          print('The price is $price');
+        } else {
+          print('Price element not found');
+        }
+      }
+    } on SocketException catch (_) {
+      print('No Internet connection');
+    } catch (e) {
+      print(e);
+    }
+  }
 
   Future<void> iniciarCosecha(BuildContext context) async {
     //Todo: preguntar si hay una cosecha abierta y así no funcione el botón
@@ -33,22 +60,39 @@ class MyHomePage extends StatelessWidget {
         ),
       );
     }
-    List<CosechaModel> todasCosechas = await CosechaDao().readAll();
-    for (var cosecha in todasCosechas) {
-      print(cosecha.toJson());
-    }
   }
 
-  Future<void> finalizarCosecha() async {
-    List<Map<String, dynamic>> cosechaIniciada =
-        await CosechaDao().cosechaIniciada();
-    if (cosechaIniciada.isNotEmpty && cosechaIniciada.length == 1) {
-      var cosecha = CosechaModel(
-        fechaFin: DateTime.now(),
-        idCosecha: cosechaIniciada[0]['id_cosecha'],
-        fechaInicio: DateTime.parse(cosechaIniciada[0]['fecha_inicio']),
+  Future<void> finalizarCosecha(
+      BuildContext context, bool recogidaIniciada) async {
+    peticion();
+    if (!recogidaIniciada) {
+      List<Map<String, dynamic>> cosechaIniciada =
+          await CosechaDao().cosechaIniciada();
+      if (cosechaIniciada.isNotEmpty && cosechaIniciada.length == 1) {
+        var cosecha = CosechaModel(
+          fechaFin: DateTime.now(),
+          idCosecha: cosechaIniciada[0]['id_cosecha'],
+          fechaInicio: DateTime.parse(cosechaIniciada[0]['fecha_inicio']),
+        );
+        await CosechaDao().update(cosecha);
+      }
+    } else {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Center(
+            child: Text(
+              'Hay una recogida iniciada, Finalicela antes de cerrar la cosecha',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+          dismissDirection: DismissDirection.up,
+          elevation: 5.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
       );
-      await CosechaDao().update(cosecha);
     }
   }
 
@@ -67,6 +111,7 @@ class MyHomePage extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(texto)),
       );
+      Navigator.pop(context);
     }
   }
 
@@ -75,7 +120,7 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,
-          title: Text(title),
+          title: const Text('Cafeteros de Colombia'),
           leading: Builder(builder: (BuildContext context) {
             return IconButton(
               icon: const Icon(Icons.menu),
@@ -116,9 +161,16 @@ class MyHomePage extends StatelessWidget {
             ],
           ),
         ),
-        body: const Center(
-          child: Text(
-            'Bienvenido a la pagina principal',
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/imagen_cafe2.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: Container(),
           ),
         ),
         floatingActionButton:
@@ -135,7 +187,12 @@ class MyHomePage extends StatelessWidget {
           FloatingActionButton(
               heroTag: null,
               backgroundColor: Theme.of(context).colorScheme.secondary,
-              onPressed: () => finalizarCosecha(),
+              onPressed: () {
+                final recogidaIniciada =
+                    Provider.of<RecogidaProvider>(context, listen: false)
+                        .recogidaIniciada;
+                finalizarCosecha(context, recogidaIniciada);
+              },
               tooltip: 'Finalizar Cosecha',
               child: const Icon(Icons.agriculture_sharp)),
         ]));

@@ -5,6 +5,7 @@ class TrabajaModel {
   int pago;
   int kilosTrabajador;
   DateTime fecha;
+  String? nombre;
 
   TrabajaModel({
     this.idTrabaja,
@@ -13,6 +14,7 @@ class TrabajaModel {
     required this.pago,
     required this.kilosTrabajador,
     required this.fecha,
+    this.nombre,
   });
 
   Map<String, dynamic> toJson() {
@@ -22,7 +24,7 @@ class TrabajaModel {
       'id_recogida': idRecogida,
       'pago': pago,
       'kilos_trabajador': kilosTrabajador,
-      'fecha': fecha.toIso8601String().substring(0, 10),
+      'fecha': fecha.toIso8601String().substring(0, 10)
     };
   }
 
@@ -34,6 +36,7 @@ class TrabajaModel {
       pago: json['pago'],
       kilosTrabajador: json['kilos_trabajador'],
       fecha: DateTime.parse(json['fecha']),
+      nombre: json['nombre'],
     );
   }
 }

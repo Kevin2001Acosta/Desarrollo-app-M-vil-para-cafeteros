@@ -23,8 +23,8 @@ class RecogidaDao {
         where: 'id_recogida = ?', whereArgs: [recogida.idRecogida]);
   }
 
-  Future<List<Map<String, dynamic>>> recogidaIniciada() async {
+  Future<List<RecogidaModel>> recogidaIniciada() async {
     final data = await database.query('recogida', where: 'fecha_fin is null');
-    return data;
+    return data.map((e) => RecogidaModel.fromJson(e)).toList();
   }
 }

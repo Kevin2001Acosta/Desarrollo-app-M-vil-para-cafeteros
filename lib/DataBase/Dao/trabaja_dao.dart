@@ -5,7 +5,11 @@ class TrabajaDao {
   final database = DatabaseHelper.instance.db;
 
   Future<List<TrabajaModel>> readAll() async {
-    final data = await database.query('Trabaja');
+    final data = await database.rawQuery('''
+    SELECT Trabaja.*,Trabajador.nombre FROM Trabaja
+    INNER JOIN Trabajador ON Trabaja.id_trabajador = Trabajador.id_trabajador
+    ORDER BY Trabaja.fecha DESC
+  ''');
     return data.map((e) => TrabajaModel.fromJson(e)).toList();
   }
 
@@ -21,5 +25,16 @@ class TrabajaDao {
   Future<void> delete(TrabajaModel trabaja) async {
     await database.delete('trabaja',
         where: 'id_trabaja = ?', whereArgs: [trabaja.idTrabaja]);
+  }
+
+  Future<List<TrabajaModel>> trabajosActuales() async {
+    final data = await database.rawQuery('''
+    SELECT Trabaja.*,Trabajador.nombre FROM Trabaja
+    INNER JOIN Trabajador ON Trabaja.id_trabajador = Trabajador.id_trabajador
+    INNER JOIN Recogida ON Trabaja.id_recogida = Recogida.id_recogida
+    WHERE Recogida.fecha_fin IS NULL
+    ORDER BY Trabaja.fecha DESC
+  ''');
+    return data.map((e) => TrabajaModel.fromJson(e)).toList();
   }
 }
