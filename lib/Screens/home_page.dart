@@ -42,7 +42,6 @@ class MyHomePage extends StatelessWidget {
   }
 
   Future<void> iniciarCosecha(BuildContext context) async {
-    //Todo: preguntar si hay una cosecha abierta y así no funcione el botón
     List<Map<String, dynamic>> cosechaIniciada =
         await CosechaDao().cosechaIniciada();
 
@@ -78,6 +77,7 @@ class MyHomePage extends StatelessWidget {
           idCosecha: cosechaIniciada[0]['id_cosecha'],
           fechaInicio: DateTime.parse(cosechaIniciada[0]['fecha_inicio']),
         );
+        // Todo: falta poner los kilos de café de la cosecha
         await CosechaDao().update(cosecha);
       }
     } else {
@@ -110,7 +110,6 @@ class MyHomePage extends StatelessWidget {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const RecogidaPage()));
     } else {
-      // Opcional: Muestra un mensaje al usuario si no hay una cosecha iniciada
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(texto)),
