@@ -7,28 +7,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class RecogidaKilosTrabajoW extends StatefulWidget {
+class RecogidaDiaTrabajoW extends StatefulWidget {
   final int idRecogida;
-  final int precioKilo;
   final VoidCallback onTrabajoGuardado;
 
-  const RecogidaKilosTrabajoW(
-      {required this.idRecogida,
-      required this.precioKilo,
-      required this.onTrabajoGuardado,
-      Key? key})
-      : super(key: key);
+  const RecogidaDiaTrabajoW(
+      {required this.idRecogida, required this.onTrabajoGuardado, super.key});
 
   @override
-  RecogidaKilosTrabajoWState createState() => RecogidaKilosTrabajoWState();
+  State<RecogidaDiaTrabajoW> createState() => _RecogidaDiaTrabajoWState();
 }
 
-class RecogidaKilosTrabajoWState extends State<RecogidaKilosTrabajoW> {
+class _RecogidaDiaTrabajoWState extends State<RecogidaDiaTrabajoW> {
   TrabajadorModel? trabajadorSeleccionado;
-  List<TrabajadorModel> trabajadores =
-      []; // Aquí debes cargar los trabajadores de la base de datos
+  List<TrabajadorModel> trabajadores = [];
   int kilosCafe = 0;
+  int pago = 0;
   final TextEditingController kilosCafeController = TextEditingController();
+  final TextEditingController pagoController = TextEditingController();
   DateTime selectedDate = DateTime.now();
   final TextEditingController dropController = TextEditingController();
   VoidCallback get onTrabajoGuardado => widget.onTrabajoGuardado;
@@ -61,7 +57,7 @@ class RecogidaKilosTrabajoWState extends State<RecogidaKilosTrabajoW> {
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       return Column(
-        children: [
+        children: <Widget>[
           Row(
             children: [
               const Flexible(
@@ -78,10 +74,10 @@ class RecogidaKilosTrabajoWState extends State<RecogidaKilosTrabajoW> {
                 ),
               ),
               Flexible(
-                  flex: 1,
-                  child: SizedBox(
-                    width: 180,
-                    child: CustomDropdown(
+                flex: 1,
+                child: SizedBox(
+                  width: 180,
+                  child: CustomDropdown(
                       items: trabajadores,
                       selectedItem: trabajadorSeleccionado,
                       onChanged: (TrabajadorModel? trabajador) {
@@ -89,9 +85,9 @@ class RecogidaKilosTrabajoWState extends State<RecogidaKilosTrabajoW> {
                           trabajadorSeleccionado = trabajador;
                         });
                       },
-                      controller: dropController,
-                    ),
-                  )),
+                      controller: dropController),
+                ),
+              ),
             ],
           ),
           Row(
@@ -133,6 +129,46 @@ class RecogidaKilosTrabajoWState extends State<RecogidaKilosTrabajoW> {
               ),
             ],
           ),
+          Row(
+            children: [
+              const SizedBox(width: 3),
+              Flexible(
+                  flex: 1,
+                  child: Container(
+                      width: 150,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: const Align(
+                          alignment: Alignment.centerRight,
+                          child:
+                              Text('Pago:', style: TextStyle(fontSize: 20))))),
+              Flexible(
+                flex: 1,
+                child: SizedBox(
+                  width: 180,
+                  child: TextField(
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    controller: pagoController,
+                    onChanged: (value) {
+                      setState(() {
+                        pago = int.tryParse(value) ?? 0;
+                      });
+                    },
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Ingresa el pago',
+                      labelStyle: TextStyle(
+                        color: pagoController.text.isEmpty
+                            ? Theme.of(context).colorScheme.error
+                            : null,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {
@@ -157,12 +193,12 @@ class RecogidaKilosTrabajoWState extends State<RecogidaKilosTrabajoW> {
           ),
           ElevatedButton(
             onPressed: () async {
-              if (trabajadorSeleccionado != null && kilosCafe > 0) {
+              if (trabajadorSeleccionado != null && kilosCafe > 0 && pago > 0) {
                 TrabajaModel trabajo = TrabajaModel(
                   idRecogida: widget.idRecogida,
                   idTrabajador: trabajadorSeleccionado!.idTrabajador!,
                   kilosTrabajador: kilosCafe,
-                  pago: widget.precioKilo * kilosCafe,
+                  pago: pago,
                   fecha: selectedDate,
                 );
                 await TrabajaDao().insert(trabajo);

@@ -34,8 +34,8 @@ class MyApp extends StatelessWidget {
               0xFF6B4226), // un marron oscuro, evocando el color de las hojas de café
           surface: Color(
               0xFFC9D1B3), // un verde claro, para fondos de componentes de la interfaz de usuario
-          background: Color(
-              0xFFE9ECE5), // un verde muy claro, para el fondo de la aplicación
+          background: Color.fromARGB(255, 221, 231,
+              234), // un Azul muy claro, para el fondo de la aplicación
           error: Colors.red, // rojo para errores
           onPrimary: Colors.white, // texto e iconos sobre el color primario
           onSecondary: Colors.black, // texto e iconos sobre el color secundario
@@ -46,10 +46,16 @@ class MyApp extends StatelessWidget {
           onError: Colors.white, // texto e iconos sobre el color de error
           brightness: Brightness.light, // luminosidad general del tema
         ),
+        cardTheme: const CardTheme(
+          color: Color.fromARGB(255, 200, 213, 164),
+          shadowColor: Color.fromARGB(255, 38, 98, 107),
+          elevation: 10,
+          shape: BeveledRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+        ),
       ),
-      home: const MyHomePage(
-        title: 'Cafeteros de Colombia',
-      ),
+      home: const MyHomePage(),
     );
   }
 }

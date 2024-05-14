@@ -1,8 +1,14 @@
 import 'package:cafetero/DataBase/Dao/recogida_dao.dart';
+import 'package:cafetero/DataBase/Dao/trabaja_dao.dart';
 import 'package:cafetero/Models/recogida_model.dart';
+import 'package:cafetero/Models/trabaja_model.dart';
+import 'package:cafetero/Screens/home_page.dart';
+import 'package:cafetero/Widgets/lista_trabajos_recogida.dart';
+import 'package:cafetero/Widgets/recogida_dia_trabajo.dart';
 import 'package:cafetero/Widgets/recogida_kilos_trabajo.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:cafetero/provider/recogida_provider.dart';
 import 'package:cafetero/Widgets/dialogo_valores_recogida.dart';
@@ -20,12 +26,28 @@ class _RecogidaPageState extends State<RecogidaPage> {
   Map<String, dynamic>? result;
   bool recogidaIniciada = false;
   int? idCosecha;
-  Map<String, dynamic>? infoRecogida;
+  Map<String, List<TrabajaModel>> trabajos = {};
 
   @override
   void initState() {
     super.initState();
-    print('$recogidaIniciada init');
+    cargarTrabajos();
+  }
+
+  void cargarTrabajos() async {
+    final List<TrabajaModel> trabajosDB = await TrabajaDao().trabajosActuales();
+    Map<String, List<TrabajaModel>> trabajosFecha = {};
+    for (var trabajo in trabajosDB) {
+      if (!trabajosFecha
+          .containsKey(DateFormat('yyyy-MM-dd').format(trabajo.fecha))) {
+        trabajosFecha[DateFormat('yyyy-MM-dd').format(trabajo.fecha)] = [];
+      }
+      trabajosFecha[DateFormat('yyyy-MM-dd').format(trabajo.fecha)]!
+          .add(trabajo);
+    }
+    setState(() {
+      trabajos = trabajosFecha;
+    });
   }
 
   @override
@@ -100,28 +122,28 @@ class _RecogidaPageState extends State<RecogidaPage> {
                 jornals == 1 ? null : int.tryParse(result!['precioKilo']),
           ));
       context.read<RecogidaProvider>().cargarEstadoRecogida();
-      print('$result jornal: $jornals cosecha: $idCosecha');
     }
   }
 
   void finalizarRecogida() async {
     final recogida = await RecogidaDao().recogidaIniciada();
     final RecogidaModel recogidaFinal = RecogidaModel(
-      idRecogida: recogida[0]['id_recogida'],
-      fechaInicio: DateTime.parse(recogida[0]['fecha_inicio'] as String),
+      idRecogida: recogida[0].idRecogida as int,
+      fechaInicio: recogida[0].fechaInicio,
       fechaFin: DateTime.now(),
-      idCosecha: recogida[0]['id_cosecha'] as int,
-      jornal: recogida[0]['jornal'] as int,
-      precioKilo: recogida[0]['precio_kilo'] as int?,
+      idCosecha: recogida[0].idCosecha,
+      jornal: recogida[0].jornal,
+      precioKilo: recogida[0].precioKilo,
       // Todo: Falta calcular y enviar los kilos totales recogidos
     );
     if (recogida.isNotEmpty && recogida.length == 1) {
       if (!context.mounted) return;
       context.read<RecogidaProvider>().finalizarRecogida(recogidaFinal);
       context.read<RecogidaProvider>().cargarEstadoRecogida();
-      print(recogidaFinal);
     }
-    print('numero de recodigas abiertas: ${recogida.length}');
+    setState(() {
+      trabajos = {};
+    });
   }
 
   @override
@@ -129,50 +151,69 @@ class _RecogidaPageState extends State<RecogidaPage> {
     final recogidaIniciada = context.watch<RecogidaProvider>().recogidaIniciada;
     final idCosecha = context.watch<CosechaProvider>().idCosecha;
     final infoRecogida = context.watch<RecogidaProvider>().infoUltimaRecogida;
-    final jornal = infoRecogida != null ? infoRecogida['jornal'] : null;
-    print('hay recogida iniciada?: $recogidaIniciada');
-    print('Id de la cosecha abierta $idCosecha');
+    final jornal = infoRecogida?.jornal;
 
     setState(() {
       this.recogidaIniciada = recogidaIniciada;
       this.idCosecha = idCosecha;
     });
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Recogida de café',
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) =>
+                    const MyHomePage()), // Replace HomePage with your main page
+            (route) => false,
+          );
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Recogida de café',
+          ),
         ),
-      ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Visibility(
-              visible: recogidaIniciada,
-              child: ElevatedButton(
-                onPressed: finalizarRecogida,
-                child: Text('Finalizar Recogida',
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Theme.of(context).colorScheme.onSecondary)),
+        body: Center(
+          child: Column(
+            children: <Widget>[
+              Visibility(
+                visible: recogidaIniciada,
+                child: ElevatedButton(
+                  onPressed: finalizarRecogida,
+                  child: Text('Finalizar Recogida',
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Theme.of(context).colorScheme.onSecondary)),
+                ),
               ),
-            ),
-            Visibility(
-              visible: !recogidaIniciada,
-              child: ElevatedButton(
-                onPressed: iniciarRecogida,
-                child: Text('Iniciar Recogida',
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Theme.of(context).colorScheme.onSecondary)),
+              Visibility(
+                visible: !recogidaIniciada,
+                child: ElevatedButton(
+                  onPressed: iniciarRecogida,
+                  child: Text('Iniciar Recogida',
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Theme.of(context).colorScheme.onSecondary)),
+                ),
               ),
-            ),
-            const SizedBox(height: 20.0),
-            if (jornal == 0)
-              RecogidaKilosTrabajoW(
-                  idRecogida: infoRecogida!['id_recogida'] as int),
-            if (jornal == 1) const Text('Recogida al dia'),
-          ],
+              const SizedBox(height: 20.0),
+              if (jornal == 0)
+                RecogidaKilosTrabajoW(
+                    idRecogida: infoRecogida!.idRecogida as int,
+                    precioKilo: infoRecogida.precioKilo as int,
+                    onTrabajoGuardado: cargarTrabajos),
+              if (jornal == 1)
+                RecogidaDiaTrabajoW(
+                    idRecogida: infoRecogida!.idRecogida as int,
+                    onTrabajoGuardado: cargarTrabajos),
+              Expanded(
+                child: GroupListViewWidget(trabajos: trabajos),
+              ),
+            ],
+          ),
         ),
       ),
     );

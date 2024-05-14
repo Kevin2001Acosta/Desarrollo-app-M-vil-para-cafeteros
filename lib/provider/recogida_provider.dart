@@ -4,10 +4,10 @@ import 'package:flutter/foundation.dart';
 
 class RecogidaProvider with ChangeNotifier {
   bool _recogidaIniciada = false;
-  Map<String, dynamic>? _infoUltimaRecogida;
+  RecogidaModel? _infoUltimaRecogida;
 
   bool get recogidaIniciada => _recogidaIniciada;
-  Map<String, dynamic>? get infoUltimaRecogida => _infoUltimaRecogida;
+  RecogidaModel? get infoUltimaRecogida => _infoUltimaRecogida;
 
   RecogidaProvider() {
     cargarEstadoRecogida();
