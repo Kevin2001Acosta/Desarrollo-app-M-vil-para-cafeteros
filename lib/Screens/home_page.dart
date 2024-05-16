@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
+import 'package:cafetero/Screens/trabajadores_page.dart';
 import 'package:cafetero/Screens/trabajo_recogida_page.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
 import 'package:cafetero/provider/recogida_provider.dart';
@@ -143,10 +144,11 @@ class MyHomePage extends StatelessWidget {
                 ),
               ),
               ListTile(
-                title: const Text('Registrar trabajador',
+                title: const Text('Trabajadores',
                     style: TextStyle(fontSize: 20.0)),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const TrabajadoresPage()));
                 },
               ),
               ListTile(
@@ -163,7 +165,7 @@ class MyHomePage extends StatelessWidget {
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/imagen_cafe2.png'),
+              image: AssetImage('assets/fondo_cafetero.jpg'),
               fit: BoxFit.cover,
             ),
           ),

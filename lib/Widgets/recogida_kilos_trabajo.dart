@@ -160,7 +160,7 @@ class RecogidaKilosTrabajoWState extends State<RecogidaKilosTrabajoW> {
               if (trabajadorSeleccionado != null && kilosCafe > 0) {
                 TrabajaModel trabajo = TrabajaModel(
                   idRecogida: widget.idRecogida,
-                  idTrabajador: trabajadorSeleccionado!.idTrabajador!,
+                  idTrabajador: trabajadorSeleccionado!.id!,
                   kilosTrabajador: kilosCafe,
                   pago: widget.precioKilo * kilosCafe,
                   fecha: selectedDate,
