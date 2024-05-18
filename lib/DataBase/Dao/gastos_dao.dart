@@ -1,6 +1,6 @@
 import 'package:cafetero/DataBase/data_base_helper.dart';
 import 'package:cafetero/Models/gastos_model.dart';
-
+import 'package:intl/intl.dart';
 
 class GastosDao {
   final database = DatabaseHelper.instance.db;
@@ -20,7 +20,16 @@ class GastosDao {
   }
 
   Future<void> delete(GastosModel gasto) async {
-    await database.delete('Gastos',
-        where: 'id_gastos = ?', whereArgs: [gasto.idGastos]);
+    await database
+        .delete('Gastos', where: 'id_gastos = ?', whereArgs: [gasto.idGastos]);
+  }
+
+  Future<List<GastosModel>> currentYear() async {
+    final year = DateTime.now().year;
+    final firstDayOfYear = DateTime(year);
+    final data = await database.query('Gastos',
+        where: 'fecha >= ?',
+        whereArgs: [DateFormat('yyyy-MM-dd').format(firstDayOfYear)]);
+    return data.map((e) => GastosModel.fromJson(e)).toList();
   }
 }

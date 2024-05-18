@@ -58,26 +58,13 @@ class _RecogidaDiaTrabajoWState extends State<RecogidaDiaTrabajoW> {
         builder: (BuildContext context, BoxConstraints constraints) {
       return Column(
         children: <Widget>[
-          Row(
+          Column(
             children: [
-              const Flexible(
-                flex: 1,
-                child: SizedBox(
-                  width: 150,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Trabajador:',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                ),
-              ),
-              Flexible(
-                flex: 1,
-                child: SizedBox(
-                  width: 180,
-                  child: CustomDropdown(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Elige el trabajador:'),
+                  CustomDropdown(
                       items: trabajadores,
                       selectedItem: trabajadorSeleccionado,
                       onChanged: (TrabajadorModel? trabajador) {
@@ -86,83 +73,36 @@ class _RecogidaDiaTrabajoWState extends State<RecogidaDiaTrabajoW> {
                         });
                       },
                       controller: dropController),
-                ),
+                ],
               ),
             ],
           ),
-          Row(
+          const SizedBox(height: 20),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(width: 3),
-              const Flexible(
-                  flex: 1,
-                  child: SizedBox(
-                      width: 150,
-                      child: Align(
-                          alignment: Alignment.center,
-                          child: Text('Kgs de café: ',
-                              style: TextStyle(fontSize: 20))))),
-              Flexible(
-                flex: 1,
-                child: SizedBox(
-                  width: 180,
-                  child: TextField(
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    controller: kilosCafeController,
-                    onChanged: (value) {
-                      setState(() {
-                        kilosCafe = int.tryParse(value) ?? 0;
-                      });
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Ingresa los Kgs',
-                      labelStyle: TextStyle(
-                        color: kilosCafeController.text.isEmpty
-                            ? Theme.of(context).colorScheme.error
-                            : null,
-                      ),
+              const Text('Ingrese la cantidad en kg:'),
+              SizedBox(
+                width: 230,
+                child: TextField(
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  controller: kilosCafeController,
+                  onChanged: (value) {
+                    setState(() {
+                      kilosCafe = int.tryParse(value) ?? 0;
+                    });
+                  },
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Kilos',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              const SizedBox(width: 3),
-              Flexible(
-                  flex: 1,
-                  child: Container(
-                      width: 150,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: const Align(
-                          alignment: Alignment.centerRight,
-                          child:
-                              Text('Pago:', style: TextStyle(fontSize: 20))))),
-              Flexible(
-                flex: 1,
-                child: SizedBox(
-                  width: 180,
-                  child: TextField(
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    controller: pagoController,
-                    onChanged: (value) {
-                      setState(() {
-                        pago = int.tryParse(value) ?? 0;
-                      });
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Ingresa el pago',
-                      labelStyle: TextStyle(
-                        color: pagoController.text.isEmpty
-                            ? Theme.of(context).colorScheme.error
-                            : null,
-                      ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                 ),
@@ -170,27 +110,77 @@ class _RecogidaDiaTrabajoWState extends State<RecogidaDiaTrabajoW> {
             ],
           ),
           const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () async {
-              final DateTime? pickedDate = await showDatePicker(
-                context: context,
-                initialDate: selectedDate,
-                firstDate: DateTime(2000),
-                lastDate: DateTime(2100),
-              );
-
-              if (pickedDate != null) {
-                setState(() {
-                  selectedDate = pickedDate;
-                });
-              }
-            },
-            child: Text(
-              DateFormat('yyyy-MM-dd').format(selectedDate),
-              style:
-                  TextStyle(color: Theme.of(context).colorScheme.onSecondary),
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(width: 3),
+              const Text('Pago:'),
+              SizedBox(
+                width: 230,
+                child: TextField(
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  controller: pagoController,
+                  onChanged: (value) {
+                    setState(() {
+                      pago = int.tryParse(value) ?? 0;
+                    });
+                  },
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Ingresa el pago',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
+          const SizedBox(height: 20),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Fecha:'),
+              Container(
+                width: 230,
+                height: 65,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: TextButton(
+                  onPressed: () async {
+                    final DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: selectedDate,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                    );
+
+                    if (pickedDate != null) {
+                      setState(() {
+                        selectedDate = pickedDate;
+                      });
+                    }
+                  },
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      DateFormat('yyyy-MM-dd').format(selectedDate),
+                      style: const TextStyle(fontSize: 15, color: Colors.black),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {
               if (trabajadorSeleccionado != null && kilosCafe > 0 && pago > 0) {
@@ -201,12 +191,51 @@ class _RecogidaDiaTrabajoWState extends State<RecogidaDiaTrabajoW> {
                   pago: pago,
                   fecha: selectedDate,
                 );
-                await TrabajaDao().insert(trabajo);
+                try {
+                  await TrabajaDao().insert(trabajo);
+                  if (!mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Center(
+                        child: Text(
+                          'Registro exitoso',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary),
+                        ),
+                      ),
+                      elevation: 5.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.onError,
+                    ),
+                  );
+                } catch (e) {
+                  if (!mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Center(
+                        child: Text(
+                          'Error al guardar el trabajo, por favor intenta de nuevo',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.error),
+                        ),
+                      ),
+                      elevation: 5.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.onError,
+                    ),
+                  );
+                }
                 setState(() {
                   trabajadorSeleccionado = null;
                   kilosCafe = 0;
                   kilosCafeController.clear();
                 });
+
+                // ? por ahora como no muestro ningún valor onTrabajoGuardado no es necesario
                 onTrabajoGuardado();
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -227,7 +256,10 @@ class _RecogidaDiaTrabajoWState extends State<RecogidaDiaTrabajoW> {
                 );
               }
             },
-            child: const Text('Guardar'),
+            child: const Text(
+              'Guardar',
+              style: TextStyle(color: Colors.black),
+            ),
           ),
         ],
       );

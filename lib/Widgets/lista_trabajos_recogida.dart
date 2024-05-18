@@ -1,11 +1,12 @@
 import 'package:cafetero/Models/trabaja_model.dart';
 import 'package:flutter/material.dart';
 import 'package:group_list_view/group_list_view.dart';
+import 'package:intl/intl.dart';
 
-class GroupListViewWidget extends StatelessWidget {
+class GroupListViewTrabaja extends StatelessWidget {
   final Map<String, List<TrabajaModel>> trabajos;
 
-  const GroupListViewWidget({required this.trabajos, super.key});
+  const GroupListViewTrabaja({required this.trabajos, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class GroupListViewWidget extends StatelessWidget {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.45,
                   child: Text(
-                    'Pago: ${trabajo.pago} \$',
+                    'Pago: ${NumberFormat("#,##0", "es_ES").format(trabajo.pago)} \$',
                     style: const TextStyle(fontSize: 18),
                   ),
                 ),

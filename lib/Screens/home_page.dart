@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
+import 'package:cafetero/Screens/gastos_page.dart';
 import 'package:cafetero/Screens/trabajo_recogida_page.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
 import 'package:cafetero/provider/recogida_provider.dart';
@@ -143,18 +144,26 @@ class MyHomePage extends StatelessWidget {
                 ),
               ),
               ListTile(
-                title: const Text('Registrar trabajador',
+                title: const Text('Trabajadores',
                     style: TextStyle(fontSize: 20.0)),
                 onTap: () {
                   Navigator.pop(context);
                 },
               ),
               ListTile(
-                title: const Text('Registrar recogida',
-                    style: TextStyle(fontSize: 20.0)),
+                title:
+                    const Text('Recogidas', style: TextStyle(fontSize: 20.0)),
                 onTap: () {
                   navegarSiCosechaIniciada(context,
                       'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde');
+                },
+              ),
+              ListTile(
+                title: const Text('Gastos', style: TextStyle(fontSize: 20.0)),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const GastosPage();
+                  }));
                 },
               ),
             ],
