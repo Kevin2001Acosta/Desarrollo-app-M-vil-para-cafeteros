@@ -121,6 +121,11 @@ class MyHomePage extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,
           title: const Text('Cafeteros de Colombia'),
+          titleTextStyle: const TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+          ),
+          iconTheme: IconThemeData(color: Colors.white),
           leading: Builder(builder: (BuildContext context) {
             return IconButton(
               icon: const Icon(Icons.menu),
@@ -137,23 +142,36 @@ class MyHomePage extends StatelessWidget {
               DrawerHeader(
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.primary,
+                  border: Border.all(color: Colors.white, width: 0),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.white,
+                      blurRadius: 0.0,
+                    ),
+                  ],
                 ),
                 child: const Center(
-                  child:
-                      Text('Menú Principal', style: TextStyle(fontSize: 26.0)),
+                  child: Text('Menú Principal',
+                      style: TextStyle(fontSize: 26.0, color: Colors.white)),
                 ),
               ),
               ListTile(
-                title: const Text('Trabajadores',
-                    style: TextStyle(fontSize: 20.0)),
+                title: Text('Trabajadores',
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Theme.of(context).colorScheme.secondary)),
                 onTap: () {
-                  Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const TrabajadoresPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const TrabajadoresPage()));
                 },
               ),
               ListTile(
-                title: const Text('Registrar recogida',
-                    style: TextStyle(fontSize: 20.0)),
+                title: Text('Registrar recogida',
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Theme.of(context).colorScheme.secondary)),
                 onTap: () {
                   navegarSiCosechaIniciada(context,
                       'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde');

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:cafetero/Models/trabajador_model.dart';
 import 'package:cafetero/provider/trabajadores_provider.dart';
 
@@ -10,67 +11,74 @@ class TrabajadoresPage extends StatefulWidget {
 }
 
 class _TrabajadoresPageState extends State<TrabajadoresPage> {
-  Map<String, List<TrabajadorModel>> trabajadores = {};
-  bool _isLoading = true;
   final TextEditingController _nombreController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _cargarTrabajadores();
-  }
-
-  // TODO: Cargar los trabajadores desde el proveedor al iniciar la página
-  void _cargarTrabajadores() async {
-    await TrabajadoresProvider().cargarTrabajadores();
-
-    setState(() {
-      trabajadores = TrabajadoresProvider().trabajadores;
-      _isLoading = false;
-      TrabajadoresProvider().imprimirTrabajadores();
+    // TODO: Cargar trabajadores después de que el widget se haya construido
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _cargarTrabajadores();
     });
   }
 
-  // TODO: Agregar un nuevo trabajador
+  // TODO: Método para cargar trabajadores desde el proveedor
+  void _cargarTrabajadores() async {
+    await Provider.of<TrabajadoresProvider>(context, listen: false)
+        .cargarTrabajadores();
+  }
+
+  // TODO: Método para agregar un nuevo trabajador
   Future<void> _addTrabajador() async {
     final String nombre = _nombreController.text;
-    await TrabajadoresProvider()
+    await Provider.of<TrabajadoresProvider>(context, listen: false)
         .insertarTrabajadores(TrabajadorModel(nombre: nombre));
-
-    print(nombre);
-
+    _nombreController.clear();
     _cargarTrabajadores();
   }
 
-  // TODO: Actualizar un trabajador existente
+  // TODO: Método para actualizar un trabajador existente
   Future<void> _updateTrabajador(int id) async {
     final String nombre = _nombreController.text;
-    await TrabajadoresProvider()
+    await Provider.of<TrabajadoresProvider>(context, listen: false)
         .actualizarTrabajadores(TrabajadorModel(id: id, nombre: nombre));
+    _nombreController.clear();
     _cargarTrabajadores();
   }
 
-  // TODO: Eliminar un trabajador
+  // TODO: Método para eliminar un trabajador
   Future<void> _deleteTrabajador(String nombre) async {
-    if (trabajadores.containsKey(nombre)) {
-      final int? id = trabajadores[nombre]!
-          .first
-          .id; // Obtener el ID del primer trabajador con ese nombre
-      await TrabajadoresProvider()
+    final trabajadoresProvider =
+        Provider.of<TrabajadoresProvider>(context, listen: false);
+    if (trabajadoresProvider.trabajadores.containsKey(nombre)) {
+      final int? id = trabajadoresProvider.trabajadores[nombre]!.first.id;
+      await trabajadoresProvider
           .borrarTrabajadores(TrabajadorModel(id: id, nombre: nombre));
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
           backgroundColor: Colors.redAccent,
-          content: Text('Trabajador eliminado')));
+          content: Text('Trabajador eliminado'),
+        ),
+      );
       _cargarTrabajadores();
     } else {
       print('El nombre del trabajador no es válido: $nombre');
     }
   }
 
-  void _showBottomSheet(String? id) async {
+  // TODO: Mostrar hoja modal para agregar o actualizar trabajador
+  void _showBottomSheet(int? id) async {
+    final trabajadoresProvider =
+        Provider.of<TrabajadoresProvider>(context, listen: false);
+
+    // Limpiar el controlador del texto antes de mostrar la hoja modal
+    _nombreController.clear();
+
     if (id != null) {
-      final existingData = trabajadores[id]!;
-      _nombreController.text = existingData.first.nombre;
+      final existingData = trabajadoresProvider.trabajadores.values
+          .expand((list) => list)
+          .firstWhere((trabajador) => trabajador.id == id);
+      _nombreController.text = existingData.nombre;
     }
 
     showModalBottomSheet(
@@ -78,6 +86,7 @@ class _TrabajadoresPageState extends State<TrabajadoresPage> {
       isScrollControlled: true,
       context: context,
       builder: (_) => Container(
+        color: Theme.of(context).colorScheme.surface,
         padding: EdgeInsets.only(
           top: 30,
           left: 15,
@@ -90,35 +99,47 @@ class _TrabajadoresPageState extends State<TrabajadoresPage> {
           children: [
             TextField(
               controller: _nombreController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
+                labelStyle:
+                    TextStyle(color: Theme.of(context).colorScheme.secondary),
                 labelText: 'Ingrese el nombre del trabajador',
                 border: OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.secondary,
+                    width: 1.0,
+                  ),
+                ),
                 hintText: "Nombre del trabajador",
               ),
             ),
             const SizedBox(height: 10),
             Center(
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                ),
                 onPressed: () async {
                   if (id == null) {
                     await _addTrabajador();
                   } else {
-                    await _updateTrabajador(int.parse(id));
+                    await _updateTrabajador(id);
                   }
 
-                  _nombreController.text = "";
+                  _nombreController.clear();
 
-                  // Ocultar la hoja inferior
                   Navigator.of(context).pop();
-                  print("Trabajador agregado");
-                  print(trabajadores.length);
+                  print("Trabajador agregado o actualizado");
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(18),
                   child: Text(
                     id == null ? "Agregar Trabajador" : "Actualizar Trabajador",
                     style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.w500),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white),
                   ),
                 ),
               ),
@@ -131,38 +152,65 @@ class _TrabajadoresPageState extends State<TrabajadoresPage> {
 
   @override
   Widget build(BuildContext context) {
+    final trabajadoresProvider = Provider.of<TrabajadoresProvider>(context);
+    final trabajadores = trabajadoresProvider.trabajadores;
+
     return Scaffold(
       appBar: AppBar(
-          title: const Text("Trabajadores"),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          titleTextStyle: const TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-          centerTitle: true,
-          iconTheme: const IconThemeData(color: Colors.white)),
-      body: _isLoading
+        title: const Text("Trabajadores"),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+        ),
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      // TODO: Mostrar indicador de carga mientras se cargan los trabajadores
+      body: trabajadoresProvider.isLoading
           ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: trabajadores.length,
-              itemBuilder: (context, index) {
-                final id = trabajadores.keys.elementAt(index);
-                return Card(
-                    margin: const EdgeInsets.all(15),
-                    child: ListTile(
-                      title: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: Text(
-                          id,
-                          style: const TextStyle(fontSize: 20),
+          : trabajadores.isEmpty
+              ? const Center(child: Text('No hay trabajadores disponibles'))
+              : ListView.builder(
+                  itemCount: trabajadores.values.expand((list) => list).length,
+                  itemBuilder: (context, index) {
+                    final trabajador = trabajadores.values
+                        .expand((list) => list)
+                        .elementAt(index);
+                    return Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      color: Theme.of(context).colorScheme.primary,
+                      margin: const EdgeInsets.all(10),
+                      child: ListTile(
+                        title: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: Text(
+                            trabajador.nombre,
+                            style: TextStyle(fontSize: 20, color: Colors.white),
+                          ),
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              color: Colors.white,
+                              onPressed: () => _showBottomSheet(trabajador.id),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              color: Colors.white,
+                              onPressed: () =>
+                                  _deleteTrabajador(trabajador.nombre),
+                            ),
+                          ],
                         ),
                       ),
-                      // TODO: Agregar funcionalidad de actualización y eliminación al tocar el elemento de la lista
-                      onTap: () => _showBottomSheet(id),
-                      onLongPress: () => _deleteTrabajador(id),
-                    ));
-              },
-            ),
+                    );
+                  },
+                ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showBottomSheet(null),
         child: const Icon(Icons.add),
