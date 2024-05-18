@@ -1,3 +1,6 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'dart:ffi';
 import 'dart:io';
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
@@ -130,37 +133,62 @@ class MyHomePage extends StatelessWidget {
             );
           }),
         ),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
+          drawer: Drawer(
+            backgroundColor: Color.fromARGB(255, 255, 255, 255),
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                UserAccountsDrawerHeader(
+                  accountName: Text(
+                      '¡Bienvenido, Admin!👋',
+                      style: TextStyle(
+                      fontSize: 22.0,
+                      color: Color.fromARGB(255, 255, 255, 255), 
+                      fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  accountEmail: null,
+                  currentAccountPicture: CircleAvatar(
+                    backgroundColor: Color.fromARGB(255, 230, 230, 230),
+                    child: ClipOval(
+                      child: Image.asset('assets/logo.png',fit: BoxFit.cover),
+                      )
+                  )
+                  ,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/fondo2.jpg'),
+                        fit: BoxFit.cover,
+                      )
+                    ),
                 ),
-                child: const Center(
-                  child:
-                      Text('Menú Principal', style: TextStyle(fontSize: 26.0)),
+                ListTile(
+                  leading: Icon(Icons.person_2_sharp),
+                  title: Text('Crear Trabajador'),
+                  onTap: () => {print("si")},
                 ),
-              ),
-              ListTile(
-                title: const Text('Registrar trabajador',
-                    style: TextStyle(fontSize: 20.0)),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: const Text('Registrar recogida',
-                    style: TextStyle(fontSize: 20.0)),
-                onTap: () {
-                  navegarSiCosechaIniciada(context,
-                      'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde');
-                },
-              ),
-            ],
+                Divider(
+                  color: Colors.grey.withOpacity(0.5), thickness: 1,
+                ),
+                ListTile(
+                  leading: Icon(Icons.app_registration_rounded),
+                  title: Text('Registrar Recogida',),
+                  onTap: () => {navegarSiCosechaIniciada(context,'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde')},
+                ),
+                Divider(
+                  color: Colors.grey.withOpacity(0.5), thickness: 1,
+                ),
+                ListTile(
+                  leading: Icon(Icons.money_rounded),
+                  title: Text('Registrar Gastos',),
+                  onTap: () => {print("si")},
+                ),
+                Divider(
+                  color: Colors.grey.withOpacity(0.5), thickness: 1,
+                ),
+              ],
+            ),
           ),
-        ),
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
