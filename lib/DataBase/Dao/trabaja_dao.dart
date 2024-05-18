@@ -13,6 +13,7 @@ class TrabajaDao {
     return data.map((e) => TrabajaModel.fromJson(e)).toList();
   }
 
+
   Future<int> insert(TrabajaModel trabaja) async {
     return await database.insert('trabaja', trabaja.toJson());
   }

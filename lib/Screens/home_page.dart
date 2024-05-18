@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
+import 'package:cafetero/Screens/trabajadores_page.dart';
 import 'package:cafetero/Screens/trabajo_recogida_page.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
 import 'package:cafetero/provider/recogida_provider.dart';
@@ -43,7 +44,6 @@ class MyHomePage extends StatelessWidget {
   }
 
   Future<void> iniciarCosecha(BuildContext context) async {
-    //Todo: preguntar si hay una cosecha abierta y así no funcione el botón
     List<Map<String, dynamic>> cosechaIniciada =
         await CosechaDao().cosechaIniciada();
 
@@ -77,6 +77,7 @@ class MyHomePage extends StatelessWidget {
           idCosecha: cosechaIniciada[0]['id_cosecha'],
           fechaInicio: DateTime.parse(cosechaIniciada[0]['fecha_inicio']),
         );
+        // Todo: falta poner los kilos de café de la cosecha
         await CosechaDao().update(cosecha);
       }
     } else {
@@ -109,7 +110,6 @@ class MyHomePage extends StatelessWidget {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const RecogidaPage()));
     } else {
-      // Opcional: Muestra un mensaje al usuario si no hay una cosecha iniciada
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(texto)),
@@ -124,6 +124,11 @@ class MyHomePage extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,
           title: const Text('Cafeteros de Colombia'),
+          titleTextStyle: const TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+          ),
+          iconTheme: IconThemeData(color: Colors.white),
           leading: Builder(builder: (BuildContext context) {
             return IconButton(
               icon: const Icon(Icons.menu),
@@ -133,66 +138,55 @@ class MyHomePage extends StatelessWidget {
             );
           }),
         ),
-          drawer: Drawer(
-            backgroundColor: Color.fromARGB(255, 255, 255, 255),
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                UserAccountsDrawerHeader(
-                  accountName: Text(
-                      '¡Bienvenido, Admin!👋',
-                      style: TextStyle(
-                      fontSize: 22.0,
-                      color: Color.fromARGB(255, 255, 255, 255), 
-                      fontWeight: FontWeight.bold,
-                      ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  border: Border.all(color: Colors.white, width: 0),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.white,
+                      blurRadius: 0.0,
                     ),
-                  accountEmail: null,
-                  currentAccountPicture: CircleAvatar(
-                    backgroundColor: Color.fromARGB(255, 230, 230, 230),
-                    child: ClipOval(
-                      child: Image.asset('assets/logo.png',fit: BoxFit.cover),
-                      )
-                  )
-                  ,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/fondo2.jpg'),
-                        fit: BoxFit.cover,
-                      )
-                    ),
+                  ],
                 ),
-                ListTile(
-                  leading: Icon(Icons.person_2_sharp),
-                  title: Text('Crear Trabajador'),
-                  onTap: () => {print("si")},
+                child: const Center(
+                  child: Text('Menú Principal',
+                      style: TextStyle(fontSize: 26.0, color: Colors.white)),
                 ),
-                Divider(
-                  color: Colors.grey.withOpacity(0.5), thickness: 1,
-                ),
-                ListTile(
-                  leading: Icon(Icons.app_registration_rounded),
-                  title: Text('Registrar Recogida',),
-                  onTap: () => {navegarSiCosechaIniciada(context,'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde')},
-                ),
-                Divider(
-                  color: Colors.grey.withOpacity(0.5), thickness: 1,
-                ),
-                ListTile(
-                  leading: Icon(Icons.money_rounded),
-                  title: Text('Registrar Gastos',),
-                  onTap: () => {print("si")},
-                ),
-                Divider(
-                  color: Colors.grey.withOpacity(0.5), thickness: 1,
-                ),
-              ],
-            ),
+              ),
+              ListTile(
+                title: Text('Trabajadores',
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Theme.of(context).colorScheme.secondary)),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const TrabajadoresPage()));
+                },
+              ),
+              ListTile(
+                title: Text('Registrar recogida',
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Theme.of(context).colorScheme.secondary)),
+                onTap: () {
+                  navegarSiCosechaIniciada(context,
+                      'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde');
+                },
+              ),
+            ],
           ),
+        ),
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/imagen_cafe2.png'),
+              image: AssetImage('assets/fondo_cafetero.jpg'),
               fit: BoxFit.cover,
             ),
           ),
