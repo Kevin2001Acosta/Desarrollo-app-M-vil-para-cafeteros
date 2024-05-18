@@ -2,6 +2,7 @@ import 'package:cafetero/DataBase/data_base_helper.dart';
 import 'package:cafetero/Screens/home_page.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
 import 'package:cafetero/provider/recogida_provider.dart';
+import 'package:cafetero/provider/semana_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 //import 'package:cafetero/Screens/trabajo_recogida_page.dart';
@@ -13,6 +14,8 @@ void main() async {
     providers: [
       ChangeNotifierProvider(create: (context) => RecogidaProvider()),
       ChangeNotifierProvider(create: (context) => CosechaProvider()),
+      ChangeNotifierProvider(create: (context) => SemanaProvider()),
+      
     ],
     child: const MyApp(),
   ));

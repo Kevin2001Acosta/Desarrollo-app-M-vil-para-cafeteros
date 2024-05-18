@@ -4,6 +4,7 @@ import 'package:cafetero/DataBase/Dao/trabajador_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
 import 'package:cafetero/Models/trabajador_model.dart';
 import 'package:cafetero/Screens/trabajo_recogida_page.dart';
+import 'package:cafetero/Screens/jornal_page.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
 import 'package:cafetero/provider/recogida_provider.dart';
 //import 'package:cafetero/provider/recogida_provider.dart';
@@ -65,8 +66,8 @@ class MyHomePage extends StatelessWidget {
 
   Future<void> finalizarCosecha(
       BuildContext context, bool recogidaIniciada) async { 
-        final trabajador = TrabajadorModel(nombre : "Andrea");
-        await TrabajadorDao().insert(trabajador);
+       // final trabajador = TrabajadorModel(nombre : "Sergio");
+       // await TrabajadorDao().insert(trabajador);
     peticion();
     if (!recogidaIniciada) {
       List<Map<String, dynamic>> cosechaIniciada =
@@ -159,6 +160,14 @@ class MyHomePage extends StatelessWidget {
                 onTap: () {
                   navegarSiCosechaIniciada(context,
                       'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde');
+                },
+              ),
+              ListTile(
+                title: const Text('Jornal',
+                    style: TextStyle(fontSize: 20.0)),
+                onTap: () {
+                  Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const JornalPage()));
                 },
               ),
             ],
