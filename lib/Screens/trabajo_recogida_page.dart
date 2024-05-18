@@ -1,9 +1,7 @@
 import 'package:cafetero/DataBase/Dao/recogida_dao.dart';
 import 'package:cafetero/DataBase/Dao/trabaja_dao.dart';
-import 'package:cafetero/DataBase/Dao/trabajador_dao.dart';
 import 'package:cafetero/Models/recogida_model.dart';
 import 'package:cafetero/Models/trabaja_model.dart';
-import 'package:cafetero/Models/trabajador_model.dart';
 import 'package:cafetero/Screens/home_page.dart';
 import 'package:cafetero/Widgets/recogida_dia_trabajo.dart';
 import 'package:cafetero/Widgets/recogida_kilos_trabajo.dart';
@@ -135,7 +133,7 @@ class _RecogidaPageState extends State<RecogidaPage> {
       idCosecha: recogida[0].idCosecha,
       jornal: recogida[0].jornal,
       precioKilo: recogida[0].precioKilo,
-      // Todo: Falta calcular y enviar los kilos totales recogidos
+      // TODO: Falta calcular y enviar los kilos totales recogidos
     );
     if (recogida.isNotEmpty && recogida.length == 1) {
       if (!context.mounted) return;
@@ -218,7 +216,9 @@ class _RecogidaPageState extends State<RecogidaPage> {
         ),
         floatingActionButton: FloatingActionButton.extended(
           backgroundColor: Theme.of(context).colorScheme.surface,
-          onPressed: null,
+          onPressed: () {
+            // TODO: llevar a la pagina de ver recogidas de la cosecha actual.
+          },
           label: Text('Ver recogidas',
               style: TextStyle(
                   fontSize: 16,

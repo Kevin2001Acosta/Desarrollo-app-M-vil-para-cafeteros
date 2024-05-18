@@ -169,7 +169,7 @@ class MyHomePage extends StatelessWidget {
                 },
               ),
               ListTile(
-                title: Text('Registrar recogida',
+                title: Text('Recogidas',
                     style: TextStyle(
                         fontSize: 20.0,
                         color: Theme.of(context).colorScheme.secondary)),
@@ -179,7 +179,10 @@ class MyHomePage extends StatelessWidget {
                 },
               ),
               ListTile(
-                title: const Text('Gastos', style: TextStyle(fontSize: 20.0)),
+                title: Text('Gastos',
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Theme.of(context).colorScheme.secondary)),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return const GastosPage();
