@@ -62,71 +62,85 @@ class RecogidaKilosTrabajoWState extends State<RecogidaKilosTrabajoW> {
         builder: (BuildContext context, BoxConstraints constraints) {
       return Column(
         children: [
-          Row(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Flexible(
-                flex: 1,
-                child: SizedBox(
-                  width: 150,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Trabajador:',
-                      style: TextStyle(fontSize: 20),
+              const Text('Elige el trabajador'),
+              CustomDropdown(
+                  items: trabajadores,
+                  selectedItem: trabajadorSeleccionado,
+                  onChanged: (TrabajadorModel? trabajador) {
+                    setState(() {
+                      trabajadorSeleccionado = trabajador;
+                    });
+                  },
+                  controller: dropController),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Ingrese la cantidad en kg'),
+              SizedBox(
+                width: 230,
+                child: TextField(
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  controller: kilosCafeController,
+                  onChanged: (value) {
+                    setState(() {
+                      kilosCafe = int.tryParse(value) ?? 0;
+                    });
+                  },
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Kilos',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                 ),
               ),
-              Flexible(
-                  flex: 1,
-                  child: SizedBox(
-                    width: 180,
-                    child: CustomDropdown(
-                      items: trabajadores,
-                      selectedItem: trabajadorSeleccionado,
-                      onChanged: (TrabajadorModel? trabajador) {
-                        setState(() {
-                          trabajadorSeleccionado = trabajador;
-                        });
-                      },
-                      controller: dropController,
-                    ),
-                  )),
             ],
           ),
-          Row(
+          const SizedBox(height: 20),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(width: 3),
-              const Flexible(
-                  flex: 1,
-                  child: SizedBox(
-                      width: 150,
-                      child: Align(
-                          alignment: Alignment.center,
-                          child: Text('Kgs de café: ',
-                              style: TextStyle(fontSize: 20))))),
-              Flexible(
-                flex: 1,
-                child: SizedBox(
-                  width: 180,
-                  child: TextField(
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    controller: kilosCafeController,
-                    onChanged: (value) {
+              const Text('Selecciona la fecha'),
+              Container(
+                width: 230,
+                height: 65,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: TextButton(
+                  onPressed: () async {
+                    final DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: selectedDate,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                    );
+
+                    if (pickedDate != null) {
                       setState(() {
-                        kilosCafe = int.tryParse(value) ?? 0;
+                        selectedDate = pickedDate;
                       });
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Ingresa los Kgs',
-                      labelStyle: TextStyle(
-                        color: kilosCafeController.text.isEmpty
-                            ? Theme.of(context).colorScheme.error
-                            : null,
-                      ),
+                    }
+                  },
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      DateFormat('yyyy-MM-dd').format(selectedDate),
+                      style: const TextStyle(fontSize: 15, color: Colors.black),
                     ),
                   ),
                 ),
@@ -136,31 +150,10 @@ class RecogidaKilosTrabajoWState extends State<RecogidaKilosTrabajoW> {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {
-              final DateTime? pickedDate = await showDatePicker(
-                context: context,
-                initialDate: selectedDate,
-                firstDate: DateTime(2000),
-                lastDate: DateTime(2100),
-              );
-
-              if (pickedDate != null) {
-                setState(() {
-                  selectedDate = pickedDate;
-                });
-              }
-            },
-            child: Text(
-              DateFormat('yyyy-MM-dd').format(selectedDate),
-              style:
-                  TextStyle(color: Theme.of(context).colorScheme.onSecondary),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () async {
               if (trabajadorSeleccionado != null && kilosCafe > 0) {
                 TrabajaModel trabajo = TrabajaModel(
                   idRecogida: widget.idRecogida,
-                  idTrabajador: trabajadorSeleccionado!.idTrabajador!,
+                  idTrabajador: trabajadorSeleccionado!.id!,
                   kilosTrabajador: kilosCafe,
                   pago: widget.precioKilo * kilosCafe,
                   fecha: selectedDate,
@@ -191,7 +184,10 @@ class RecogidaKilosTrabajoWState extends State<RecogidaKilosTrabajoW> {
                 );
               }
             },
-            child: const Text('Guardar'),
+            child: const Text(
+              'Guardar',
+              style: TextStyle(color: Colors.black),
+            ),
           ),
         ],
       );

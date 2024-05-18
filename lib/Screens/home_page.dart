@@ -3,6 +3,8 @@ import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
 import 'package:cafetero/DataBase/Dao/trabajador_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
 import 'package:cafetero/Models/trabajador_model.dart';
+import 'package:cafetero/Screens/gastos_page.dart';
+import 'package:cafetero/Screens/trabajadores_page.dart';
 import 'package:cafetero/Screens/trabajo_recogida_page.dart';
 import 'package:cafetero/Screens/jornal_page.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
@@ -125,6 +127,11 @@ class MyHomePage extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,
           title: const Text('Cafeteros de Colombia'),
+          titleTextStyle: const TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+          ),
+          iconTheme: IconThemeData(color: Colors.white),
           leading: Builder(builder: (BuildContext context) {
             return IconButton(
               icon: const Icon(Icons.menu),
@@ -141,42 +148,73 @@ class MyHomePage extends StatelessWidget {
               DrawerHeader(
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.primary,
+                  border: Border.all(color: Colors.white, width: 0),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.white,
+                      blurRadius: 0.0,
+                    ),
+                  ],
                 ),
                 child: const Center(
-                  child:
-                      Text('Menú Principal', style: TextStyle(fontSize: 26.0)),
+                  child: Text('Menú Principal',
+                      style: TextStyle(fontSize: 26.0, color: Colors.white)),
                 ),
               ),
               ListTile(
-                title: const Text('Registrar trabajador',
-                    style: TextStyle(fontSize: 20.0)),
+                title: Text('Trabajadores',
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Theme.of(context).colorScheme.secondary)),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const TrabajadoresPage()));
                 },
               ),
               ListTile(
-                title: const Text('Registrar recogida',
-                    style: TextStyle(fontSize: 20.0)),
+                title: Text('Recogidas',
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Theme.of(context).colorScheme.secondary)),
                 onTap: () {
                   navegarSiCosechaIniciada(context,
                       'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde');
                 },
               ),
-              ListTile(
-                title: const Text('Jornal',
-                    style: TextStyle(fontSize: 20.0)),
+                ListTile(
+                title: Text('Jornal',
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Theme.of(context).colorScheme.secondary)),
                 onTap: () {
-                  Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const JornalPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const JornalPage()));
                 },
               ),
+                ListTile(
+                title: Text('Gastos',
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Theme.of(context).colorScheme.secondary)),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const GastosPage()));
+                },
+              ),
+             
             ],
           ),
         ),
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/imagen_cafe2.png'),
+              image: AssetImage('assets/fondo_cafetero.jpg'),
               fit: BoxFit.cover,
             ),
           ),

@@ -1,20 +1,21 @@
 class TrabajadorModel {
-  int? idTrabajador;
-  String nombre;
+  int? id; // TODO: Representa el identificador único del trabajador
+  String nombre; // TODO: Representa el nombre del trabajador
 
-  TrabajadorModel({this.idTrabajador, required this.nombre});
+  TrabajadorModel({this.id, required this.nombre});
 
   factory TrabajadorModel.fromJson(Map<String, dynamic> json) {
+    // TODO: Crea una instancia de TrabajadorModel a partir de un mapa JSON
     return TrabajadorModel(
-      idTrabajador: json['id_trabajador'],
-      nombre: json['nombre'],
+      id: json['id_trabajador'], // Consideramos que el campo en el JSON se llama 'id_trabajador'
+      nombre: json['nombre'], // Obtenemos el nombre del trabajador del JSON
     );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id_trabajador'] = idTrabajador;
-    data['nombre'] = nombre;
+    data['id_trabajador'] = id; // TODO: Asigna el id del trabajador al mapa JSON
+    data['nombre'] = nombre; // Asigna el nombre del trabajador al mapa JSON
     return data;
   }
 }

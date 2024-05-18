@@ -12,8 +12,6 @@ import 'package:intl/intl.dart';
 import 'package:cafetero/DataBase/Dao/jornal_dao.dart';
 
 
-
-
 class JornalPage extends StatefulWidget {
   const JornalPage({Key? key}) : super(key: key);
 
@@ -68,7 +66,6 @@ class _JornalPageState extends State<JornalPage> {
     List<TrabajadorModel> trabajadoresDB = await TrabajadorDao().readAll();
     setState(() {
       trabajadores = trabajadoresDB;
-      trabajadoresMap = {for (var t in trabajadoresDB) t.idTrabajador!: t};
       if (trabajadores.isNotEmpty) {
         trabajadorSeleccionado = null;
       }
@@ -81,7 +78,7 @@ class _JornalPageState extends State<JornalPage> {
       final int? idSemana = semanaActual[0].idSemana;
       if (idSemana != null) {
         final JornalModel jornal = JornalModel(
-          idTrabajador: trabajadorSeleccionado!.idTrabajador ?? 0,
+          idTrabajador: trabajadorSeleccionado!.id ?? 0,
           idSemana: idSemana,
           descripcion: descripcion,
           pagoTrabajador: pago,
