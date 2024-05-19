@@ -36,7 +36,8 @@ class DatabaseHelper {
     'Servicios',
     'Beneficio',
     'Recolecta de café',
-    'Impuestos')),
+    'Impuestos',
+    'Compra de materiales')),
     valor INTEGER,
     fecha DATE
     );

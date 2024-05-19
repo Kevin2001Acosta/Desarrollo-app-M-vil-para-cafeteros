@@ -21,13 +21,11 @@ class CustomDropdown extends StatelessWidget {
     return DropdownButtonHideUnderline(
       child: Container(
         decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: Theme.of(context).colorScheme.onBackground,
-              width: 1.0,
-            ),
-          ),
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(10),
         ),
+        width: 230,
+        height: 65,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: DropdownButton2<TrabajadorModel>(
@@ -92,7 +90,9 @@ class CustomDropdown extends StatelessWidget {
                 ),
                 searchMatchFn: (item, searchValue) {
                   return item.value != null &&
-                      item.value!.nombre.toLowerCase().contains(searchValue);
+                      item.value!.nombre
+                          .toLowerCase()
+                          .contains(searchValue.toLowerCase());
                 }),
             onMenuStateChange: (isOpen) {
               if (!isOpen) {

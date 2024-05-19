@@ -1,6 +1,7 @@
 // dialogo_recogida.dart
 import 'package:flutter/material.dart';
 import 'package:cafetero/Screens/trabajo_recogida_page.dart';
+import 'package:flutter/services.dart';
 
 Future<Map<String, dynamic>?> mostrarDialogoRecogida(
     BuildContext context, Recogida tipo) {
@@ -17,6 +18,9 @@ Future<Map<String, dynamic>?> mostrarDialogoRecogida(
             children: <Widget>[
               if (tipo == Recogida.kiliado)
                 TextField(
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
                   controller: precioKiloController,
                   decoration: const InputDecoration(
                     labelText: 'Precio por kilo',
@@ -42,10 +46,21 @@ Future<Map<String, dynamic>?> mostrarDialogoRecogida(
           TextButton(
             child: const Text('Iniciar'),
             onPressed: () {
-              // Aquí puedes recoger las respuestas y los precios y devolverlos
-              Navigator.of(context).pop({
-                'precioKilo': precioKiloController.text,
-              });
+              var precio = int.tryParse(precioKiloController.text);
+              if (precio != null && precio > 0) {
+                Navigator.of(context).pop({
+                  'precioKilo': precioKiloController.text,
+                });
+              } else {
+                Navigator.of(context).pop(); // Cierra el AlertDialog
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    backgroundColor: Colors.white60,
+                    content: Text('Por favor, ingresa un precio válido.',
+                        style: TextStyle(color: Colors.red)),
+                  ),
+                );
+              }
             },
           ),
         ],

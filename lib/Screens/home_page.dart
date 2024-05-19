@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
+import 'package:cafetero/Screens/gastos_page.dart';
 import 'package:cafetero/Screens/trabajadores_page.dart';
 import 'package:cafetero/Screens/trabajo_recogida_page.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
@@ -141,15 +142,15 @@ class MyHomePage extends StatelessWidget {
           }),
         ),
         drawer: Drawer(
-            backgroundColor: Color(0xFFF5F9F3),
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                UserAccountsDrawerHeader(
-                  accountName: Container(
-                    width: 217,
-                    padding: EdgeInsets.all(6),
-                    decoration: BoxDecoration(
+          backgroundColor: Color(0xFFF5F9F3),
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              UserAccountsDrawerHeader(
+                accountName: Container(
+                  width: 217,
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.8), // Color de fondo
                     borderRadius: BorderRadius.circular(15), // Ajusta el radio según tus preferencias
                   ),
@@ -162,52 +163,64 @@ class MyHomePage extends StatelessWidget {
                     ),
                   ),
                 ),  
-                  accountEmail: null,
-                  currentAccountPicture: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Color.fromARGB(255, 31, 31, 31), width: 1.5),
-                    ),
-                    child: CircleAvatar(
-                      backgroundColor:  Color(0xFFF5F9F3),
-                      radius: 30,
-                      backgroundImage: AssetImage('assets/logo.png'), // Cambia la imagen según tus necesidades
-                    ),
+                accountEmail: null,
+                currentAccountPicture: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Color.fromARGB(255, 31, 31, 31), width: 1.5),
                   ),
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/fondo2.png'),
-                        fit: BoxFit.cover,
-                      )
-                    ),
+                  child: CircleAvatar(
+                    backgroundColor:  Color(0xFFF5F9F3),
+                    radius: 30,
+                    backgroundImage: AssetImage('assets/logo.png'), // Cambia la imagen según tus necesidades
+                  ),
                 ),
-                ListTile(
-                  leading: Icon(Icons.person_2_sharp),
-                  title: Text('Crear Trabajador'),
-                  onTap: () => {print("si")},
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/fondo2.png'),
+                    fit: BoxFit.cover,
+                  )
                 ),
-                Divider(
-                  color: Colors.grey.withOpacity(0.5), thickness: 1,
-                ),
-                ListTile(
-                  leading: Icon(Icons.app_registration_rounded),
-                  title: Text('Registrar Recogida',),
-                  onTap: () => {navegarSiCosechaIniciada(context,'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde')},
-                ),
-                Divider(
-                  color: Colors.grey.withOpacity(0.5), thickness: 1,
-                ),
-                ListTile(
-                  leading: Icon(Icons.money_rounded),
-                  title: Text('Registrar Gastos',),
-                  onTap: () => {print("si")},
-                ),
-                Divider(
-                  color: Colors.grey.withOpacity(0.5), thickness: 1,
-                ),
-              ],
-            ),
+              ),
+              ListTile(
+                leading: Icon(Icons.person_2_sharp, size: 25),
+                title: Text('Crear Trabajador',style: TextStyle(fontSize: 18.0,)),
+                onTap: () => {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TrabajadoresPage()))
+                },
+              ),
+              Divider(
+                color: Colors.grey.withOpacity(0.5), thickness: 1,
+              ),
+              ListTile(
+                leading: Icon(Icons.app_registration_rounded, size: 25),
+                title: Text('Registrar Recogida',style: TextStyle(fontSize: 18.0)),
+                onTap: () => 
+                {navegarSiCosechaIniciada(context,'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde')},
+              ),
+              Divider(
+                color: Colors.grey.withOpacity(0.5), thickness: 1,
+              ),
+              ListTile(
+                leading: Icon(Icons.money_rounded, size: 25,),
+                title: Text('Registrar Gastos',style: TextStyle(fontSize: 18.0)),
+                onTap: () =>  {
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return const GastosPage();
+                    })
+                  )
+                },
+              ),
+              Divider(
+                color: Colors.grey.withOpacity(0.5), thickness: 1,
+              ),
+            ],
           ),
+        ),
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(

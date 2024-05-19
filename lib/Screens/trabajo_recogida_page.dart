@@ -3,7 +3,6 @@ import 'package:cafetero/DataBase/Dao/trabaja_dao.dart';
 import 'package:cafetero/Models/recogida_model.dart';
 import 'package:cafetero/Models/trabaja_model.dart';
 import 'package:cafetero/Screens/home_page.dart';
-import 'package:cafetero/Widgets/lista_trabajos_recogida.dart';
 import 'package:cafetero/Widgets/recogida_dia_trabajo.dart';
 import 'package:cafetero/Widgets/recogida_kilos_trabajo.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
@@ -134,7 +133,7 @@ class _RecogidaPageState extends State<RecogidaPage> {
       idCosecha: recogida[0].idCosecha,
       jornal: recogida[0].jornal,
       precioKilo: recogida[0].precioKilo,
-      // Todo: Falta calcular y enviar los kilos totales recogidos
+      // TODO: Falta calcular y enviar los kilos totales recogidos
     );
     if (recogida.isNotEmpty && recogida.length == 1) {
       if (!context.mounted) return;
@@ -176,43 +175,57 @@ class _RecogidaPageState extends State<RecogidaPage> {
             'Recogida de café',
           ),
         ),
-        body: Center(
-          child: Column(
-            children: <Widget>[
-              Visibility(
-                visible: recogidaIniciada,
-                child: ElevatedButton(
-                  onPressed: finalizarRecogida,
-                  child: Text('Finalizar Recogida',
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Theme.of(context).colorScheme.onSecondary)),
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                const SizedBox(height: 20.0),
+                Visibility(
+                  visible: recogidaIniciada,
+                  child: ElevatedButton(
+                    onPressed: finalizarRecogida,
+                    child: Text('Finalizar Recogida',
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Theme.of(context).colorScheme.onSecondary)),
+                  ),
                 ),
-              ),
-              Visibility(
-                visible: !recogidaIniciada,
-                child: ElevatedButton(
-                  onPressed: iniciarRecogida,
-                  child: Text('Iniciar Recogida',
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Theme.of(context).colorScheme.onSecondary)),
+                Visibility(
+                  visible: !recogidaIniciada,
+                  child: ElevatedButton(
+                    onPressed: iniciarRecogida,
+                    child: Text('Iniciar Recogida',
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Theme.of(context).colorScheme.onSecondary)),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20.0),
-              if (jornal == 0)
-                RecogidaKilosTrabajoW(
-                    idRecogida: infoRecogida!.idRecogida as int,
-                    precioKilo: infoRecogida.precioKilo as int,
-                    onTrabajoGuardado: cargarTrabajos),
-              if (jornal == 1)
-                RecogidaDiaTrabajoW(
-                    idRecogida: infoRecogida!.idRecogida as int,
-                    onTrabajoGuardado: cargarTrabajos),
-              Expanded(
-                child: GroupListViewWidget(trabajos: trabajos),
-              ),
-            ],
+                const SizedBox(height: 20.0),
+                if (jornal == 0)
+                  RecogidaKilosTrabajoW(
+                      idRecogida: infoRecogida!.idRecogida as int,
+                      precioKilo: infoRecogida.precioKilo as int,
+                      onTrabajoGuardado: cargarTrabajos),
+                if (jornal == 1)
+                  RecogidaDiaTrabajoW(
+                      idRecogida: infoRecogida!.idRecogida as int,
+                      onTrabajoGuardado: cargarTrabajos),
+              ],
+            ),
+          ),
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          onPressed: () {
+            // TODO: llevar a la pagina de ver recogidas de la cosecha actual.
+          },
+          label: Text('Ver recogidas',
+              style: TextStyle(
+                  fontSize: 16,
+                  color: Theme.of(context).colorScheme.onBackground)),
+          icon: const Icon(
+            Icons.history_sharp,
+            color: Colors.black,
           ),
         ),
       ),
