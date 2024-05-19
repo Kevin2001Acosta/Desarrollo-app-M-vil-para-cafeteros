@@ -14,6 +14,8 @@ import 'package:provider/provider.dart';
 //import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
+import 'package:rounded_background_text/rounded_background_text.dart';
+
 // url de pdf info café: https://federaciondecafeteros.org/app/uploads/2019/10/precio_cafe.pdf
 
 class MyHomePage extends StatelessWidget {
@@ -139,50 +141,73 @@ class MyHomePage extends StatelessWidget {
           }),
         ),
         drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  border: Border.all(color: Colors.white, width: 0),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.white,
-                      blurRadius: 0.0,
+            backgroundColor: Color(0xFFF5F9F3),
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                UserAccountsDrawerHeader(
+                  accountName: Container(
+                    width: 217,
+                    padding: EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.8), // Color de fondo
+                    borderRadius: BorderRadius.circular(15), // Ajusta el radio según tus preferencias
+                  ),
+                  child: Text(
+                    '¡Bienvenido, Admin!👋',
+                    style: TextStyle(
+                      fontSize: 19.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
+                  ),
+                ),  
+                  accountEmail: null,
+                  currentAccountPicture: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Color.fromARGB(255, 31, 31, 31), width: 1.5),
+                    ),
+                    child: CircleAvatar(
+                      backgroundColor:  Color(0xFFF5F9F3),
+                      radius: 30,
+                      backgroundImage: AssetImage('assets/logo.png'), // Cambia la imagen según tus necesidades
+                    ),
+                  ),
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/fondo2.png'),
+                        fit: BoxFit.cover,
+                      )
+                    ),
                 ),
-                child: const Center(
-                  child: Text('Menú Principal',
-                      style: TextStyle(fontSize: 26.0, color: Colors.white)),
+                ListTile(
+                  leading: Icon(Icons.person_2_sharp),
+                  title: Text('Crear Trabajador'),
+                  onTap: () => {print("si")},
                 ),
-              ),
-              ListTile(
-                title: Text('Trabajadores',
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        color: Theme.of(context).colorScheme.secondary)),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const TrabajadoresPage()));
-                },
-              ),
-              ListTile(
-                title: Text('Registrar recogida',
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        color: Theme.of(context).colorScheme.secondary)),
-                onTap: () {
-                  navegarSiCosechaIniciada(context,
-                      'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde');
-                },
-              ),
-            ],
+                Divider(
+                  color: Colors.grey.withOpacity(0.5), thickness: 1,
+                ),
+                ListTile(
+                  leading: Icon(Icons.app_registration_rounded),
+                  title: Text('Registrar Recogida',),
+                  onTap: () => {navegarSiCosechaIniciada(context,'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde')},
+                ),
+                Divider(
+                  color: Colors.grey.withOpacity(0.5), thickness: 1,
+                ),
+                ListTile(
+                  leading: Icon(Icons.money_rounded),
+                  title: Text('Registrar Gastos',),
+                  onTap: () => {print("si")},
+                ),
+                Divider(
+                  color: Colors.grey.withOpacity(0.5), thickness: 1,
+                ),
+              ],
+            ),
           ),
-        ),
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
