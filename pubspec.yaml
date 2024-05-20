@@ -36,7 +36,7 @@ dependencies:
   path: any
   provider: ^6.1.2
   # para formatos de fechas y más
-  intl: ^0.17.0
+  intl: ^0.18.1
 
   group_list_view: ^1.1.1
 

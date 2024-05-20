@@ -13,7 +13,6 @@ class TrabajaDao {
     return data.map((e) => TrabajaModel.fromJson(e)).toList();
   }
 
-
   Future<int> insert(TrabajaModel trabaja) async {
     return await database.insert('trabaja', trabaja.toJson());
   }
@@ -37,5 +36,15 @@ class TrabajaDao {
     ORDER BY Trabaja.fecha DESC
   ''');
     return data.map((e) => TrabajaModel.fromJson(e)).toList();
+  }
+
+  Future<List<Map<String, dynamic>>> kilosRecogida(String id) async {
+    final data = await database.rawQuery('''
+    SELECT id_recogida, SUM(kilos_trabajador) AS kilos_totales
+    FROM Trabaja
+    GROUP BY id_recogida
+    HAVING id_recogida = ?
+  ''', [id]);
+    return data;
   }
 }

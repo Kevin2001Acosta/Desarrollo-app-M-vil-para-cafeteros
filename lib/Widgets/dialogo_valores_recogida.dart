@@ -22,8 +22,23 @@ Future<Map<String, dynamic>?> mostrarDialogoRecogida(
                     FilteringTextInputFormatter.digitsOnly
                   ],
                   controller: precioKiloController,
-                  decoration: const InputDecoration(
-                    labelText: 'Precio por kilo',
+                  decoration: InputDecoration(
+                    //labelText: 'Precio por kilo',
+                    label: const Text('Precio por kilo',
+                        style: TextStyle(color: Color(0xFF356724))),
+                    //labelStyle: const TextStyle(color: Colors.green),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Color(0xFF356724)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Color(0xFF356724)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Color(0xFF356724)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
@@ -38,13 +53,17 @@ Future<Map<String, dynamic>?> mostrarDialogoRecogida(
         ),
         actions: <Widget>[
           TextButton(
-            child: const Text('Cancelar'),
+            child: Text('Cancelar',
+                style: TextStyle(color: Theme.of(context).colorScheme.surface)),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           TextButton(
-            child: const Text('Iniciar'),
+            child: Text(
+              'Iniciar',
+              style: TextStyle(color: Theme.of(context).colorScheme.surface),
+            ),
             onPressed: () {
               var precio = int.tryParse(precioKiloController.text);
               if (precio != null && precio > 0) {
@@ -55,7 +74,7 @@ Future<Map<String, dynamic>?> mostrarDialogoRecogida(
                 Navigator.of(context).pop(); // Cierra el AlertDialog
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    backgroundColor: Colors.white60,
+                    backgroundColor: Colors.white,
                     content: Text('Por favor, ingresa un precio válido.',
                         style: TextStyle(color: Colors.red)),
                   ),

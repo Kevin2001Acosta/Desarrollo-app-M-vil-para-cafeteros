@@ -56,8 +56,18 @@ class MyHomePage extends StatelessWidget {
     } else {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Ya hay una cosecha iniciada'),
+        SnackBar(
+          content: Center(
+            child: Text(
+              'Ya hay una cosecha iniciada',
+              style: TextStyle(color: Theme.of(context).colorScheme.surface),
+            ),
+          ),
+          elevation: 5.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.onError,
         ),
       );
     }
@@ -76,12 +86,66 @@ class MyHomePage extends StatelessWidget {
           fechaInicio: DateTime.parse(cosechaIniciada[0]['fecha_inicio']),
         );
         // Todo: falta poner los kilos de café de la cosecha
-        await CosechaDao().update(cosecha);
+        try {
+          await CosechaDao().update(cosecha);
+          if (!context.mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Center(
+                child: Text(
+                  'Finalización exitosa',
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.surface),
+                ),
+              ),
+              elevation: 5.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.onError,
+            ),
+          );
+        } catch (e) {
+          if (!context.mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Center(
+                child: Text(
+                  'Error al finalizar, intentelo nuevamente',
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
+              ),
+              elevation: 5.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.onError,
+            ),
+          );
+        }
+      } else {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Center(
+              child: Text(
+                'No hay cosecha iniciada para finalizar',
+                style: TextStyle(color: Theme.of(context).colorScheme.surface),
+              ),
+            ),
+            elevation: 5.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            backgroundColor: Theme.of(context).colorScheme.onError,
+          ),
+        );
       }
     } else {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          backgroundColor: Colors.white,
           content: const Center(
             child: Text(
               'Hay una recogida iniciada, Finalicela antes de cerrar la cosecha',
@@ -120,13 +184,11 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primary,
           title: const Text('Cafeteros de Colombia'),
           titleTextStyle: const TextStyle(
-            color: Colors.white,
             fontSize: 20,
           ),
-          iconTheme: IconThemeData(color: Colors.white),
+          iconTheme: const IconThemeData(color: Colors.white),
           leading: Builder(builder: (BuildContext context) {
             return IconButton(
               icon: const Icon(Icons.menu),
@@ -137,19 +199,19 @@ class MyHomePage extends StatelessWidget {
           }),
         ),
         drawer: Drawer(
+          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
               DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  border: Border.all(color: Colors.white, width: 0),
-                  boxShadow: const [
+                  border: Border.all(width: 0),
+/*                   boxShadow: const [
                     BoxShadow(
                       color: Colors.white,
                       blurRadius: 0.0,
                     ),
-                  ],
+                  ], */
                 ),
                 child: const Center(
                   child: Text('Menú Principal',
@@ -210,6 +272,7 @@ class MyHomePage extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 70.0),
             child: FloatingActionButton(
               heroTag: null,
+              backgroundColor: Theme.of(context).colorScheme.surface,
               onPressed: () => iniciarCosecha(context),
               tooltip: 'Empezar Cosecha',
               child: const Icon(Icons.agriculture_rounded),
@@ -218,11 +281,11 @@ class MyHomePage extends StatelessWidget {
           FloatingActionButton(
               heroTag: null,
               backgroundColor: Theme.of(context).colorScheme.secondary,
-              onPressed: () {
+              onPressed: () async {
                 final recogidaIniciada =
                     Provider.of<RecogidaProvider>(context, listen: false)
                         .recogidaIniciada;
-                finalizarCosecha(context, recogidaIniciada);
+                await finalizarCosecha(context, recogidaIniciada);
               },
               tooltip: 'Finalizar Cosecha',
               child: const Icon(Icons.agriculture_sharp)),
