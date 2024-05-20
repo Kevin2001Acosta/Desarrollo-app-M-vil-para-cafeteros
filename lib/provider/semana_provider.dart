@@ -4,9 +4,8 @@ import 'package:flutter/foundation.dart';
 
 class SemanaProvider with ChangeNotifier {
   bool _semanaIniciada =  false;
-
-
- bool get semanaIniciada => _semanaIniciada;
+  
+  bool get semanaIniciada => _semanaIniciada;
 
  SemanaProvider() {
   cargarEstadoSemana();

@@ -187,7 +187,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.17.0"
-<<<<<<< HEAD
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
+      sha256: "1ce844379ca14835a50d2f019a3099f419082cfdd231cd86a142af94dd5c6bb1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.9.0"
   leak_tracker:
     dependency: transitive
     description:
@@ -212,16 +219,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-=======
-  json_annotation:
-    dependency: transitive
-    description:
-      name: json_annotation
-      sha256: "1ce844379ca14835a50d2f019a3099f419082cfdd231cd86a142af94dd5c6bb1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.9.0"
->>>>>>> 38b1b1546d7b32d40ef297cd79a1b9a6827a5b33
   lints:
     dependency: transitive
     description:
@@ -269,10 +266,7 @@ packages:
       sha256: "087ce49c3f0dc39180befefc60fdb4acd8f8620e5682fe2476afd0b3688bb4af"
       url: "https://pub.dev"
     source: hosted
-<<<<<<< HEAD
     version: "1.9.0"
-=======
-    version: "1.8.3"
   petitparser:
     dependency: transitive
     description:
@@ -281,7 +275,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.2"
->>>>>>> 38b1b1546d7b32d40ef297cd79a1b9a6827a5b33
   provider:
     dependency: "direct main"
     description:
@@ -390,10 +383,7 @@ packages:
       sha256: b3d56ff4341b8f182b96aceb2fa20e3dcb336b9f867bc0eafc0de10f1048e957
       url: "https://pub.dev"
     source: hosted
-<<<<<<< HEAD
     version: "13.0.0"
-=======
-    version: "0.3.0"
   xml:
     dependency: transitive
     description:
@@ -410,7 +400,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
->>>>>>> 38b1b1546d7b32d40ef297cd79a1b9a6827a5b33
 sdks:
   dart: ">=3.2.6 <4.0.0"
   flutter: ">=3.7.0"

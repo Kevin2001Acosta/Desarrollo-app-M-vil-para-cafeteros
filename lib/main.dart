@@ -11,15 +11,19 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DatabaseHelper.instance.init();
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (context) => RecogidaProvider()),
-      ChangeNotifierProvider(create: (context) => CosechaProvider()),
-      ChangeNotifierProvider(create: (context) => TrabajadoresProvider()),
-      ChangeNotifierProvider(create: (context) => SemanaProvider()),
-    ]
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => RecogidaProvider()),
+        ChangeNotifierProvider(create: (context) => CosechaProvider()),
+        ChangeNotifierProvider(create: (context) => TrabajadoresProvider()),
+        ChangeNotifierProvider(create: (context) => SemanaProvider()),
+      ],
+      child: MyApp(), // Asegúrate de definir y usar tu widget principal aquí
+    ),
+  );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
