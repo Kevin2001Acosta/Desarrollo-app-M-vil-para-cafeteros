@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:io';
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
@@ -12,6 +14,8 @@ import 'package:provider/provider.dart';
 //import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
+import 'package:rounded_background_text/rounded_background_text.dart';
+
 // url de pdf info café: https://federaciondecafeteros.org/app/uploads/2019/10/precio_cafe.pdf
 
 class MyHomePage extends StatelessWidget {
@@ -199,57 +203,94 @@ class MyHomePage extends StatelessWidget {
           }),
         ),
         drawer: Drawer(
-          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+          backgroundColor: Color(0xFFF5F9F3),
           child: ListView(
             padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  border: Border.all(width: 0),
-/*                   boxShadow: const [
-                    BoxShadow(
-                      color: Colors.white,
-                      blurRadius: 0.0,
+            children: [
+              UserAccountsDrawerHeader(
+                accountName: Container(
+                  width: 217,
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.8), // Color de fondo
+                    borderRadius: BorderRadius.circular(
+                        15), // Ajusta el radio según tus preferencias
+                  ),
+                  child: Text(
+                    '¡Bienvenido, Admin!👋',
+                    style: TextStyle(
+                      fontSize: 19.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ], */
+                  ),
                 ),
-                child: const Center(
-                  child: Text('Menú Principal',
-                      style: TextStyle(fontSize: 26.0, color: Colors.white)),
+                accountEmail: null,
+                currentAccountPicture: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                        color: Color.fromARGB(255, 31, 31, 31), width: 1.5),
+                  ),
+                  child: CircleAvatar(
+                    backgroundColor: Color(0xFFF5F9F3),
+                    radius: 30,
+                    backgroundImage: AssetImage(
+                        'assets/logo.png'), // Cambia la imagen según tus necesidades
+                  ),
                 ),
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                  image: AssetImage('assets/fondo2.png'),
+                  fit: BoxFit.cover,
+                )),
               ),
               ListTile(
-                title: Text('Trabajadores',
+                leading: Icon(Icons.person_2_sharp, size: 25),
+                title: Text('Crear Trabajador',
                     style: TextStyle(
-                        fontSize: 20.0,
-                        color: Theme.of(context).colorScheme.secondary)),
-                onTap: () {
+                      fontSize: 18.0,
+                    )),
+                onTap: () => {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const TrabajadoresPage()));
+                          builder: (context) => const TrabajadoresPage()))
                 },
               ),
+              Divider(
+                color: Colors.grey.withOpacity(0.5),
+                thickness: 1,
+              ),
               ListTile(
-                title: Text('Recogidas',
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        color: Theme.of(context).colorScheme.secondary)),
-                onTap: () {
+                leading: Icon(Icons.app_registration_rounded, size: 25),
+                title: Text('Registrar Recogida',
+                    style: TextStyle(fontSize: 18.0)),
+                onTap: () => {
                   navegarSiCosechaIniciada(context,
-                      'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde');
+                      'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde')
                 },
               ),
+              Divider(
+                color: Colors.grey.withOpacity(0.5),
+                thickness: 1,
+              ),
               ListTile(
-                title: Text('Gastos',
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        color: Theme.of(context).colorScheme.secondary)),
-                onTap: () {
+                leading: Icon(
+                  Icons.money_rounded,
+                  size: 25,
+                ),
+                title:
+                    Text('Registrar Gastos', style: TextStyle(fontSize: 18.0)),
+                onTap: () => {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return const GastosPage();
-                  }));
+                  }))
                 },
+              ),
+              Divider(
+                color: Colors.grey.withOpacity(0.5),
+                thickness: 1,
               ),
             ],
           ),

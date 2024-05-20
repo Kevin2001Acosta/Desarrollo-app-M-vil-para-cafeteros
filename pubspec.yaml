@@ -30,6 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_emoji: ^2.0.0
+  rounded_background_text: 0.5.0
+
 
   # para manejar la base de datos
   sqflite: ^2.3.2
