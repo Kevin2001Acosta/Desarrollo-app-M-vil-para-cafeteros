@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 //import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
-import 'package:rounded_background_text/rounded_background_text.dart';
+import 'package:cafetero/Screens/vista_cosecha_page.dart';
 
 // url de pdf info café: https://federaciondecafeteros.org/app/uploads/2019/10/precio_cafe.pdf
 
@@ -211,6 +211,20 @@ class MyHomePage extends StatelessWidget {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
                       return const GastosPage();
+                    })
+                  )
+                },
+              ),
+              Divider(
+                color: Colors.grey.withOpacity(0.5), thickness: 1,
+              ),
+              ListTile(
+                leading: Icon(Icons.list_alt, size: 25,),
+                title: Text('Vista Cosecha',style: TextStyle(fontSize: 18.0)),
+                onTap: () => {
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return const PaginaCosechas();
                     })
                   )
                 },
