@@ -103,10 +103,8 @@ class _RecogidaPageState extends State<RecogidaPage> {
         // ? lo mismo que al dia pero kiliado
         break;
       case null:
-        // ! cancelar el dialogo y no hacer nada
         break;
     }
-    // ? como hago para que se cree la recogida como yo quiero.
 
     if (result != null) {
       // Aquí puedes iniciar la recogida con los datos recogidos
@@ -126,16 +124,20 @@ class _RecogidaPageState extends State<RecogidaPage> {
 
   void finalizarRecogida() async {
     final recogida = await RecogidaDao().recogidaIniciada();
-    final RecogidaModel recogidaFinal = RecogidaModel(
-      idRecogida: recogida[0].idRecogida as int,
-      fechaInicio: recogida[0].fechaInicio,
-      fechaFin: DateTime.now(),
-      idCosecha: recogida[0].idCosecha,
-      jornal: recogida[0].jornal,
-      precioKilo: recogida[0].precioKilo,
-      // TODO: Falta calcular y enviar los kilos totales recogidos
-    );
-    if (recogida.isNotEmpty && recogida.length == 1) {
+    final sumTrabajos =
+        await TrabajaDao().kilosRecogida(recogida[0].idRecogida.toString());
+    if (recogida.isNotEmpty && recogida.length == 1 && sumTrabajos.isNotEmpty) {
+      // Todo: si no hay trabajos en la recogida no finalizar recogida
+      // Todo: preguntar si desea eliminar la recogida ya que no hay registros
+      final RecogidaModel recogidaFinal = RecogidaModel(
+        idRecogida: recogida[0].idRecogida as int,
+        fechaInicio: recogida[0].fechaInicio,
+        fechaFin: DateTime.now(),
+        idCosecha: recogida[0].idCosecha,
+        jornal: recogida[0].jornal,
+        precioKilo: recogida[0].precioKilo,
+        kilosTotales: sumTrabajos[0]['kilos_totales'],
+      );
       if (!context.mounted) return;
       context.read<RecogidaProvider>().finalizarRecogida(recogidaFinal);
       context.read<RecogidaProvider>().cargarEstadoRecogida();
@@ -173,7 +175,9 @@ class _RecogidaPageState extends State<RecogidaPage> {
         appBar: AppBar(
           title: const Text(
             'Recogida de café',
+            style: TextStyle(color: Colors.white),
           ),
+          iconTheme: const IconThemeData(color: Colors.white),
         ),
         body: SingleChildScrollView(
           child: Center(
@@ -184,20 +188,16 @@ class _RecogidaPageState extends State<RecogidaPage> {
                   visible: recogidaIniciada,
                   child: ElevatedButton(
                     onPressed: finalizarRecogida,
-                    child: Text('Finalizar Recogida',
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Theme.of(context).colorScheme.onSecondary)),
+                    child: const Text('Finalizar Recogida',
+                        style: TextStyle(fontSize: 15)),
                   ),
                 ),
                 Visibility(
                   visible: !recogidaIniciada,
                   child: ElevatedButton(
                     onPressed: iniciarRecogida,
-                    child: Text('Iniciar Recogida',
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Theme.of(context).colorScheme.onSecondary)),
+                    child: const Text('Iniciar Recogida',
+                        style: TextStyle(fontSize: 15)),
                   ),
                 ),
                 const SizedBox(height: 20.0),
@@ -219,14 +219,8 @@ class _RecogidaPageState extends State<RecogidaPage> {
           onPressed: () {
             // TODO: llevar a la pagina de ver recogidas de la cosecha actual.
           },
-          label: Text('Ver recogidas',
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).colorScheme.onBackground)),
-          icon: const Icon(
-            Icons.history_sharp,
-            color: Colors.black,
-          ),
+          label: const Text('Ver recogidas', style: TextStyle(fontSize: 16)),
+          icon: const Icon(Icons.history_sharp),
         ),
       ),
     );

@@ -38,7 +38,7 @@ class CustomDropdown extends StatelessWidget {
                     trabajador.nombre,
                     style: TextStyle(
                         fontSize: 20,
-                        color: Theme.of(context).colorScheme.primary),
+                        color: Theme.of(context).colorScheme.surface),
                   ));
             }).toList(),
             onChanged: onChanged,
@@ -73,6 +73,13 @@ class CustomDropdown extends StatelessWidget {
                     maxLines: null,
                     controller: controller,
                     decoration: InputDecoration(
+                      focusColor: Colors.grey,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          color: Colors.grey,
+                        ),
+                      ),
                       isDense: true,
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 10,
@@ -83,7 +90,7 @@ class CustomDropdown extends StatelessWidget {
                         fontSize: 12,
                       ),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                   ),

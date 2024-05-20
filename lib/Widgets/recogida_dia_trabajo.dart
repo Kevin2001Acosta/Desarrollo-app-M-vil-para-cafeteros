@@ -82,8 +82,9 @@ class _RecogidaDiaTrabajoWState extends State<RecogidaDiaTrabajoW> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Ingrese la cantidad en kg:'),
-              SizedBox(
+              Container(
                 width: 230,
+                padding: const EdgeInsets.only(top: 4),
                 child: TextField(
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
@@ -97,10 +98,16 @@ class _RecogidaDiaTrabajoWState extends State<RecogidaDiaTrabajoW> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Kilos',
+                    labelStyle: const TextStyle(color: Colors.black),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.grey),
                     ),
                     enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
                       borderSide: const BorderSide(color: Colors.grey),
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -115,8 +122,9 @@ class _RecogidaDiaTrabajoWState extends State<RecogidaDiaTrabajoW> {
             children: [
               const SizedBox(width: 3),
               const Text('Pago:'),
-              SizedBox(
+              Container(
                 width: 230,
+                padding: const EdgeInsets.only(top: 4),
                 child: TextField(
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
@@ -130,10 +138,16 @@ class _RecogidaDiaTrabajoWState extends State<RecogidaDiaTrabajoW> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Ingresa el pago',
+                    labelStyle: const TextStyle(color: Colors.black),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.grey),
                     ),
                     enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
                       borderSide: const BorderSide(color: Colors.grey),
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -157,6 +171,28 @@ class _RecogidaDiaTrabajoWState extends State<RecogidaDiaTrabajoW> {
                 child: TextButton(
                   onPressed: () async {
                     final DateTime? pickedDate = await showDatePicker(
+                      builder: (BuildContext context, Widget? child) {
+                        return Theme(
+                          data: ThemeData.light().copyWith(
+                            primaryColor: Colors.black, //Color del header
+                            colorScheme: const ColorScheme.light(
+                              primary: Color.fromARGB(
+                                  255, 131, 155, 42), //Color del header
+                              onPrimary:
+                                  Colors.white, //Color del texto en el header
+                              surface: Color(
+                                  0xFFC9D1B3), //Color de fondo de los items
+                              onSurface:
+                                  Colors.black, //Color del texto de los items
+                            ),
+                            buttonTheme: const ButtonThemeData(
+                              textTheme: ButtonTextTheme
+                                  .primary, //Estilo del texto del botón 'OK'
+                            ),
+                          ),
+                          child: child!,
+                        );
+                      },
                       context: context,
                       initialDate: selectedDate,
                       firstDate: DateTime(2000),
@@ -200,7 +236,7 @@ class _RecogidaDiaTrabajoWState extends State<RecogidaDiaTrabajoW> {
                         child: Text(
                           'Registro exitoso',
                           style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary),
+                              color: Theme.of(context).colorScheme.surface),
                         ),
                       ),
                       elevation: 5.0,
@@ -255,10 +291,10 @@ class _RecogidaDiaTrabajoWState extends State<RecogidaDiaTrabajoW> {
                   ),
                 );
               }
+              FocusScope.of(context).unfocus();
             },
             child: const Text(
               'Guardar',
-              style: TextStyle(color: Colors.black),
             ),
           ),
         ],
