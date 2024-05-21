@@ -313,7 +313,7 @@ class MyHomePage extends StatelessWidget {
               Divider(
                 color: Colors.grey.withOpacity(0.5),
                 thickness: 1,
-              )
+              ),
               ListTile(
                 leading: Icon(Icons.list_alt, size: 25,),
                 title: Text('Vista Cosecha',style: TextStyle(fontSize: 18.0)),
