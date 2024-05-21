@@ -1,7 +1,6 @@
 import 'package:cafetero/DataBase/data_base_helper.dart';
 import 'package:cafetero/Models/m_semana_model.dart';
 
-
 class MSemanaDao {
   final database = DatabaseHelper.instance.db;
 
@@ -24,8 +23,19 @@ class MSemanaDao {
         where: 'id_semana = ?', whereArgs: [semana.idSemana]);
   }
 
-   Future<List<MSemanaModel>> semanaIniciada() async {
+  Future<List<MSemanaModel>> semanaIniciada() async {
     final data = await database.query('M_Semana', where: 'fecha_fin is null');
     return data.map((e) => MSemanaModel.fromJson(e)).toList();
+  }
+
+  Future<List<Map<String, dynamic>>> pagosSemana(int id) {
+    return database.rawQuery('''
+            SELECT Trabajador.id_trabajador, Trabajador.nombre, SUM(Jornal.pago_trabajador) AS pago_total, GROUP_CONCAT(Jornal.descripcion) AS descripciones
+            FROM M_Semana
+            INNER JOIN Jornal ON M_Semana.id_semana = Jornal.id_semana
+            INNER JOIN Trabajador ON Jornal.id_trabajador = Trabajador.id_trabajador
+            WHERE M_Semana.id_semana = ?
+            GROUP BY Trabajador.id_trabajador, Trabajador.nombre
+            ORDER BY Trabajador.nombre;''', [id]);
   }
 }
