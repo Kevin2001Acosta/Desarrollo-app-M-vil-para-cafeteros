@@ -70,7 +70,7 @@ class _RecogidaDiaTrabajoWState extends State<RecogidaDiaTrabajoW> {
                       onChanged: (TrabajadorModel? trabajador) {
                         setState(() {
                           trabajadorSeleccionado = trabajador;
-                        }); 
+                        });
                       },
                       controller: dropController),
                 ],

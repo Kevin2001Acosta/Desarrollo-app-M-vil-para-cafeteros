@@ -6,6 +6,7 @@ import 'package:cafetero/DataBase/Dao/trabajador_dao.dart';
 import 'package:cafetero/Models/trabajador_model.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:cafetero/Widgets/custom_dropdown.dart';
 import 'package:intl/intl.dart';
@@ -84,35 +85,35 @@ class _JornalPageState extends State<JornalPage> {
 }
 
 
-   void guardarJornal() async {
+  void guardarJornal() async {
     final List<MSemanaModel> semanaActual = await MSemanaDao().semanaIniciada();
     if (semanaActual.isNotEmpty && trabajadorSeleccionado != null && pago > 0 && descripcion.isNotEmpty) {
       final int? idSemana = semanaActual[0].idSemana;
       if (idSemana != null) {
         final JornalModel jornal = JornalModel(
-          idTrabajador: trabajadorSeleccionado!.id ?? 0,
+          idTrabajador: trabajadorSeleccionado!.id!,
           idSemana: idSemana,
           descripcion: descripcion,
           pagoTrabajador: pago,
           fecha: selectedDate,
         );
           await JornalDao().insert(jornal);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-            content: Center(
-                child: Text(
-                  'Registro exitoso',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary),
-                          ),
+           ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Center(
+                        child: Text(
+                          'Registro exitoso',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.surface),
                         ),
-                        elevation: 5.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        backgroundColor: Theme.of(context).colorScheme.onError,
                       ),
-                    );
+                      elevation: 5.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.onError,
+                    ),
+                  );
                 mostrarJornalesGuardados();
                 limpiarCampos();
                 } else {
@@ -121,13 +122,13 @@ class _JornalPageState extends State<JornalPage> {
                   );
                 }
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(
+               ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Center(
                                 child: Text(
                                   'Por favor, llena todos los campos',
                                   style: TextStyle(
-                                      color: Theme.of(context).colorScheme.error),
+                                     color: Theme.of(context).colorScheme.error),
                                 ),
                               ),
                               elevation: 5.0,
@@ -136,10 +137,9 @@ class _JornalPageState extends State<JornalPage> {
                               ),
                               backgroundColor: Theme.of(context).colorScheme.onError,
                             )
-                );
-                          
+                           );           
               }
-}
+       }
 
       Future<void> mostrarJornalesGuardados() async {
         List<JornalModel> jornalesDB = await JornalDao().readAll();
@@ -158,8 +158,12 @@ class _JornalPageState extends State<JornalPage> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text("Jornal"),
-          ),
+            title: const Text(
+              "Jornal",
+               style: TextStyle(color: Colors.white),
+               ),
+               iconTheme: const IconThemeData(color: Colors.white),
+             ),
               body: SingleChildScrollView(
                     child: Padding(
                     padding: const EdgeInsets.all(20.0),
@@ -173,7 +177,6 @@ class _JornalPageState extends State<JornalPage> {
                           visible: !semanaIniciada,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.black, // Texto en negro
                         ),
                             onPressed: empezarSemanaButton,
                             child: Text('Iniciar Semana'),
@@ -183,7 +186,6 @@ class _JornalPageState extends State<JornalPage> {
                           visible: semanaIniciada,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.black, // Texto en negro
                         ),
                             onPressed: finalizarSemanaButton,
                             child: Text('Finalizar Semana'),
@@ -192,7 +194,6 @@ class _JornalPageState extends State<JornalPage> {
                       ],
                     ),
                     SizedBox(height: 20),
-                    
                     // Texto "Trabajador"
                     Column(
                     children: [
@@ -200,7 +201,7 @@ class _JornalPageState extends State<JornalPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text('Elige el trabajador:'),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       CustomDropdown(
                           items: trabajadores,
                           selectedItem: trabajadorSeleccionado,
@@ -215,129 +216,147 @@ class _JornalPageState extends State<JornalPage> {
                     ],
                   ),
                   // Texto "Ingresa el valor del pago"
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 230,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Ingrese el pago del jornal '),
-                            SizedBox(height: 8), // Espacio entre el texto y el cuadro
-                            SizedBox(
-                              width: 230,
-                              child: TextField(
-                                inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.digitsOnly
-                                ],
-                                controller: pagoController,
-                                onChanged: (value) {
-                                  setState(() {
-                                    pago = int.tryParse(value) ?? 0;
-                                  });
-                                },
-                                  keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  labelText: 'Pago',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ) 
-                              ),
-                            ),
-                          ],
+                  const SizedBox(height: 20),
+                  Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(width: 3),
+                    const Text('Pago:'),
+                    Container(
+                      width: 230,
+                      padding: const EdgeInsets.only(top: 4),
+                      child: TextField(
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        controller: pagoController,
+                        onChanged: (value) {
+                          setState(() {
+                            pago = int.tryParse(value) ?? 0;
+                          });
+                        },
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'Ingresa el pago',
+                          labelStyle: const TextStyle(color: Colors.black),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
-                    ],
+                    ),
+                  ],
                   ),
                   // Texto "Ingresa la descripción del jornal"
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                 const SizedBox(height: 20),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
+                       const Text('Ingrese la descripción del jornal'),
+                       Container(
                         width: 230,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Ingrese la descripción del jornal'),
-                            SizedBox(height: 8), // Espacio entre el texto y el cuadro
-                            SizedBox(
-                              width: 230,
-                              child: TextField(
-                                controller: descripcionController,
-                                onChanged: (value) {
-                                  setState(() {
-                                    descripcion = value;
+                        padding: const EdgeInsets.only(top: 4),
+                        child: TextField(
+                            controller: descripcionController,
+                            onChanged: (value) {
+                              setState(() {
+                                descripcion = value;
                                   });
-                                },
-                                decoration: InputDecoration(
-                                labelText: 'Descripcion',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                              ),
+                              },
+                             decoration: InputDecoration(
+                            labelText: 'Descripcion',
+                            labelStyle: const TextStyle(color: Colors.black),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Colors.grey),
                             ),
-                          ],
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          )    
                         ),
-                      ),
+                       ),
                     ],
                   ),
                   // Widget de fecha
-                  const SizedBox(height: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Fecha:'),
-                Container(
-                  width: 230,
-                  height: 65,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: TextButton(
-                    onPressed: () async {
-                      final DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: selectedDate,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2100),
-                      );
+                    const SizedBox(height: 20),
+                    Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Fecha:'),
+                      Container(
+                        width: 230,
+                        height: 65,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: TextButton(
+                          onPressed: () async {
+                            final DateTime? pickedDate = await showDatePicker(
+                              builder: (BuildContext context, Widget? child) {
+                                return Theme(
+                                  data: ThemeData.light().copyWith(
+                                    primaryColor: Colors.black, //Color del header
+                                    colorScheme: const ColorScheme.light(
+                                      primary: Color.fromARGB(
+                                          255, 131, 155, 42), //Color del header
+                                      onPrimary:
+                                          Colors.white, //Color del texto en el header
+                                      surface: Color(
+                                          0xFFC9D1B3), //Color de fondo de los items
+                                      onSurface:
+                                          Colors.black, //Color del texto de los items
+                                    ),
+                                    buttonTheme: const ButtonThemeData(
+                                      textTheme: ButtonTextTheme
+                                          .primary, //Estilo del texto del botón 'OK'
+                                    ),
+                                  ),
+                                  child: child!,
+                                );
+                              },
+                              context: context,
+                              initialDate: selectedDate,
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2100),
+                            );
 
-                      if (pickedDate != null) {
-                        setState(() {
-                          selectedDate = pickedDate;
-                        });
-                      }
-                    },
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        DateFormat('yyyy-MM-dd').format(selectedDate),
-                        style: const TextStyle(fontSize: 15, color: Colors.black),
+                            if (pickedDate != null) {
+                              setState(() {
+                                selectedDate = pickedDate;
+                              });
+                            }
+                          },
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              DateFormat('yyyy-MM-dd').format(selectedDate),
+                              style: const TextStyle(fontSize: 15, color: Colors.black),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-
-                  SizedBox(height: 20),
+                  //Boton guardar
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black, // Texto en negro
                       ),
                     onPressed: guardarJornal,
                     child: Text('Guardar'),
@@ -346,24 +365,14 @@ class _JornalPageState extends State<JornalPage> {
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton.extended(
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                onPressed: () {
-                  // TODO: llevar a la pagina de ver recogidas de la cosecha actual.
-                },
-                label: Text('Ver Jornal',
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Theme.of(context).colorScheme.onBackground)),
-                icon: const Icon(
-                  Icons.history_sharp,
-                  color: Colors.black,
-                ),
-              ),
-
-
-
-
+         floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          onPressed: () {
+            
+          },
+          label: const Text('Ver jornal', style: TextStyle(fontSize: 16)),
+          icon: const Icon(Icons.history_sharp),
+         ),
         );
     }
 }

@@ -297,9 +297,26 @@ class MyHomePage extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.5),
                 thickness: 1,
               ),
-             
+              ListTile(
+                 leading: Icon(Icons.app_registration_rounded, size: 25),
+                title: Text('Registrar Jornal',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    )),
+                onTap: () => {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const JornalPage()))
+                },
+              ),
+              Divider(
+                color: Colors.grey.withOpacity(0.5),
+                thickness: 1,
+              )
             ],
           ),
+          
         ),
         body: Container(
           decoration: const BoxDecoration(
