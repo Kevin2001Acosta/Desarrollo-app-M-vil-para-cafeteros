@@ -87,6 +87,24 @@ class _JornalPageState extends State<JornalPage> {
 
   void guardarJornal() async {
     final List<MSemanaModel> semanaActual = await MSemanaDao().semanaIniciada();
+    if (semanaActual.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Center(
+          child: Text(
+            'Debe iniciar una semana antes de guardar un jornal.',
+            style: TextStyle(color: Theme.of(context).colorScheme.error),
+          ),
+        ),
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.onError,
+      ),
+    );
+    return; 
+  }
     if (semanaActual.isNotEmpty && trabajadorSeleccionado != null && pago > 0 && descripcion.isNotEmpty) {
       final int? idSemana = semanaActual[0].idSemana;
       if (idSemana != null) {
@@ -261,7 +279,7 @@ class _JornalPageState extends State<JornalPage> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       const Text('Ingrese la descripción del jornal'),
+                       const Text('Descripcion'),
                        Container(
                         width: 230,
                         padding: const EdgeInsets.only(top: 4),
@@ -273,7 +291,7 @@ class _JornalPageState extends State<JornalPage> {
                                   });
                               },
                              decoration: InputDecoration(
-                            labelText: 'Descripcion',
+                            labelText: 'Descripción del jornal',
                             labelStyle: const TextStyle(color: Colors.black),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
