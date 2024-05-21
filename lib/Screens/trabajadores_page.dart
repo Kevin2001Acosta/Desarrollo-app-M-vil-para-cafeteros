@@ -86,7 +86,7 @@ class _TrabajadoresPageState extends State<TrabajadoresPage> {
       isScrollControlled: true,
       context: context,
       builder: (_) => Container(
-        color: Theme.of(context).colorScheme.surface,
+        color: Theme.of(context).colorScheme.surfaceVariant,
         padding: EdgeInsets.only(
           top: 30,
           left: 15,
@@ -110,6 +110,11 @@ class _TrabajadoresPageState extends State<TrabajadoresPage> {
                     color: Theme.of(context).colorScheme.secondary,
                     width: 1.0,
                   ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary),
                 ),
                 hintText: "Nombre del trabajador",
               ),
@@ -158,9 +163,7 @@ class _TrabajadoresPageState extends State<TrabajadoresPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Trabajadores"),
-        backgroundColor: Theme.of(context).colorScheme.primary,
         titleTextStyle: const TextStyle(
-          color: Colors.white,
           fontSize: 20,
         ),
         centerTitle: true,
@@ -181,14 +184,14 @@ class _TrabajadoresPageState extends State<TrabajadoresPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      color: Theme.of(context).colorScheme.primary,
                       margin: const EdgeInsets.all(10),
                       child: ListTile(
                         title: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5),
                           child: Text(
                             trabajador.nombre,
-                            style: TextStyle(fontSize: 20, color: Colors.white),
+                            style: const TextStyle(
+                                fontSize: 20, color: Colors.white),
                           ),
                         ),
                         trailing: Row(
@@ -212,6 +215,7 @@ class _TrabajadoresPageState extends State<TrabajadoresPage> {
                   },
                 ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).colorScheme.surface,
         onPressed: () => _showBottomSheet(null),
         child: const Icon(Icons.add),
       ),

@@ -1,12 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:ffi';
 import 'dart:io';
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
+import 'package:cafetero/DataBase/Dao/trabajador_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
+import 'package:cafetero/Models/trabajador_model.dart';
 import 'package:cafetero/Screens/gastos_page.dart';
 import 'package:cafetero/Screens/trabajadores_page.dart';
 import 'package:cafetero/Screens/trabajo_recogida_page.dart';
+import 'package:cafetero/Screens/jornal_page.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
 import 'package:cafetero/provider/recogida_provider.dart';
 //import 'package:cafetero/provider/recogida_provider.dart';
@@ -61,15 +63,27 @@ class MyHomePage extends StatelessWidget {
     } else {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Ya hay una cosecha iniciada'),
+        SnackBar(
+          content: Center(
+            child: Text(
+              'Ya hay una cosecha iniciada',
+              style: TextStyle(color: Theme.of(context).colorScheme.surface),
+            ),
+          ),
+          elevation: 5.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.onError,
         ),
       );
     }
   }
 
   Future<void> finalizarCosecha(
-      BuildContext context, bool recogidaIniciada) async {
+      BuildContext context, bool recogidaIniciada) async { 
+       // final trabajador = TrabajadorModel(nombre : "Sergio");
+       // await TrabajadorDao().insert(trabajador);
     peticion();
     if (!recogidaIniciada) {
       List<Map<String, dynamic>> cosechaIniciada =
@@ -81,12 +95,66 @@ class MyHomePage extends StatelessWidget {
           fechaInicio: DateTime.parse(cosechaIniciada[0]['fecha_inicio']),
         );
         // Todo: falta poner los kilos de café de la cosecha
-        await CosechaDao().update(cosecha);
+        try {
+          await CosechaDao().update(cosecha);
+          if (!context.mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Center(
+                child: Text(
+                  'Finalización exitosa',
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.surface),
+                ),
+              ),
+              elevation: 5.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.onError,
+            ),
+          );
+        } catch (e) {
+          if (!context.mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Center(
+                child: Text(
+                  'Error al finalizar, intentelo nuevamente',
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
+              ),
+              elevation: 5.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.onError,
+            ),
+          );
+        }
+      } else {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Center(
+              child: Text(
+                'No hay cosecha iniciada para finalizar',
+                style: TextStyle(color: Theme.of(context).colorScheme.surface),
+              ),
+            ),
+            elevation: 5.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            backgroundColor: Theme.of(context).colorScheme.onError,
+          ),
+        );
       }
     } else {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          backgroundColor: Colors.white,
           content: const Center(
             child: Text(
               'Hay una recogida iniciada, Finalicela antes de cerrar la cosecha',
@@ -125,13 +193,11 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primary,
           title: const Text('Cafeteros de Colombia'),
           titleTextStyle: const TextStyle(
-            color: Colors.white,
             fontSize: 20,
           ),
-          iconTheme: IconThemeData(color: Colors.white),
+          iconTheme: const IconThemeData(color: Colors.white),
           leading: Builder(builder: (BuildContext context) {
             return IconButton(
               icon: const Icon(Icons.menu),
@@ -152,7 +218,8 @@ class MyHomePage extends StatelessWidget {
                   padding: EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.8), // Color de fondo
-                    borderRadius: BorderRadius.circular(15), // Ajusta el radio según tus preferencias
+                    borderRadius: BorderRadius.circular(
+                        15), // Ajusta el radio según tus preferencias
                   ),
                   child: Text(
                     '¡Bienvenido, Admin!👋',
@@ -162,62 +229,91 @@ class MyHomePage extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),  
+                ),
                 accountEmail: null,
                 currentAccountPicture: Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Color.fromARGB(255, 31, 31, 31), width: 1.5),
+                    border: Border.all(
+                        color: Color.fromARGB(255, 31, 31, 31), width: 1.5),
                   ),
                   child: CircleAvatar(
-                    backgroundColor:  Color(0xFFF5F9F3),
+                    backgroundColor: Color(0xFFF5F9F3),
                     radius: 30,
-                    backgroundImage: AssetImage('assets/logo.png'), // Cambia la imagen según tus necesidades
+                    backgroundImage: AssetImage(
+                        'assets/logo.png'), // Cambia la imagen según tus necesidades
                   ),
                 ),
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/fondo2.png'),
-                    fit: BoxFit.cover,
-                  )
-                ),
+                    image: DecorationImage(
+                  image: AssetImage('assets/fondo2.png'),
+                  fit: BoxFit.cover,
+                )),
               ),
               ListTile(
                 leading: Icon(Icons.person_2_sharp, size: 25),
-                title: Text('Crear Trabajador',style: TextStyle(fontSize: 18.0,)),
+                title: Text('Crear Trabajador',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    )),
                 onTap: () => {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const TrabajadoresPage()))
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const TrabajadoresPage()))
                 },
               ),
               Divider(
-                color: Colors.grey.withOpacity(0.5), thickness: 1,
+                color: Colors.grey.withOpacity(0.5),
+                thickness: 1,
               ),
               ListTile(
                 leading: Icon(Icons.app_registration_rounded, size: 25),
-                title: Text('Registrar Recogida',style: TextStyle(fontSize: 18.0)),
-                onTap: () => 
-                {navegarSiCosechaIniciada(context,'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde')},
-              ),
-              Divider(
-                color: Colors.grey.withOpacity(0.5), thickness: 1,
-              ),
-              ListTile(
-                leading: Icon(Icons.money_rounded, size: 25,),
-                title: Text('Registrar Gastos',style: TextStyle(fontSize: 18.0)),
-                onTap: () =>  {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return const GastosPage();
-                    })
-                  )
+                title: Text('Registrar Recogida',
+                    style: TextStyle(fontSize: 18.0)),
+                onTap: () => {
+                  navegarSiCosechaIniciada(context,
+                      'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde')
                 },
               ),
               Divider(
-                color: Colors.grey.withOpacity(0.5), thickness: 1,
+                color: Colors.grey.withOpacity(0.5),
+                thickness: 1,
               ),
+              ListTile(
+                leading: Icon(
+                  Icons.money_rounded,
+                  size: 25,
+                ),
+                title:
+                    Text('Registrar Gastos', style: TextStyle(fontSize: 18.0)),
+                onTap: () => {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const GastosPage();
+                  }))
+                },
+              ),
+              Divider(
+                color: Colors.grey.withOpacity(0.5),
+                thickness: 1,
+              ),
+              ListTile(
+                 leading: Icon(Icons.app_registration_rounded, size: 25),
+                title: Text('Registrar Jornal',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    )),
+                onTap: () => {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const JornalPage()))
+                },
+              ),
+              Divider(
+                color: Colors.grey.withOpacity(0.5),
+                thickness: 1,
+              )
               ListTile(
                 leading: Icon(Icons.list_alt, size: 25,),
                 title: Text('Vista Cosecha',style: TextStyle(fontSize: 18.0)),
@@ -234,6 +330,7 @@ class MyHomePage extends StatelessWidget {
               ),
             ],
           ),
+          
         ),
         body: Container(
           decoration: const BoxDecoration(
@@ -253,6 +350,7 @@ class MyHomePage extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 70.0),
             child: FloatingActionButton(
               heroTag: null,
+              backgroundColor: Theme.of(context).colorScheme.surface,
               onPressed: () => iniciarCosecha(context),
               tooltip: 'Empezar Cosecha',
               child: const Icon(Icons.agriculture_rounded),
@@ -261,11 +359,11 @@ class MyHomePage extends StatelessWidget {
           FloatingActionButton(
               heroTag: null,
               backgroundColor: Theme.of(context).colorScheme.secondary,
-              onPressed: () {
+              onPressed: () async {
                 final recogidaIniciada =
                     Provider.of<RecogidaProvider>(context, listen: false)
                         .recogidaIniciada;
-                finalizarCosecha(context, recogidaIniciada);
+                await finalizarCosecha(context, recogidaIniciada);
               },
               tooltip: 'Finalizar Cosecha',
               child: const Icon(Icons.agriculture_sharp)),
