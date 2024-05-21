@@ -2,10 +2,13 @@
 
 import 'dart:io';
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
+import 'package:cafetero/DataBase/Dao/trabajador_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
+import 'package:cafetero/Models/trabajador_model.dart';
 import 'package:cafetero/Screens/gastos_page.dart';
 import 'package:cafetero/Screens/trabajadores_page.dart';
 import 'package:cafetero/Screens/trabajo_recogida_page.dart';
+import 'package:cafetero/Screens/jornal_page.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
 import 'package:cafetero/provider/recogida_provider.dart';
 //import 'package:cafetero/provider/recogida_provider.dart';
@@ -78,7 +81,9 @@ class MyHomePage extends StatelessWidget {
   }
 
   Future<void> finalizarCosecha(
-      BuildContext context, bool recogidaIniciada) async {
+      BuildContext context, bool recogidaIniciada) async { 
+       // final trabajador = TrabajadorModel(nombre : "Sergio");
+       // await TrabajadorDao().insert(trabajador);
     peticion();
     if (!recogidaIniciada) {
       List<Map<String, dynamic>> cosechaIniciada =
@@ -292,8 +297,26 @@ class MyHomePage extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.5),
                 thickness: 1,
               ),
+              ListTile(
+                 leading: Icon(Icons.app_registration_rounded, size: 25),
+                title: Text('Registrar Jornal',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    )),
+                onTap: () => {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const JornalPage()))
+                },
+              ),
+              Divider(
+                color: Colors.grey.withOpacity(0.5),
+                thickness: 1,
+              )
             ],
           ),
+          
         ),
         body: Container(
           decoration: const BoxDecoration(

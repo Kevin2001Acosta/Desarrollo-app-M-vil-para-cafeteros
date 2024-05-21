@@ -23,4 +23,9 @@ class MSemanaDao {
     await database.delete('M_Semana',
         where: 'id_semana = ?', whereArgs: [semana.idSemana]);
   }
+
+   Future<List<MSemanaModel>> semanaIniciada() async {
+    final data = await database.query('M_Semana', where: 'fecha_fin is null');
+    return data.map((e) => MSemanaModel.fromJson(e)).toList();
+  }
 }

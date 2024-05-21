@@ -2,6 +2,7 @@ import 'package:cafetero/DataBase/data_base_helper.dart';
 import 'package:cafetero/Screens/home_page.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
 import 'package:cafetero/provider/recogida_provider.dart';
+import 'package:cafetero/provider/semana_provider.dart';
 import 'package:cafetero/provider/trabajadores_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,15 +11,19 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DatabaseHelper.instance.init();
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (context) => RecogidaProvider()),
-      ChangeNotifierProvider(create: (context) => CosechaProvider()),
-      ChangeNotifierProvider(create: (context) => TrabajadoresProvider()),
-    ],
-    child: const MyApp(),
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => RecogidaProvider()),
+        ChangeNotifierProvider(create: (context) => CosechaProvider()),
+        ChangeNotifierProvider(create: (context) => TrabajadoresProvider()),
+        ChangeNotifierProvider(create: (context) => SemanaProvider()),
+      ],
+      child: MyApp(), // Asegúrate de definir y usar tu widget principal aquí
+    ),
+  );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
