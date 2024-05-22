@@ -174,9 +174,10 @@ class _RecogidaPageState extends State<RecogidaPage> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
-            'Recogida de café',
-            style: TextStyle(color: Colors.white),
+            'RECOGIDA DE CAFÉ',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
+          centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.white),
         ),
         body: SingleChildScrollView(

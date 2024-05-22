@@ -193,9 +193,11 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Cafeteros de Colombia'),
+          title: const Text('CAFETEROS DE COLOMBIA',),
+          centerTitle: true, 
           titleTextStyle: const TextStyle(
             fontSize: 20,
+            fontWeight: FontWeight.bold
           ),
           iconTheme: const IconThemeData(color: Colors.white),
           leading: Builder(builder: (BuildContext context) {
@@ -222,7 +224,7 @@ class MyHomePage extends StatelessWidget {
                         15), // Ajusta el radio según tus preferencias
                   ),
                   child: Text(
-                    '¡Bienvenido, Admin!👋',
+                    '¡Bienvenido, Admin!👋🏼',
                     style: TextStyle(
                       fontSize: 19.0,
                       color: Colors.black,
@@ -235,7 +237,7 @@ class MyHomePage extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                        color: Color.fromARGB(255, 31, 31, 31), width: 1.5),
+                        color: Color(0xFF6B4226), width: 2.0),
                   ),
                   child: CircleAvatar(
                     backgroundColor: Color(0xFFF5F9F3),
@@ -251,10 +253,10 @@ class MyHomePage extends StatelessWidget {
                 )),
               ),
               ListTile(
-                leading: Icon(Icons.person_2_sharp, size: 25),
-                title: Text('Crear Trabajador',
+                leading: Icon(Icons.perm_identity_outlined, size: 25),
+                title: Text('Trabajador',
                     style: TextStyle(
-                      fontSize: 18.0,
+                      fontSize: 17.0,
                     )),
                 onTap: () => {
                   Navigator.push(
@@ -268,9 +270,9 @@ class MyHomePage extends StatelessWidget {
                 thickness: 1,
               ),
               ListTile(
-                leading: Icon(Icons.app_registration_rounded, size: 25),
-                title: Text('Registrar Recogida',
-                    style: TextStyle(fontSize: 18.0)),
+                leading: Icon(Icons.shopping_basket_outlined, size: 25),
+                title: Text('Recogida',
+                    style: TextStyle(fontSize: 17.0)),
                 onTap: () => {
                   navegarSiCosechaIniciada(context,
                       'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde')
@@ -282,11 +284,11 @@ class MyHomePage extends StatelessWidget {
               ),
               ListTile(
                 leading: Icon(
-                  Icons.money_rounded,
+                  Icons.receipt_long_sharp,
                   size: 25,
                 ),
                 title:
-                    Text('Registrar Gastos', style: TextStyle(fontSize: 18.0)),
+                    Text('Gastos', style: TextStyle(fontSize: 17.0)),
                 onTap: () => {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return const GastosPage();
@@ -298,10 +300,10 @@ class MyHomePage extends StatelessWidget {
                 thickness: 1,
               ),
               ListTile(
-                 leading: Icon(Icons.app_registration_rounded, size: 25),
-                title: Text('Registrar Jornal',
+                 leading: Icon(Icons.view_timeline_outlined, size: 25),
+                title: Text('Jornal',
                     style: TextStyle(
-                      fontSize: 18.0,
+                      fontSize: 17.0,
                     )),
                 onTap: () => {
                   Navigator.push(
@@ -315,8 +317,8 @@ class MyHomePage extends StatelessWidget {
                 thickness: 1,
               ),
               ListTile(
-                leading: Icon(Icons.list_alt, size: 25,),
-                title: Text('Vista Cosecha',style: TextStyle(fontSize: 18.0)),
+                leading: Icon(Icons.view_list_outlined, size: 25,),
+                title: Text('Vista Cosecha',style: TextStyle(fontSize: 17.0)),
                 onTap: () => {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {

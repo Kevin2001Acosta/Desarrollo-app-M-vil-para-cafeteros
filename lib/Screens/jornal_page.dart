@@ -177,9 +177,10 @@ class _JornalPageState extends State<JornalPage> {
         return Scaffold(
           appBar: AppBar(
             title: const Text(
-              "Jornal",
-               style: TextStyle(color: Colors.white),
+              "JORNAL",
+               style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                ),
+               centerTitle: true,
                iconTheme: const IconThemeData(color: Colors.white),
              ),
               body: SingleChildScrollView(
