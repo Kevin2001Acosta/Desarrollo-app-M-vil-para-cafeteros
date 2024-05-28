@@ -180,9 +180,10 @@ class _JornalPageState extends State<JornalPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Jornal",
-          style: TextStyle(color: Colors.white),
+          "JORNAL",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
+        centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
@@ -198,7 +199,7 @@ class _JornalPageState extends State<JornalPage> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(),
                       onPressed: empezarSemanaButton,
-                      child: const Text('Iniciar Semana'),
+                      child: Text('Iniciar Semana'),
                     ),
                   ),
                   Visibility(
@@ -206,12 +207,12 @@ class _JornalPageState extends State<JornalPage> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(),
                       onPressed: finalizarSemanaButton,
-                      child: const Text('Finalizar Semana'),
+                      child: Text('Finalizar Semana'),
                     ),
                   )
                 ],
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               // Texto "Trabajador"
               Column(
                 children: [
