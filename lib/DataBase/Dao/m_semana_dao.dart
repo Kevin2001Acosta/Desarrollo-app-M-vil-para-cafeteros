@@ -30,7 +30,7 @@ class MSemanaDao {
 
   Future<List<Map<String, dynamic>>> pagosSemana(int id) {
     return database.rawQuery('''
-            SELECT Trabajador.id_trabajador, Trabajador.nombre, SUM(Jornal.pago_trabajador) AS pago_total, GROUP_CONCAT(Jornal.descripcion) AS descripciones
+            SELECT Trabajador.id_trabajador, Trabajador.nombre, SUM(Jornal.pago_trabajador) AS pago_total,count(*) as jornales
             FROM M_Semana
             INNER JOIN Jornal ON M_Semana.id_semana = Jornal.id_semana
             INNER JOIN Trabajador ON Jornal.id_trabajador = Trabajador.id_trabajador
