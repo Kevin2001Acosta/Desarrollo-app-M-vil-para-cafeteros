@@ -23,4 +23,10 @@ class JornalDao {
     await database.delete('Jornal',
         where: 'id_jornal = ?', whereArgs: [jornal.idJornal]);
   }
+   
+   Future<List<JornalModel>> getJornalesPorSemana(int idSemana) async {
+    final data = await database.query('Jornal', where: 'id_semana = ?', whereArgs: [idSemana]);
+    return data.map((e) => JornalModel.fromJson(e)).toList();
+  }
 }
+
