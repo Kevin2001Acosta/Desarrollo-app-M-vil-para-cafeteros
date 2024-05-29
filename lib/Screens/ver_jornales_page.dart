@@ -91,7 +91,23 @@ class _VerJornalesPage extends State<VerJornalesPage> {
                 } else {
                   final jornales = snapshot.data!;
                   if (jornales.isEmpty) {
-                    return const Center(child: Text('No hay jornales disponibles.'));
+                    return const Center(child:Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                         Icon(
+                          Icons.info_outline, 
+                          color: Colors.black,
+                          size: 25, 
+                        ),
+                        SizedBox(width: 8), 
+                        Text(
+                          'No hay jornales para mostrar',
+                          style: TextStyle(
+                            fontSize: 20, 
+                            color: Colors.black, 
+                          ),
+                        ),
+                      ],));
                   }
 
                   jornales.sort((a, b) => _isDescending ? b.fecha.compareTo(a.fecha) : a.fecha.compareTo(b.fecha));

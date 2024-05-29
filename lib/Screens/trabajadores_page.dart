@@ -162,9 +162,10 @@ class _TrabajadoresPageState extends State<TrabajadoresPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Trabajadores"),
+        title: const Text("TRABAJADORES"),
         titleTextStyle: const TextStyle(
           fontSize: 20,
+          fontWeight: FontWeight.bold
         ),
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),

@@ -427,7 +427,8 @@ class _GastosPageState extends State<GastosPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gastos', style: TextStyle(color: Colors.white)),
+        title: const Text('GASTOS', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+        centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Center(
@@ -504,7 +505,7 @@ class _GastosPageState extends State<GastosPage> {
                 onPressed: () {
                   // Todo: enviar a la pagina con los filtros
                 },
-                icon: const Icon(Icons.app_registration_outlined),
+                icon: const Icon(Icons.content_paste_go_outlined),
                 label:
                     const Text('Ver gastos', style: TextStyle(fontSize: 18))),
           ],
