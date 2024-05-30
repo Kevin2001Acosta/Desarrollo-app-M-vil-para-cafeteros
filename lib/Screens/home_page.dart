@@ -1,5 +1,4 @@
 // ignore_for_file: prefer_const_constructors
-
 import 'dart:io';
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
 import 'package:cafetero/DataBase/Dao/recogida_dao.dart';
@@ -95,18 +94,23 @@ class MyHomePage extends StatelessWidget {
               return AlertDialog(
                 title: Text('Cosecha sin registros'),
                 content: Text(
-                    '''La cosecha no tiene registros, presione aceptar si desea eliminar la cosecha,\n
-                             si no eliminas la cosecha debes ingresar datos por lo menos en una recogida'''),
+                  '''La cosecha no tiene registros, presione aceptar si desea eliminar la cosecha, si no eliminas la cosecha debes ingresar datos por lo menos en una recogida''',
+                  style: TextStyle(color: Colors.deepOrange.shade300),
+                ),
                 actions: <Widget>[
                   TextButton(
-                    child: Text('Cancelar'),
+                    child: Text('Cancelar',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary)),
                     onPressed: () {
                       debeCancelar = true;
                       Navigator.of(context).pop(); // Cierra el diálogo
                     },
                   ),
                   TextButton(
-                    child: Text('Aceptar'),
+                    child: Text('Aceptar',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary)),
                     onPressed: () async {
                       await CosechaDao().delete(cosechaIniciada[0]);
                       if (!context.mounted) return;

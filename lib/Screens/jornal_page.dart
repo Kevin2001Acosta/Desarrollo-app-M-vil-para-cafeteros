@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:cafetero/Widgets/custom_dropdown.dart';
 import 'package:intl/intl.dart';
 import 'package:cafetero/DataBase/Dao/jornal_dao.dart';
+import 'package:cafetero/Screens/ver_jornales_page.dart';
 
 class JornalPage extends StatefulWidget {
   const JornalPage({Key? key}) : super(key: key);
@@ -24,7 +25,6 @@ class _JornalPageState extends State<JornalPage> {
   bool semanaIniciada = false;
   Map<String, List<JornalModel>> trabajos = {};
   List<JornalModel> jornales = [];
-  Map<int, TrabajadorModel> trabajadoresMap = {};
 
   TrabajadorModel? trabajadorSeleccionado;
   List<TrabajadorModel> trabajadores = [];
@@ -39,7 +39,7 @@ class _JornalPageState extends State<JornalPage> {
   void initState() {
     super.initState();
     cargarTrabajadores();
-    mostrarJornalesGuardados();
+    //mostrarJornalesGuardados();
   }
 
   void empezarSemanaButton() async {
@@ -386,7 +386,8 @@ class _JornalPageState extends State<JornalPage> {
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Theme.of(context).colorScheme.surface,
         onPressed: () async {
-          final List<MSemanaModel> semanaActual =
+          // ! codigo para pruebas de pagina de pago jornales
+/*           final List<MSemanaModel> semanaActual =
               await MSemanaDao().semanaIniciada();
           if (semanaActual.isNotEmpty) {
             if (!mounted) return;
@@ -395,7 +396,22 @@ class _JornalPageState extends State<JornalPage> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => PagosJornalesPage(semanaActual: id)));
-          }
+          } else {
+            if (!mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Center(
+                child: Text(
+                  'No hay una semana iniciada',
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
+              ),
+              elevation: 5.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.onError,
+            ));
+          } */
         },
         label: const Text('Ver jornal', style: TextStyle(fontSize: 16)),
         icon: const Icon(Icons.history_sharp),
