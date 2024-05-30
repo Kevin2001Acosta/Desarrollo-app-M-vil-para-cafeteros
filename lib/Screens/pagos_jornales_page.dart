@@ -15,6 +15,7 @@ class PagosJornalesPage extends StatefulWidget {
 class _PagosJornalesPageState extends State<PagosJornalesPage> {
   final scrollController = ScrollController();
   List<Map<String, dynamic>> pagosTrabajadores = [];
+  bool isOdd = false;
 
   bool sortAscending = true;
   int sortColumnIndex = 0;
@@ -82,11 +83,15 @@ class _PagosJornalesPageState extends State<PagosJornalesPage> {
     List<Map<String, dynamic>> pagosTrabajadoresModificable =
         List.from(pagosTrabajadores);
     if (sortAscending) {
-      pagosTrabajadoresModificable
-          .sort((a, b) => a['nombre'].compareTo(b['nombre']));
+      pagosTrabajadoresModificable.sort((a, b) => a['nombre']
+          .toString()
+          .toLowerCase()
+          .compareTo(b['nombre'].toString().toLowerCase()));
     } else {
-      pagosTrabajadoresModificable
-          .sort((a, b) => b['nombre'].compareTo(a['nombre']));
+      pagosTrabajadoresModificable.sort((a, b) => b['nombre']
+          .toString()
+          .toLowerCase()
+          .compareTo(a['nombre'].toString().toLowerCase()));
     }
     setState(() {
       pagosTrabajadores = pagosTrabajadoresModificable;
@@ -134,6 +139,8 @@ class _PagosJornalesPageState extends State<PagosJornalesPage> {
         headingRowHeight: 80,
         dataRowHeight: 60,
         minWidth: 650,
+        headingRowColor: MaterialStateColor.resolveWith(
+            (states) => const Color.fromARGB(255, 255, 255, 255)),
 
         isHorizontalScrollBarVisible: true,
         columns: [
@@ -187,13 +194,12 @@ class _PagosJornalesPageState extends State<PagosJornalesPage> {
           )
         ],
         rows: pagosTrabajadores.map((pago) {
-          int idx = pagosTrabajadores.indexOf(pago);
+          //int idx = pagosTrabajadores.indexOf(pago);
+          final color =
+              isOdd ? Colors.white : const Color.fromARGB(255, 205, 218, 166);
+          isOdd = !isOdd;
           return DataRow(
-            color: idx % 2 == 0
-                ? MaterialStateColor.resolveWith(
-                    (states) => const Color(0xFFB4F0B6))
-                : MaterialStateColor.resolveWith(
-                    (states) => Colors.transparent),
+            color: MaterialStateProperty.resolveWith<Color>((states) => color),
             cells: pago.entries.map((e) {
               return DataCell(Align(
                 alignment: Alignment.center,

@@ -5,25 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
-class PaginaCosechas extends StatefulWidget 
-{
+class PaginaCosechas extends StatefulWidget {
   const PaginaCosechas({Key? key}) : super(key: key);
 
   @override
   State<PaginaCosechas> createState() => _PaginaCosechasState();
 }
 
-
-class _PaginaCosechasState extends State<PaginaCosechas> 
-{
+class _PaginaCosechasState extends State<PaginaCosechas> {
   List<CosechaModel> cosechas = [];
   bool isOdd = false;
   int? _sortColumnIndex;
   bool _sortAscending = true;
 
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
     cargarCosechas();
   }
@@ -35,55 +31,71 @@ class _PaginaCosechasState extends State<PaginaCosechas>
     setState(() {
       cosechas = cosechaBD;
     });
-
   }
 
   @override
-  Widget build(BuildContext context)  => Scaffold( 
-    appBar: AppBar(
-      title: const Text('COSECHA',
-                        style: TextStyle(color: Colors.white, fontSize: 22, fontWeight:FontWeight.bold),),
-      iconTheme: const IconThemeData(color: Colors.white),
-      centerTitle: true, 
-      ),
-    body: cosechas.isEmpty
-        ? Center(
-          child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.info_outline, 
-              color: Colors.black,
-              size: 25, 
-            ),
-            const SizedBox(width: 8), 
-            Text(
-              'No hay cosechas para mostrar',
-              style: TextStyle(
-                fontSize: 25, 
-                color: Colors.black, 
-              ),
-            ),
-          ],),
-        )
-        : SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: buildDatatable(),
-            ),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'COSECHA',
+            style: TextStyle(
+                color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
           ),
-  );
+          iconTheme: const IconThemeData(color: Colors.white),
+          centerTitle: true,
+        ),
+        body: cosechas.isEmpty
+            ? Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.info_outline,
+                      color: Colors.black,
+                      size: 25,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'No hay cosechas para mostrar',
+                      style: TextStyle(
+                        fontSize: 25,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: buildDatatable(),
+                ),
+              ),
+      );
 
   Widget buildDatatable() {
-    final columns = ['ID', 'Fecha Inicio', 'Fecha Fin', 'Kilos Totales', 'Recogidas', 'Venta de café'];
+    final columns = [
+      'ID',
+      'Fecha Inicio',
+      'Fecha Fin',
+      'Kilos Totales',
+      'Recogidas',
+      'Venta de café'
+    ];
 
     return Container(
       decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: Colors.black, width: 1.0)), // Línea negra encima de los nombres de las columnas
+        border: Border(
+            top: BorderSide(
+                color: Colors.black,
+                width:
+                    1.0)), // Línea negra encima de los nombres de las columnas
       ),
       child: DataTable(
-        headingRowColor: MaterialStateColor.resolveWith((states) => Color.fromARGB(255, 255, 255, 255) ?? Color.fromARGB(255, 205, 218, 166)),
+        headingRowColor: MaterialStateColor.resolveWith((states) =>
+            Color.fromARGB(255, 255, 255, 255) ??
+            Color.fromARGB(255, 205, 218, 166)),
         sortColumnIndex: _sortColumnIndex,
         sortAscending: _sortAscending,
         columns: getColumns(columns),
@@ -104,7 +116,10 @@ class _PaginaCosechasState extends State<PaginaCosechas>
                   column,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-                Icon(Icons.filter_list, color: Colors.black,),
+                Icon(
+                  Icons.filter_list,
+                  color: Colors.black,
+                ),
               ],
             ),
             onSort: (columnIndex, ascending) {
@@ -123,7 +138,10 @@ class _PaginaCosechasState extends State<PaginaCosechas>
                   column,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-                Icon(Icons.filter_list, color: Colors.black,),
+                Icon(
+                  Icons.filter_list,
+                  color: Colors.black,
+                ),
               ],
             ),
             onSort: (columnIndex, ascending) {
@@ -145,7 +163,6 @@ class _PaginaCosechasState extends State<PaginaCosechas>
     }).toList();
   }
 
-
   void _sortData(String column, bool ascending) {
     setState(() {
       cosechas.sort((a, b) {
@@ -155,7 +172,8 @@ class _PaginaCosechasState extends State<PaginaCosechas>
             cmp = a.fechaInicio.compareTo(b.fechaInicio);
             break;
           case 'Fecha Fin':
-            cmp = (a.fechaFin ?? DateTime(2100)).compareTo(b.fechaFin ?? DateTime(2100));
+            cmp = (a.fechaFin ?? DateTime(2100))
+                .compareTo(b.fechaFin ?? DateTime(2100));
             break;
           case 'Kilos Totales':
             cmp = (a.kilosTotales ?? 0).compareTo(b.kilosTotales ?? 0);
@@ -169,61 +187,59 @@ class _PaginaCosechasState extends State<PaginaCosechas>
   }
 
   List<DataRow> getRows(List<CosechaModel> cosechas) =>
-  cosechas.map((CosechaModel cosechas){
-    final color = isOdd 
-      ? Colors.white
-      : Color.fromARGB(255, 205, 218, 166);
-    isOdd = !isOdd;
-    return DataRow(
-      color: MaterialStateProperty.resolveWith<Color>((states) => color),
-      cells: [
-        DataCell(Container(
-            width: 20,
-            child: Text(cosechas.idCosecha?.toString() ?? 'N/A',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),))
-          ),
-          DataCell(Container(
-            width: 90,
-            child: Text(DateFormat('dd/MM/yyyy').format(cosechas.fechaInicio),
-                        style: TextStyle(
-                                      fontSize: 16,
-                                    ),))
-          ),
-          DataCell(Container(
-            width: 90,
-            child: Text(cosechas.fechaFin != null
-                    ? DateFormat('dd/MM/yyyy').format(cosechas.fechaFin!)
-                    : 'Fecha no disponible',
-                    style: TextStyle(
-                          fontSize: 16,
-                        ),
-            ))
-          ),
-          DataCell(Container(
-            width: 90,
-            child: Text(cosechas.kilosTotales.toString(),
-                        style: TextStyle(
-                                      fontSize: 16,
-                                    ),))
-          ),
-          DataCell(
-              InkWell(
+      cosechas.map((CosechaModel cosechas) {
+        final color = isOdd ? Colors.white : Color.fromARGB(255, 205, 218, 166);
+        isOdd = !isOdd;
+        return DataRow(
+          color: MaterialStateProperty.resolveWith<Color>((states) => color),
+          cells: [
+            DataCell(Container(
+                width: 20,
+                child: Text(
+                  cosechas.idCosecha?.toString() ?? 'N/A',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ))),
+            DataCell(Container(
+                width: 90,
+                child: Text(
+                  DateFormat('dd/MM/yyyy').format(cosechas.fechaInicio),
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ))),
+            DataCell(Container(
+                width: 90,
+                child: Text(
+                  cosechas.fechaFin != null
+                      ? DateFormat('dd/MM/yyyy').format(cosechas.fechaFin!)
+                      : 'Fecha no disponible',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ))),
+            DataCell(Container(
+                width: 90,
+                child: Text(
+                  cosechas.kilosTotales.toString(),
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ))),
+            DataCell(InkWell(
                 onTap: () {
                   print("SI");
                 },
                 child: Container(
                   width: 90,
                   child: Icon(
-                    Icons.content_paste_go_outlined, // Choose an appropriate icon
-                    color: Colors.black, 
+                    Icons
+                        .content_paste_go_outlined, // Choose an appropriate icon
+                    color: Colors.black,
                   ),
-                )
-              )
-          ),
-          DataCell(
-              InkWell(
+                ))),
+            DataCell(InkWell(
                 onTap: () {
                   // Define your onTap action here
                   print("SI");
@@ -231,14 +247,12 @@ class _PaginaCosechasState extends State<PaginaCosechas>
                 child: Container(
                   width: 90,
                   child: Icon(
-                    Icons.content_paste_go_outlined, // Choose an appropriate icon
-                    color: Colors.black, 
+                    Icons
+                        .content_paste_go_outlined, // Choose an appropriate icon
+                    color: Colors.black,
                   ),
-                )
-              )
-          )
-        ],
-      );
-    }
-  ).toList();
+                )))
+          ],
+        );
+      }).toList();
 }

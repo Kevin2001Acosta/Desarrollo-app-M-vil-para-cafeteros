@@ -27,4 +27,18 @@ class RecogidaDao {
     final data = await database.query('recogida', where: 'fecha_fin is null');
     return data.map((e) => RecogidaModel.fromJson(e)).toList();
   }
+
+  Future<Map<String, dynamic>> kilosCosecha(String id) async {
+    final data = await database.rawQuery('''
+    SELECT id_cosecha, SUM(kilos_totales) AS kilos_totales
+    FROM Recogida
+    GROUP BY id_cosecha
+    HAVING id_cosecha = ?
+  ''', [id]);
+    if (data.isNotEmpty) {
+      return data.first;
+    } else {
+      throw Exception('No data found for id: $id');
+    }
+  }
 }

@@ -2,19 +2,16 @@
 
 import 'dart:io';
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
-import 'package:cafetero/DataBase/Dao/trabajador_dao.dart';
+import 'package:cafetero/DataBase/Dao/recogida_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
-import 'package:cafetero/Models/trabajador_model.dart';
 import 'package:cafetero/Screens/gastos_page.dart';
 import 'package:cafetero/Screens/trabajadores_page.dart';
 import 'package:cafetero/Screens/trabajo_recogida_page.dart';
 import 'package:cafetero/Screens/jornal_page.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
 import 'package:cafetero/provider/recogida_provider.dart';
-//import 'package:cafetero/provider/recogida_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-//import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:cafetero/Screens/vista_cosecha_page.dart';
@@ -49,8 +46,7 @@ class MyHomePage extends StatelessWidget {
   }
 
   Future<void> iniciarCosecha(BuildContext context) async {
-    List<Map<String, dynamic>> cosechaIniciada =
-        await CosechaDao().cosechaIniciada();
+    List<CosechaModel> cosechaIniciada = await CosechaDao().cosechaIniciada();
 
     if (cosechaIniciada.isEmpty) {
       var cosecha = CosechaModel(fechaInicio: DateTime.now());
@@ -81,20 +77,75 @@ class MyHomePage extends StatelessWidget {
   }
 
   Future<void> finalizarCosecha(
-      BuildContext context, bool recogidaIniciada) async { 
-       // final trabajador = TrabajadorModel(nombre : "Sergio");
-       // await TrabajadorDao().insert(trabajador);
+      BuildContext context, bool recogidaIniciada) async {
     peticion();
+    bool debeCancelar = false;
+    Map<String, dynamic> kilos = {};
     if (!recogidaIniciada) {
-      List<Map<String, dynamic>> cosechaIniciada =
-          await CosechaDao().cosechaIniciada();
+      List<CosechaModel> cosechaIniciada = await CosechaDao().cosechaIniciada();
       if (cosechaIniciada.isNotEmpty && cosechaIniciada.length == 1) {
+        try {
+          kilos = await RecogidaDao()
+              .kilosCosecha(cosechaIniciada[0].idCosecha.toString());
+        } catch (e) {
+          if (!context.mounted) return;
+          await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Cosecha sin registros'),
+                content: Text(
+                    '''La cosecha no tiene registros, presione aceptar si desea eliminar la cosecha,\n
+                             si no eliminas la cosecha debes ingresar datos por lo menos en una recogida'''),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Cancelar'),
+                    onPressed: () {
+                      debeCancelar = true;
+                      Navigator.of(context).pop(); // Cierra el diálogo
+                    },
+                  ),
+                  TextButton(
+                    child: Text('Aceptar'),
+                    onPressed: () async {
+                      await CosechaDao().delete(cosechaIniciada[0]);
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Center(
+                            child: Text(
+                              'Cosecha eliminada exitosamente',
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.surface),
+                            ),
+                          ),
+                          elevation: 5.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          backgroundColor:
+                              Theme.of(context).colorScheme.onError,
+                        ),
+                      );
+                      debeCancelar = true;
+                      Navigator.of(context).pop(); // Cierra el diálogo
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        }
+        if (debeCancelar) {
+          return;
+        }
         var cosecha = CosechaModel(
           fechaFin: DateTime.now(),
-          idCosecha: cosechaIniciada[0]['id_cosecha'],
-          fechaInicio: DateTime.parse(cosechaIniciada[0]['fecha_inicio']),
+          idCosecha: cosechaIniciada[0].idCosecha,
+          fechaInicio: cosechaIniciada[0].fechaInicio,
+          kilosTotales: kilos['kilos_totales'] as int,
         );
-        // Todo: falta poner los kilos de café de la cosecha
+        // Todo: falta verificar que los kilos se están poniendo bien
         try {
           await CosechaDao().update(cosecha);
           if (!context.mounted) return;
@@ -173,8 +224,7 @@ class MyHomePage extends StatelessWidget {
 
   Future<void> navegarSiCosechaIniciada(
       BuildContext context, String texto) async {
-    List<Map<String, dynamic>> cosechaIniciada =
-        await CosechaDao().cosechaIniciada();
+    List<CosechaModel> cosechaIniciada = await CosechaDao().cosechaIniciada();
 
     if (cosechaIniciada.isNotEmpty) {
       if (!context.mounted) return;
@@ -193,12 +243,12 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('CAFETEROS DE COLOMBIA',),
-          centerTitle: true, 
-          titleTextStyle: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold
+          title: const Text(
+            'CAFETEROS DE COLOMBIA',
           ),
+          centerTitle: true,
+          titleTextStyle:
+              const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           iconTheme: const IconThemeData(color: Colors.white),
           leading: Builder(builder: (BuildContext context) {
             return IconButton(
@@ -236,8 +286,7 @@ class MyHomePage extends StatelessWidget {
                 currentAccountPicture: Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(
-                        color: Color(0xFF6B4226), width: 2.0),
+                    border: Border.all(color: Color(0xFF6B4226), width: 2.0),
                   ),
                   child: CircleAvatar(
                     backgroundColor: Color(0xFFF5F9F3),
@@ -271,8 +320,7 @@ class MyHomePage extends StatelessWidget {
               ),
               ListTile(
                 leading: Icon(Icons.shopping_basket_outlined, size: 25),
-                title: Text('Recogida',
-                    style: TextStyle(fontSize: 17.0)),
+                title: Text('Recogida', style: TextStyle(fontSize: 17.0)),
                 onTap: () => {
                   navegarSiCosechaIniciada(context,
                       'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde')
@@ -287,8 +335,7 @@ class MyHomePage extends StatelessWidget {
                   Icons.receipt_long_sharp,
                   size: 25,
                 ),
-                title:
-                    Text('Gastos', style: TextStyle(fontSize: 17.0)),
+                title: Text('Gastos', style: TextStyle(fontSize: 17.0)),
                 onTap: () => {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return const GastosPage();
@@ -300,7 +347,7 @@ class MyHomePage extends StatelessWidget {
                 thickness: 1,
               ),
               ListTile(
-                 leading: Icon(Icons.view_timeline_outlined, size: 25),
+                leading: Icon(Icons.view_timeline_outlined, size: 25),
                 title: Text('Jornal',
                     style: TextStyle(
                       fontSize: 17.0,
@@ -317,22 +364,23 @@ class MyHomePage extends StatelessWidget {
                 thickness: 1,
               ),
               ListTile(
-                leading: Icon(Icons.view_list_outlined, size: 25,),
-                title: Text('Vista Cosecha',style: TextStyle(fontSize: 17.0)),
+                leading: Icon(
+                  Icons.view_list_outlined,
+                  size: 25,
+                ),
+                title: Text('Vista Cosecha', style: TextStyle(fontSize: 17.0)),
                 onTap: () => {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return const PaginaCosechas();
-                    })
-                  )
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const PaginaCosechas();
+                  }))
                 },
               ),
               Divider(
-                color: Colors.grey.withOpacity(0.5), thickness: 1,
+                color: Colors.grey.withOpacity(0.5),
+                thickness: 1,
               ),
             ],
           ),
-          
         ),
         body: Container(
           decoration: const BoxDecoration(

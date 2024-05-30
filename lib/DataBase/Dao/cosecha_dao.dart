@@ -23,9 +23,9 @@ class CosechaDao {
         where: 'id_cosecha = ?', whereArgs: [cosecha.idCosecha]);
   }
 
-  Future<List<Map<String, dynamic>>> cosechaIniciada() async {
+  Future<List<CosechaModel>> cosechaIniciada() async {
     final data = await database.query('cosecha',
         where: 'fecha_fin is null', columns: ['id_cosecha', 'fecha_inicio']);
-    return data;
+    return data.map((e) => CosechaModel.fromJson(e)).toList();
   }
 }
