@@ -1,5 +1,7 @@
+import 'package:cafetero/DataBase/Dao/gastos_dao.dart';
 import 'package:cafetero/DataBase/Dao/recogida_dao.dart';
 import 'package:cafetero/DataBase/Dao/trabaja_dao.dart';
+import 'package:cafetero/Models/gastos_model.dart';
 import 'package:cafetero/Models/recogida_model.dart';
 import 'package:cafetero/Models/trabaja_model.dart';
 import 'package:cafetero/Screens/home_page.dart';
@@ -129,6 +131,13 @@ class _RecogidaPageState extends State<RecogidaPage> {
     if (recogida.isNotEmpty && recogida.length == 1 && sumTrabajos.isNotEmpty) {
       // Todo: si no hay trabajos en la recogida no finalizar recogida
       // Todo: preguntar si desea eliminar la recogida ya que no hay registros
+
+      // creo una insidencia de gastos y le agrego los pagos de los trabajadores
+      final GastosModel gasto = GastosModel(
+          nombre: 'Recolecta de café',
+          valor: sumTrabajos[0]['pagos'] as int,
+          fecha: DateTime.now());
+      final idGasto = await GastosDao().insert(gasto);
       final RecogidaModel recogidaFinal = RecogidaModel(
         idRecogida: recogida[0].idRecogida as int,
         fechaInicio: recogida[0].fechaInicio,
@@ -137,6 +146,7 @@ class _RecogidaPageState extends State<RecogidaPage> {
         jornal: recogida[0].jornal,
         precioKilo: recogida[0].precioKilo,
         kilosTotales: sumTrabajos[0]['kilos_totales'],
+        idGastos: idGasto,
       );
       if (!context.mounted) return;
       context.read<RecogidaProvider>().finalizarRecogida(recogidaFinal);

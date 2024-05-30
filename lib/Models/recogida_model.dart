@@ -6,6 +6,7 @@ class RecogidaModel {
   int? kilosTotales;
   int? precioKilo;
   int idCosecha;
+  int? idGastos;
 
   RecogidaModel({
     this.idRecogida,
@@ -15,6 +16,7 @@ class RecogidaModel {
     this.kilosTotales,
     this.precioKilo,
     required this.idCosecha,
+    this.idGastos,
   });
 
   Map<String, dynamic> toJson() {
@@ -25,6 +27,7 @@ class RecogidaModel {
       'kilos_totales': kilosTotales,
       'precio_kilo': precioKilo,
       'id_cosecha': idCosecha,
+      'id_gastos': idGastos,
     };
   }
 
@@ -46,6 +49,7 @@ class RecogidaModel {
       kilosTotales: json['kilos_totales'],
       precioKilo: json['precio_kilo'],
       idCosecha: json['id_cosecha'],
+      idGastos: json['id_gastos'],
     );
   }
 }

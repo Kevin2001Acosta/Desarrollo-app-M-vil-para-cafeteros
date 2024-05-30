@@ -51,7 +51,9 @@ class DatabaseHelper {
     kilos_totales INTEGER,
     precio_kilo INTEGER,
     id_cosecha INTEGER NOT NULL,
-    FOREIGN KEY (id_cosecha) REFERENCES Cosecha(id_cosecha)
+    id_gastos INTEGER,
+    FOREIGN KEY (id_cosecha) REFERENCES Cosecha(id_cosecha),
+    FOREIGN KEY (id_gastos) REFERENCES Gastos(id_gastos)
     );
     ''');
       await db.execute('''
@@ -70,7 +72,9 @@ class DatabaseHelper {
     CREATE TABLE M_Semana (
     id_semana INTEGER PRIMARY KEY AUTOINCREMENT,
     fecha_inicio DATE,
-    fecha_fin DATE
+    fecha_fin DATE,
+    id_gastos INTEGER,
+    FOREIGN KEY (id_gastos) REFERENCES Gastos(id_gastos)
     );
     ''');
       await db.execute('''

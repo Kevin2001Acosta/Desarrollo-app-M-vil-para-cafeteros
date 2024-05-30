@@ -1,4 +1,6 @@
+import 'package:cafetero/DataBase/Dao/gastos_dao.dart';
 import 'package:cafetero/DataBase/Dao/m_semana_dao.dart';
+import 'package:cafetero/Models/gastos_model.dart';
 import 'package:cafetero/Models/m_semana_model.dart';
 import 'package:cafetero/Models/jornal_model.dart';
 import 'package:cafetero/Screens/pagos_jornales_page.dart';
@@ -51,12 +53,26 @@ class _JornalPageState extends State<JornalPage> {
 
   void finalizarSemanaButton() async {
     final List<MSemanaModel> semanaActual = await MSemanaDao().semanaIniciada();
+    // Todo: verificar que hayan jornales en la semana, si no los hay
+    // Todo: mostrar un Dialog que pregunte si quiere eliminar la semana ya que no tiene registros
     if (semanaActual.isNotEmpty) {
+      final sumTrabajos = await JornalDao()
+          .pagoSemanaTotal(semanaActual[0].idSemana.toString());
+      // ? si no hay jornales lanzará un error porque valor será vacío.
+      // Todo: crear las validaciones para eliminar semana para evitar esto.
+      // Todo: si no hay datos pagoSemanaTotal enviará un error que puedes tomar con un try y así
+      // Todo: validar que hay datos antes de continuar.
+      final GastosModel gasto = GastosModel(
+          nombre: 'Jornales',
+          valor: sumTrabajos['pagos'] as int,
+          fecha: DateTime.now());
+      final idGasto = await GastosDao().insert(gasto);
       await MSemanaDao().update(
         MSemanaModel(
           idSemana: semanaActual[0].idSemana,
           fechaInicio: semanaActual[0].fechaInicio,
           fechaFin: DateTime.now(),
+          idGastos: idGasto,
         ),
       );
     }

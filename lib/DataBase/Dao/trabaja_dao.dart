@@ -40,7 +40,7 @@ class TrabajaDao {
 
   Future<List<Map<String, dynamic>>> kilosRecogida(String id) async {
     final data = await database.rawQuery('''
-    SELECT id_recogida, SUM(kilos_trabajador) AS kilos_totales
+    SELECT id_recogida, SUM(kilos_trabajador) AS kilos_totales, SUM(pago) AS pagos
     FROM Trabaja
     GROUP BY id_recogida
     HAVING id_recogida = ?
