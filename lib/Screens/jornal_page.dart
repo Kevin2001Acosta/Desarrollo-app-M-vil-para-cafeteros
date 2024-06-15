@@ -51,34 +51,78 @@ class _JornalPageState extends State<JornalPage> {
     await context.read<SemanaProvider>().cargarEstadoSemana();
   }
 
-  void finalizarSemanaButton() async {
+
+
+
+void finalizarSemanaButton() async {
+  try {
     final List<MSemanaModel> semanaActual = await MSemanaDao().semanaIniciada();
-    // Todo: verificar que hayan jornales en la semana, si no los hay
-    // Todo: mostrar un Dialog que pregunte si quiere eliminar la semana ya que no tiene registros
     if (semanaActual.isNotEmpty) {
-      final sumTrabajos = await JornalDao()
-          .pagoSemanaTotal(semanaActual[0].idSemana.toString());
-      // ? si no hay jornales lanzará un error porque valor será vacío.
-      // Todo: crear las validaciones para eliminar semana para evitar esto.
-      // Todo: si no hay datos pagoSemanaTotal enviará un error que puedes tomar con un try y así
-      // Todo: validar que hay datos antes de continuar.
-      final GastosModel gasto = GastosModel(
+      final jornales = await JornalDao().getJornalesPorSemana(semanaActual[0].idSemana!);
+      if (jornales.isEmpty) {
+        final shouldDelete = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Eliminar semana'),
+            content: Text('La semana no tiene registros de jornales. ¿Desea eliminarla?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('Cancelar',
+                style: TextStyle(color: Theme.of(context).colorScheme.surface),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true), 
+                child: Text('Eliminar', 
+                style: TextStyle(color: Theme.of(context).colorScheme.surface),),
+              ),
+            ],
+          ),
+        );
+
+        if (shouldDelete == true) {
+          final semanaParaEliminar = semanaActual[0];
+          await MSemanaDao().delete(semanaParaEliminar);
+          if (!mounted) return;
+          await context.read<SemanaProvider>().cargarEstadoSemana();
+          return;
+        } else {
+          return;
+        }
+      }
+      try {
+        final sumTrabajos = await JornalDao().pagoSemanaTotal(semanaActual[0].idSemana.toString());
+        if (sumTrabajos == null || !sumTrabajos.containsKey('pagos')) {
+          throw Exception('No hay datos de pagos');
+        }
+
+        final GastosModel gasto = GastosModel(
           nombre: 'Jornales',
           valor: sumTrabajos['pagos'] as int,
-          fecha: DateTime.now());
-      final idGasto = await GastosDao().insert(gasto);
-      await MSemanaDao().update(
-        MSemanaModel(
-          idSemana: semanaActual[0].idSemana,
-          fechaInicio: semanaActual[0].fechaInicio,
-          fechaFin: DateTime.now(),
-          idGastos: idGasto,
-        ),
-      );
+          fecha: DateTime.now(),
+        );
+        final idGasto = await GastosDao().insert(gasto);
+        await MSemanaDao().update(
+          MSemanaModel(
+            idSemana: semanaActual[0].idSemana,
+            fechaInicio: semanaActual[0].fechaInicio,
+            fechaFin: DateTime.now(),
+            idGastos: idGasto,
+          ),
+        );
+      } catch (e) {
+        print('Error al sumar pagos: $e');
+        return;
+      }
     }
+
     if (!mounted) return;
     await context.read<SemanaProvider>().cargarEstadoSemana();
+  } catch (e) {
+    print('Error: $e');
   }
+}
 
   Future<void> cargarTrabajadores() async {
     List<TrabajadorModel> trabajadoresDB = await TrabajadorDao().readAll();
@@ -403,7 +447,7 @@ class _JornalPageState extends State<JornalPage> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         onPressed: () async {
           // ! codigo para pruebas de pagina de pago jornales
-/*           final List<MSemanaModel> semanaActual =
+          final List<MSemanaModel> semanaActual =
               await MSemanaDao().semanaIniciada();
           if (semanaActual.isNotEmpty) {
             if (!mounted) return;
@@ -411,7 +455,7 @@ class _JornalPageState extends State<JornalPage> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => PagosJornalesPage(semanaActual: id)));
+                   builder: (context) => VerJornalesPage(idSemana: id)));
           } else {
             if (!mounted) return;
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -427,7 +471,7 @@ class _JornalPageState extends State<JornalPage> {
               ),
               backgroundColor: Theme.of(context).colorScheme.onError,
             ));
-          } */
+          } 
         },
         label: const Text('Ver jornal', style: TextStyle(fontSize: 16)),
         icon: const Icon(Icons.history_sharp),
