@@ -274,7 +274,7 @@ class MyHomePage extends StatelessWidget {
                   data: MediaQuery.of(context),
                   child: Container(
                   width: MediaQuery.of(context).size.width*0.5,
-                  height: MediaQuery.of(context).size.height*0.03,
+                  height: MediaQuery.of(context).size.height*0.04,
                   padding: EdgeInsets.all(5),
                   decoration: BoxDecoration(
                     color: Color.fromARGB(255, 185, 192, 164).withOpacity(0.7), // Color de fondo
@@ -289,7 +289,7 @@ class MyHomePage extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                       maxLines: 2,
-                      minFontSize: 12.0, 
+                      minFontSize: 19.0, 
                       maxFontSize: 20.0,
                     ),
                   ),
