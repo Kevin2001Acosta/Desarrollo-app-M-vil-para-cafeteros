@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:cafetero/Screens/vista_cosecha_page.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 // url de pdf info café: https://federaciondecafeteros.org/app/uploads/2019/10/precio_cafe.pdf
 
@@ -264,33 +265,40 @@ class MyHomePage extends StatelessWidget {
           }),
         ),
         drawer: Drawer(
-          backgroundColor: Color(0xFFF5F9F3),
+          backgroundColor: Color.fromRGBO(226, 234, 223, 1),
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
               UserAccountsDrawerHeader(
-                accountName: Container(
-                  width: 217,
-                  padding: EdgeInsets.all(6),
+                accountName: MediaQuery(
+                  data: MediaQuery.of(context),
+                  child: Container(
+                  width: MediaQuery.of(context).size.width*0.5,
+                  height: MediaQuery.of(context).size.height*0.03,
+                  padding: EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.8), // Color de fondo
+                    color: Color.fromARGB(255, 185, 192, 164).withOpacity(0.7), // Color de fondo
                     borderRadius: BorderRadius.circular(
-                        15), // Ajusta el radio según tus preferencias
+                        15),
                   ),
-                  child: Text(
-                    '¡Bienvenido, Admin!👋🏼',
-                    style: TextStyle(
-                      fontSize: 19.0,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+                  child: Center( 
+                    child: AutoSizeText(
+                      '¡Bienvenido, Admin! 👋🏽',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      minFontSize: 12.0, 
+                      maxFontSize: 20.0,
                     ),
                   ),
-                ),
+                ),),
                 accountEmail: null,
                 currentAccountPicture: Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Color(0xFF6B4226), width: 2.0),
+                    border: Border.all(color: Color.fromARGB(255, 69, 87, 10), width: 2.0),
                   ),
                   child: CircleAvatar(
                     backgroundColor: Color(0xFFF5F9F3),
