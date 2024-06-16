@@ -4,6 +4,7 @@ import 'package:cafetero/Models/cosecha_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class PaginaCosechas extends StatefulWidget {
   const PaginaCosechas({Key? key}) : super(key: key);
@@ -55,12 +56,14 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
                       size: 25,
                     ),
                     const SizedBox(width: 8),
-                    Text(
+                    AutoSizeText(
                       'No hay cosechas para mostrar',
                       style: TextStyle(
-                        fontSize: 25,
                         color: Colors.black,
                       ),
+                      maxLines: 2,
+                      minFontSize: 18.0, 
+                      maxFontSize: 25.0,
                     ),
                   ],
                 ),
