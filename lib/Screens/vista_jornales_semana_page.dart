@@ -76,7 +76,7 @@ class _PaginaSemanaJornalState extends State<PaginaSemanaJornal> {
                     ),
                     SizedBox(width: 8),
                     AutoSizeText(
-                      'No hay cosechas para mostrar',
+                      'No hay jornales para mostrar',
                       style: TextStyle(
                         color: Colors.black,
                       ),
