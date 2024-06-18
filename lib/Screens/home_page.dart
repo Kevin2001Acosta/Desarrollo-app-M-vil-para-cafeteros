@@ -397,17 +397,21 @@ class MyHomePage extends StatelessWidget {
                 thickness: 1,
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.view_list_outlined,
                   size: 25,
                 ),
-                title: Text('Vista Jornal Semana',
+                title: const Text('Vista Jornal Semana',
                     style: TextStyle(fontSize: 17.0)),
                 onTap: () => {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return const PaginaSemanaJornal();
                   }))
                 },
+              ),
+              Divider(
+                color: Colors.grey.withOpacity(0.5),
+                thickness: 1,
               ),
               ListTile(
                 leading: const Icon(
