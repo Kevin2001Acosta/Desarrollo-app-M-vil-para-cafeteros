@@ -15,6 +15,7 @@ import 'package:html/parser.dart' as parser;
 import 'package:cafetero/Screens/vista_cosecha_page.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cafetero/Screens/vista_jornales_semana_page.dart';
+import 'package:cafetero/Screens/precio_cafe_page.dart';
 
 // url de pdf info café: https://federaciondecafeteros.org/app/uploads/2019/10/precio_cafe.pdf
 
@@ -404,6 +405,21 @@ class MyHomePage extends StatelessWidget {
                 onTap: () => {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return const PaginaSemanaJornal();
+                  }))
+                },
+              ),Divider(
+                color: Colors.grey.withOpacity(0.5),
+                thickness: 1,
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.coffee,
+                  size: 25,
+                ),
+                title: Text('Precio Actual del Café', style: TextStyle(fontSize: 17.0)),
+                onTap: () => {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return PrecioCafe();
                   }))
                 },
               ),

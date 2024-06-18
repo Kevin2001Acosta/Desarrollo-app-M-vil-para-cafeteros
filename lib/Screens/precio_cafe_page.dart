@@ -1,0 +1,155 @@
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:open_file/open_file.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+
+
+class PrecioCafe extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return  Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 131, 155, 42),
+        title: const Text(
+          'PRECIO DEL CAFÉ',
+          style: TextStyle(
+              color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
+        centerTitle: true,
+      ),
+      body: Center(child: PdfDownloadScreen()),
+    );
+  }
+}
+
+class PdfDownloadScreen extends StatefulWidget {
+  @override
+  _PdfDownloadScreenState createState() => _PdfDownloadScreenState();
+}
+
+class _PdfDownloadScreenState extends State<PdfDownloadScreen> {
+
+  String fileurl = "https://federaciondecafeteros.org/app/uploads/2019/10/precio_cafe.pdf";
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: false,
+        ),
+        body: Center(
+          child: Container(
+          margin: EdgeInsets.only(right: 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              AutoSizeText(
+                      "Si quieres saber el precio del café actualizado,\n ¡Descarga el PDF!\n ⬇️",
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                      maxLines: 3,
+                      minFontSize: 21.0,
+                      maxFontSize: 25.0,
+                      textAlign: TextAlign.center,
+                    
+                    ),
+                    
+              ElevatedButton(
+                onPressed: () async {
+                  
+                  var connectivityResult = await Connectivity().checkConnectivity();
+                  if (connectivityResult[0] == ConnectivityResult.none) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: AutoSizeText(
+                      "No tienes conexión a internet, prueba en otro momento.",
+                      style: TextStyle(
+                        color: Colors.red,
+                      ),
+                      maxLines: 3,
+                      minFontSize: 20.0,
+                      maxFontSize: 25.0,
+                      textAlign: TextAlign.center,
+                    
+                    ),
+                          backgroundColor: Colors.white,
+                        ));
+                  }
+                  else{
+                  Map<Permission, PermissionStatus> statuses = await [
+                    Permission.storage,
+                  ].request();
+
+                  if(statuses[Permission.storage]!.isGranted){
+                    var dir = await  getDownloadsDirectory();
+                    
+                    if(dir != null){
+                      String savename = "PrecioCafe.pdf";
+                      String savePath = dir.path + "/$savename";
+
+                      try {
+                        await Dio().download(
+                            fileurl,
+                            savePath,
+                            onReceiveProgress: (received, total) {
+                              if (total != -1) {
+                                print((received / total * 100).toStringAsFixed(0) + "%");
+                              }
+                            });
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: AutoSizeText(
+                      "Archivo Descargado Exitosamente en la dirección: $dir",
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 131, 155, 42),
+                      ),
+                      maxLines: 3,
+                      minFontSize: 20.0,
+                      maxFontSize: 25.0,
+                      textAlign: TextAlign.center,
+                    
+                    ),
+                          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                        ));
+                        OpenFile.open(savePath);
+                      } on DioError catch (e) {
+                        print(e.message);
+                      }
+                    }
+                  }else{
+                    print("No se dieron los permisos necesarios para leer archivos, por favor intentelo de nuevo.");
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: AutoSizeText(
+                      "Permiso Denegado, por favor intentelo de nuevo.",
+                      style: TextStyle(
+                        color: Colors.red,
+                      ),
+                      maxLines: 3,
+                      minFontSize: 20.0,
+                      maxFontSize: 25.0,
+                      textAlign: TextAlign.center,
+                    
+                    ),
+                          backgroundColor: Colors.white,
+                        ));
+                  }
+                  }
+                },
+                  style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 30), 
+                  textStyle: TextStyle(fontSize: 17, fontWeight:FontWeight.bold),
+                ),
+                child: Text("DESCARGAR ARCHIVO"),
+              )
+
+            ],
+          ),
+        ))
+    );
+  }
+}
