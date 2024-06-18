@@ -86,21 +86,25 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
       'Venta de café'
     ];
 
-    return Container(
-      decoration: const BoxDecoration(
-        border: Border(
+    return SingleChildScrollView(
+      // Wrap the DataTable with SingleChildScrollView
+      child: Container(
+        decoration: const BoxDecoration(
+          border: Border(
             top: BorderSide(
-                color: Colors.black,
-                width:
-                    1.0)), // Línea negra encima de los nombres de las columnas
-      ),
-      child: DataTable(
-        headingRowColor: WidgetStateColor.resolveWith(
-            (states) => const Color.fromARGB(255, 255, 255, 255)),
-        sortColumnIndex: _sortColumnIndex,
-        sortAscending: _sortAscending,
-        columns: getColumns(columns),
-        rows: getRows(cosechas),
+              color: Colors.black,
+              width: 1.0,
+            ), // Línea negra encima de los nombres de las columnas
+          ),
+        ),
+        child: DataTable(
+          headingRowColor: WidgetStateColor.resolveWith(
+              (states) => const Color.fromARGB(255, 255, 255, 255)),
+          sortColumnIndex: _sortColumnIndex,
+          sortAscending: _sortAscending,
+          columns: getColumns(columns),
+          rows: getRows(cosechas),
+        ),
       ),
     );
   }
