@@ -1,5 +1,6 @@
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
+import 'package:cafetero/Screens/vista_recogidas_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -237,7 +238,10 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
                 ))),
             DataCell(InkWell(
                 onTap: () {
-                  print("SI");
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => VistaRecogidasPage()));
                 },
                 child: const SizedBox(
                   width: 90,
