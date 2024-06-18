@@ -19,18 +19,19 @@ void main() async {
         ChangeNotifierProvider(create: (context) => TrabajadoresProvider()),
         ChangeNotifierProvider(create: (context) => SemanaProvider()),
       ],
-      child: MyApp(), // Asegúrate de definir y usar tu widget principal aquí
+      child:
+          const MyApp(), // Asegúrate de definir y usar tu widget principal aquí
     ),
   );
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false,
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: const ColorScheme(
