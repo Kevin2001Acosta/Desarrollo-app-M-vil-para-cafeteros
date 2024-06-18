@@ -34,44 +34,14 @@ class GastosDao {
     return data.map((e) => GastosModel.fromJson(e)).toList();
   }
 
-  Future<List<GastosModel>> filtrarGastos({
-    DateTimeRange? dateRange,
-    List<String>? categories,
-    int? minAmount,
-    int? maxAmount,
-  }) async {
-    List<String> whereClauses = [];
-    List<dynamic> whereArgs = [];
-
-    if (dateRange != null) {
-      whereClauses.add('fecha >= ?');
-      whereArgs.add(DateFormat('yyyy-MM-dd').format(dateRange.start));
-      whereClauses.add('fecha <= ?');
-      whereArgs.add(DateFormat('yyyy-MM-dd').format(dateRange.end));
-    }
-    if (categories != null && categories.isNotEmpty) {
-      whereClauses.add('nombre IN (${categories.map((_) => '?').join(', ')})');
-      whereArgs.addAll(categories);
-    }
-    if (minAmount != null) {
-      whereClauses.add('valor >= ?');
-      whereArgs.add(minAmount);
-    }
-    if (maxAmount != null) {
-      whereClauses.add('valor <= ?');
-      whereArgs.add(maxAmount);
-    }
-    final whereString = whereClauses.isNotEmpty ? whereClauses.join(' AND ') : null;
-    final data = await database.query('Gastos', where: whereString, whereArgs: whereArgs);
-    return data.map((e) => GastosModel.fromJson(e)).toList();
+  Future<List<Map<String, dynamic>>> gastosbyYear(int year) async {
+    final data = await database.rawQuery('''
+    SELECT strftime('%m', fecha) as mes, SUM(valor) as total
+    FROM Gastos
+    WHERE strftime('%Y', fecha) = ?
+    GROUP BY mes
+    ORDER BY mes
+  ''', [year.toString()]);
+    return data;
   }
 }
-
-
-  
-
-
-
-
-
-
