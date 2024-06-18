@@ -1,12 +1,12 @@
-// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, prefer_const_literals_to_create_immutables
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class PaginaCosechas extends StatefulWidget {
-  const PaginaCosechas({Key? key}) : super(key: key);
+  const PaginaCosechas({super.key});
 
   @override
   State<PaginaCosechas> createState() => _PaginaCosechasState();
@@ -45,22 +45,24 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
           centerTitle: true,
         ),
         body: cosechas.isEmpty
-            ? Center(
+            ? const Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.info_outline,
                       color: Colors.black,
                       size: 25,
                     ),
-                    const SizedBox(width: 8),
-                    Text(
+                    SizedBox(width: 8),
+                    AutoSizeText(
                       'No hay cosechas para mostrar',
                       style: TextStyle(
-                        fontSize: 25,
                         color: Colors.black,
                       ),
+                      maxLines: 2,
+                      minFontSize: 18.0,
+                      maxFontSize: 25.0,
                     ),
                   ],
                 ),
@@ -84,22 +86,25 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
       'Venta de café'
     ];
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
+    return SingleChildScrollView(
+      // Wrap the DataTable with SingleChildScrollView
+      child: Container(
+        decoration: const BoxDecoration(
+          border: Border(
             top: BorderSide(
-                color: Colors.black,
-                width:
-                    1.0)), // Línea negra encima de los nombres de las columnas
-      ),
-      child: DataTable(
-        headingRowColor: MaterialStateColor.resolveWith((states) =>
-            Color.fromARGB(255, 255, 255, 255) ??
-            Color.fromARGB(255, 205, 218, 166)),
-        sortColumnIndex: _sortColumnIndex,
-        sortAscending: _sortAscending,
-        columns: getColumns(columns),
-        rows: getRows(cosechas),
+              color: Colors.black,
+              width: 1.0,
+            ), // Línea negra encima de los nombres de las columnas
+          ),
+        ),
+        child: DataTable(
+          headingRowColor: WidgetStateColor.resolveWith(
+              (states) => const Color.fromARGB(255, 255, 255, 255)),
+          sortColumnIndex: _sortColumnIndex,
+          sortAscending: _sortAscending,
+          columns: getColumns(columns),
+          rows: getRows(cosechas),
+        ),
       ),
     );
   }
@@ -114,9 +119,10 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
               children: [
                 Text(
                   column,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-                Icon(
+                const Icon(
                   Icons.filter_list,
                   color: Colors.black,
                 ),
@@ -136,9 +142,10 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
               children: [
                 Text(
                   column,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-                Icon(
+                const Icon(
                   Icons.filter_list,
                   color: Colors.black,
                 ),
@@ -156,7 +163,7 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
           return DataColumn(
             label: Text(
               column,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           );
       }
@@ -188,42 +195,43 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
 
   List<DataRow> getRows(List<CosechaModel> cosechas) =>
       cosechas.map((CosechaModel cosechas) {
-        final color = isOdd ? Colors.white : Color.fromARGB(255, 205, 218, 166);
+        final color =
+            isOdd ? Colors.white : const Color.fromARGB(255, 205, 218, 166);
         isOdd = !isOdd;
         return DataRow(
-          color: MaterialStateProperty.resolveWith<Color>((states) => color),
+          color: WidgetStateColor.resolveWith((states) => color),
           cells: [
-            DataCell(Container(
+            DataCell(SizedBox(
                 width: 20,
                 child: Text(
                   cosechas.idCosecha?.toString() ?? 'N/A',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                   ),
                 ))),
-            DataCell(Container(
+            DataCell(SizedBox(
                 width: 90,
                 child: Text(
                   DateFormat('dd/MM/yyyy').format(cosechas.fechaInicio),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                   ),
                 ))),
-            DataCell(Container(
+            DataCell(SizedBox(
                 width: 90,
                 child: Text(
                   cosechas.fechaFin != null
                       ? DateFormat('dd/MM/yyyy').format(cosechas.fechaFin!)
                       : 'Fecha no disponible',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                   ),
                 ))),
-            DataCell(Container(
+            DataCell(SizedBox(
                 width: 90,
                 child: Text(
                   cosechas.kilosTotales.toString(),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                   ),
                 ))),
@@ -231,7 +239,7 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
                 onTap: () {
                   print("SI");
                 },
-                child: Container(
+                child: const SizedBox(
                   width: 90,
                   child: Icon(
                     Icons
@@ -244,7 +252,7 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
                   // Define your onTap action here
                   print("SI");
                 },
-                child: Container(
+                child: const SizedBox(
                   width: 90,
                   child: Icon(
                     Icons
