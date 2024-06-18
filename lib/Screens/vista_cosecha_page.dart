@@ -1,5 +1,6 @@
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
+import 'package:cafetero/Screens/vista_recogidas_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -85,29 +86,28 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
       'Venta de café'
     ];
 
-    return SingleChildScrollView( // Wrap the DataTable with SingleChildScrollView
-    child: Container(
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: Colors.black,
-            width: 1.0,
-          ), // Línea negra encima de los nombres de las columnas
+    return SingleChildScrollView(
+      // Wrap the DataTable with SingleChildScrollView
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Colors.black,
+              width: 1.0,
+            ), // Línea negra encima de los nombres de las columnas
+          ),
+        ),
+        child: DataTable(
+          headingRowColor: WidgetStateColor.resolveWith((states) =>
+              Color.fromARGB(255, 255, 255, 255) ??
+              Color.fromARGB(255, 205, 218, 166)),
+          sortColumnIndex: _sortColumnIndex,
+          sortAscending: _sortAscending,
+          columns: getColumns(columns),
+          rows: getRows(cosechas),
         ),
       ),
-      child: DataTable(
-        headingRowColor: WidgetStateColor.resolveWith((states) =>
-          Color.fromARGB(255, 255, 255, 255) ??
-          Color.fromARGB(255, 205, 218, 166)),
-        sortColumnIndex: _sortColumnIndex,
-        sortAscending: _sortAscending,
-        columns: getColumns(columns),
-        rows: getRows(cosechas),
-      ),
-    ),
-  );
-
-
+    );
   }
 
   List<DataColumn> getColumns(List<String> columns) {
@@ -197,73 +197,75 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
   List<DataRow> getRows(List<CosechaModel> cosechas) {
     bool isOdd = false;
     return cosechas.map((CosechaModel cosechas) {
-        
-        final color = isOdd ? Colors.white : const Color.fromARGB(255, 205, 218, 166);
-        isOdd = !isOdd;
-        
-        return DataRow(
-          color: WidgetStateColor.resolveWith((states) => color),
-          cells: [
-            DataCell(SizedBox(
-                width: 20,
-                child: Text(
-                  cosechas.idCosecha?.toString() ?? 'N/A',
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ))),
-            DataCell(SizedBox(
+      final color =
+          isOdd ? Colors.white : const Color.fromARGB(255, 205, 218, 166);
+      isOdd = !isOdd;
+
+      return DataRow(
+        color: WidgetStateColor.resolveWith((states) => color),
+        cells: [
+          DataCell(SizedBox(
+              width: 20,
+              child: Text(
+                cosechas.idCosecha?.toString() ?? 'N/A',
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ))),
+          DataCell(SizedBox(
+              width: 90,
+              child: Text(
+                DateFormat('dd/MM/yyyy').format(cosechas.fechaInicio),
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ))),
+          DataCell(SizedBox(
+              width: 90,
+              child: Text(
+                cosechas.fechaFin != null
+                    ? DateFormat('dd/MM/yyyy').format(cosechas.fechaFin!)
+                    : 'Fecha no disponible',
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ))),
+          DataCell(SizedBox(
+              width: 90,
+              child: Text(
+                cosechas.kilosTotales.toString(),
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ))),
+          DataCell(InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => VistaRecogidasPage()));
+              },
+              child: const SizedBox(
                 width: 90,
-                child: Text(
-                  DateFormat('dd/MM/yyyy').format(cosechas.fechaInicio),
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ))),
-            DataCell(SizedBox(
+                child: Icon(
+                  Icons.content_paste_go_outlined,
+                  color: Colors.black,
+                ),
+              ))),
+          DataCell(InkWell(
+              onTap: () {
+                // Define your onTap action here
+                print("SI");
+              },
+              child: const SizedBox(
                 width: 90,
-                child: Text(
-                  cosechas.fechaFin != null
-                      ? DateFormat('dd/MM/yyyy').format(cosechas.fechaFin!)
-                      : 'Fecha no disponible',
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ))),
-            DataCell(SizedBox(
-                width: 90,
-                child: Text(
-                  cosechas.kilosTotales.toString(),
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ))),
-            DataCell(InkWell(
-                onTap: () {
-                  print("SI");
-                },
-                child: const SizedBox(
-                  width: 90,
-                  child: Icon(
-                    Icons
-                        .content_paste_go_outlined, 
-                    color: Colors.black,
-                  ),
-                ))),
-            DataCell(InkWell(
-                onTap: () {
-                  // Define your onTap action here
-                  print("SI");
-                },
-                child: const SizedBox(
-                  width: 90,
-                  child: Icon(
-                    Icons
-                        .content_paste_go_outlined,
-                    color: Colors.black,
-                  ),
-                )))
-          ],
-        );
-      }).toList();
-}}
+                child: Icon(
+                  Icons.content_paste_go_outlined,
+                  color: Colors.black,
+                ),
+              )))
+        ],
+      );
+    }).toList();
+  }
+}
