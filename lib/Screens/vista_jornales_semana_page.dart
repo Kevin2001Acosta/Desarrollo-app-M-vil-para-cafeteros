@@ -219,7 +219,6 @@ void _sortData(String column, bool ascending) {
 }
 
 
-
 List<DataRow> getRows(List<Map<String, dynamic>> resultados) {
   return resultados.map((Map<String, dynamic> res) {
     final isOdd = resultados.indexOf(res) % 2 == 1;

@@ -41,4 +41,31 @@ class RecogidaDao {
       throw Exception('No data found for id: $id');
     }
   }
+
+  Future<List<Map<String, dynamic>>> pagosRecogida(int id) async {
+  return await database.rawQuery('''
+    SELECT 
+      Trabajador.id_trabajador, 
+      Trabajador.nombre,
+      SUM(Trabaja.pago) AS pago_total,
+      SUM(Trabaja.kilos_trabajador) AS kilos_total,
+      COUNT(*) AS jornales
+    FROM 
+      Recogida
+    INNER JOIN 
+      Trabaja ON Recogida.id_recogida = Trabaja.id_recogida
+    INNER JOIN 
+      Trabajador ON Trabaja.id_trabajador = Trabajador.id_trabajador
+    WHERE 
+      Recogida.id_recogida = ?
+    GROUP BY 
+      Trabajador.id_trabajador, 
+      Trabajador.nombre
+    ORDER BY 
+      Trabajador.nombre;
+  ''', [id]);
+}
+
+
+  
 }

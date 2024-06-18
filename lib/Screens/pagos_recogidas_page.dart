@@ -1,21 +1,20 @@
-import 'package:cafetero/DataBase/Dao/m_semana_dao.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:cafetero/DataBase/Dao/recogida_dao.dart';
 
-const itemSize = 120.0;
-
-class PagosJornalesPage extends StatefulWidget {
-  final int semanaActual;
-  const PagosJornalesPage({required this.semanaActual, super.key});
+class PagosRecogidasPage extends StatefulWidget {
+  final int idRecogida;
+  const PagosRecogidasPage({Key? key, required this.idRecogida}) : super(key: key);
 
   @override
-  State<PagosJornalesPage> createState() => _PagosJornalesPageState();
+  State<PagosRecogidasPage> createState() => _PagosRecogidasPage();
 }
 
-class _PagosJornalesPageState extends State<PagosJornalesPage> {
+class _PagosRecogidasPage extends State<PagosRecogidasPage> {
   final scrollController = ScrollController();
   List<Map<String, dynamic>> pagosTrabajadores = [];
   bool isOdd = false;
+   List<Color> rowColors = [];
 
   bool sortAscending = true;
   int sortColumnIndex = 0;
@@ -27,15 +26,25 @@ class _PagosJornalesPageState extends State<PagosJornalesPage> {
   @override
   void initState() {
     super.initState();
-    getpagosTrabajadores(); // Obtén los datos de SQLite
+    getPagosTrabajadores(); 
     scrollController.addListener(onListen);
   }
 
-  void getpagosTrabajadores() async {
-    final pagos = await MSemanaDao().pagosSemana(widget.semanaActual);
-    setState(() {
-      pagosTrabajadores = pagos;
-    });
+  Future<void> getPagosTrabajadores() async {
+    try {
+      final pagos = await RecogidaDao().pagosRecogida(widget.idRecogida);
+      print('Datos de pagos recogidos: $pagos');
+      setState(() {
+        pagosTrabajadores = pagos;
+          rowColors = List.generate(pagos.length, (index) => _getRowColor(index));
+      });
+    } catch (e) {
+      print('Error al obtener pagos: $e');
+    }
+  }
+
+  Color _getRowColor(int index) {
+    return index.isOdd ? Colors.white : const Color.fromARGB(255, 205, 218, 166);
   }
 
   @override
@@ -55,17 +64,15 @@ class _PagosJornalesPageState extends State<PagosJornalesPage> {
         sortAscending = ascending;
       });
     }
-    List<Map<String, dynamic>> pagosTrabajadoresModificable =
-        List.from(pagosTrabajadores);
+    List<Map<String, dynamic>> pagosTrabajadoresModificable = List.from(pagosTrabajadores);
     if (sortAscending) {
-      pagosTrabajadoresModificable
-          .sort((a, b) => a['id_trabajador'].compareTo(b['id_trabajador']));
+      pagosTrabajadoresModificable.sort((a, b) => a['id_trabajador'].compareTo(b['id_trabajador']));
     } else {
-      pagosTrabajadoresModificable
-          .sort((a, b) => b['id_trabajador'].compareTo(a['id_trabajador']));
+      pagosTrabajadoresModificable.sort((a, b) => b['id_trabajador'].compareTo(a['id_trabajador']));
     }
     setState(() {
       pagosTrabajadores = pagosTrabajadoresModificable;
+       rowColors = List.generate(pagosTrabajadores.length, (index) => _getRowColor(index));
     });
   }
 
@@ -80,18 +87,11 @@ class _PagosJornalesPageState extends State<PagosJornalesPage> {
         sortAscending = ascending;
       });
     }
-    List<Map<String, dynamic>> pagosTrabajadoresModificable =
-        List.from(pagosTrabajadores);
+    List<Map<String, dynamic>> pagosTrabajadoresModificable = List.from(pagosTrabajadores);
     if (sortAscending) {
-      pagosTrabajadoresModificable.sort((a, b) => a['nombre']
-          .toString()
-          .toLowerCase()
-          .compareTo(b['nombre'].toString().toLowerCase()));
+      pagosTrabajadoresModificable.sort((a, b) => a['nombre'].toString().toLowerCase().compareTo(b['nombre'].toString().toLowerCase()));
     } else {
-      pagosTrabajadoresModificable.sort((a, b) => b['nombre']
-          .toString()
-          .toLowerCase()
-          .compareTo(a['nombre'].toString().toLowerCase()));
+      pagosTrabajadoresModificable.sort((a, b) => b['nombre'].toString().toLowerCase().compareTo(a['nombre'].toString().toLowerCase()));
     }
     setState(() {
       pagosTrabajadores = pagosTrabajadoresModificable;
@@ -109,14 +109,11 @@ class _PagosJornalesPageState extends State<PagosJornalesPage> {
         sortAscending = ascending;
       });
     }
-    List<Map<String, dynamic>> pagosTrabajadoresModificable =
-        List.from(pagosTrabajadores);
+    List<Map<String, dynamic>> pagosTrabajadoresModificable = List.from(pagosTrabajadores);
     if (sortAscending) {
-      pagosTrabajadoresModificable
-          .sort((a, b) => a['pago_total'].compareTo(b['pago_total']));
+      pagosTrabajadoresModificable.sort((a, b) => a['pago_total'].compareTo(b['pago_total']));
     } else {
-      pagosTrabajadoresModificable
-          .sort((a, b) => b['pago_total'].compareTo(a['pago_total']));
+      pagosTrabajadoresModificable.sort((a, b) => b['pago_total'].compareTo(a['pago_total']));
     }
     setState(() {
       pagosTrabajadores = pagosTrabajadoresModificable;
@@ -139,7 +136,7 @@ class _PagosJornalesPageState extends State<PagosJornalesPage> {
         headingRowHeight: 80,
         dataRowHeight: 60,
         minWidth: 650,
-        headingRowColor: WidgetStateColor.resolveWith(
+        headingRowColor: MaterialStateColor.resolveWith(
             (states) => const Color.fromARGB(255, 255, 255, 255)),
 
         isHorizontalScrollBarVisible: true,
@@ -176,7 +173,7 @@ class _PagosJornalesPageState extends State<PagosJornalesPage> {
             label: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('PAGO TOTAL ', style: TextStyle(color: Colors.black)),
+                Text('PAGO ', style: TextStyle(color: Colors.black)),
                 Icon(
                   Icons.filter_list,
                   color: Colors.black,
@@ -189,17 +186,21 @@ class _PagosJornalesPageState extends State<PagosJornalesPage> {
           const DataColumn2(
             label: Center(
                 child:
+                    Text('KILOS TOTALES', style: TextStyle(color: Colors.black))),
+            numeric: true,
+          ),
+          const DataColumn2(
+            label: Center(
+                child:
                     Text('JORNALES ', style: TextStyle(color: Colors.black))),
             numeric: true,
           )
         ],
-        rows: pagosTrabajadores.map((pago) {
-          //int idx = pagosTrabajadores.indexOf(pago);
-          final color =
-              isOdd ? Colors.white : const Color.fromARGB(255, 205, 218, 166);
-          isOdd = !isOdd;
+        rows: pagosTrabajadores.asMap().entries.map((entry) {
+          final index = entry.key;
+          final pago = entry.value;
           return DataRow(
-            color: WidgetStateColor.resolveWith((states) => color),
+            color: MaterialStateProperty.resolveWith<Color>((states) => rowColors[index]),
             cells: pago.entries.map((e) {
               return DataCell(Align(
                 alignment: Alignment.center,
@@ -224,3 +225,4 @@ class _PagosJornalesPageState extends State<PagosJornalesPage> {
     );
   }
 }
+

@@ -35,18 +35,18 @@ dependencies:
 
 
   # para tablas
-  data_table_2: ^2.5.12
+  data_table_2: ^2.5.15
 
   # para manejar la base de datos
   sqflite: ^2.3.2
   path: any
   provider: ^6.1.2
   # para formatos de fechas y más
-  intl: ^0.18.1
+  intl: ^0.19.0
 
   group_list_view: ^1.1.1
 
-  http: ^0.13.3
+  http: ^1.2.0
   html: ^0.15.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -69,7 +69,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^4.0.0
 
 flutter_launcher_icons:
   android: "launcher_icon"

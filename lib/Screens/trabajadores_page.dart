@@ -31,6 +31,30 @@ class _TrabajadoresPageState extends State<TrabajadoresPage> {
   // TODO: Método para agregar un nuevo trabajador
   Future<void> _addTrabajador() async {
     final String nombre = _nombreController.text;
+    final trabajadoresProvider = Provider.of<TrabajadoresProvider>(context, listen: false);
+
+    if(nombre.isEmpty){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.redAccent,
+          content: Text('Por favor digita un nombre', style: TextStyle(color: Colors.white)),
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return;
+    }
+
+    if(trabajadoresProvider.trabajadores.values.expand((list) => list).any((trabajador) => trabajador.nombre == nombre)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.redAccent,
+          content: Text('El trabajador ya existe, Por favor digita otro nombre', style: TextStyle(color: Colors.white)),
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return;
+    }
+
     await Provider.of<TrabajadoresProvider>(context, listen: false)
         .insertarTrabajadores(TrabajadorModel(nombre: nombre));
     _nombreController.clear();
