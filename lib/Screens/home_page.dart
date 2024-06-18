@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
+import 'package:cafetero/DataBase/Dao/gastos_dao.dart';
 import 'package:cafetero/DataBase/Dao/recogida_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
 import 'package:cafetero/Screens/dash_board_page.dart';
@@ -420,12 +421,8 @@ class MyHomePage extends StatelessWidget {
                 ),
                 title:
                     const Text('Dashboard', style: TextStyle(fontSize: 17.0)),
-                onTap: () => {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return DashboardPage(
-                      year: 2024,
-                    );
-                  }))
+                onTap: () async {
+                  print(await GastosDao().gastosbyYear(2024));
                 },
               ),
             ],
