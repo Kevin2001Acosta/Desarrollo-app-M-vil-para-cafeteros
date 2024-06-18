@@ -5,6 +5,7 @@ import 'package:cafetero/Models/gastos_model.dart';
 import 'package:cafetero/Models/recogida_model.dart';
 import 'package:cafetero/Models/trabaja_model.dart';
 import 'package:cafetero/Screens/home_page.dart';
+import 'package:cafetero/Screens/pagos_recogidas_page.dart';
 import 'package:cafetero/Widgets/recogida_dia_trabajo.dart';
 import 'package:cafetero/Widgets/recogida_kilos_trabajo.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
@@ -226,13 +227,27 @@ class _RecogidaPageState extends State<RecogidaPage> {
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          onPressed: () {
-            // TODO: llevar a la pagina de ver recogidas de la cosecha actual.
-          },
-          label: const Text('Ver recogidas', style: TextStyle(fontSize: 16)),
-          icon: const Icon(Icons.history_sharp),
+  backgroundColor: Theme.of(context).colorScheme.surface,
+  onPressed: () { 
+    if (infoRecogida != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PagosRecogidasPage(idRecogida: infoRecogida.idRecogida!),
         ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No hay una cosecha seleccionada para ver recogidas.'),
+        ),
+      );
+    }
+  },
+  label: const Text('Ver recogidas', style: TextStyle(fontSize: 16)),
+  icon: const Icon(Icons.history_sharp),
+),
+ 
       ),
     );
   }
