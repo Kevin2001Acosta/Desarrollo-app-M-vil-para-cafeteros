@@ -139,7 +139,7 @@ class _PagosJornalesPageState extends State<PagosJornalesPage> {
         headingRowHeight: 80,
         dataRowHeight: 60,
         minWidth: 650,
-        headingRowColor: MaterialStateColor.resolveWith(
+        headingRowColor: WidgetStateColor.resolveWith(
             (states) => const Color.fromARGB(255, 255, 255, 255)),
 
         isHorizontalScrollBarVisible: true,
@@ -199,7 +199,7 @@ class _PagosJornalesPageState extends State<PagosJornalesPage> {
               isOdd ? Colors.white : const Color.fromARGB(255, 205, 218, 166);
           isOdd = !isOdd;
           return DataRow(
-            color: MaterialStateProperty.resolveWith<Color>((states) => color),
+            color: WidgetStateColor.resolveWith((states) => color),
             cells: pago.entries.map((e) {
               return DataCell(Align(
                 alignment: Alignment.center,

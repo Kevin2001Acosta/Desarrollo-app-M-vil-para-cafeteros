@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors
 import 'dart:io';
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
 import 'package:cafetero/DataBase/Dao/recogida_dao.dart';
@@ -93,7 +92,7 @@ class MyHomePage extends StatelessWidget {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Cosecha sin registros'),
+                title: const Text('Cosecha sin registros'),
                 content: Text(
                   '''La cosecha no tiene registros, presione aceptar si desea eliminar la cosecha, si no eliminas la cosecha debes ingresar datos por lo menos en una recogida''',
                   style: TextStyle(color: Colors.deepOrange.shade300),
@@ -265,7 +264,7 @@ class MyHomePage extends StatelessWidget {
           }),
         ),
         drawer: Drawer(
-          backgroundColor: Color.fromRGBO(226, 234, 223, 1),
+          backgroundColor: const Color.fromRGBO(226, 234, 223, 1),
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
@@ -273,49 +272,52 @@ class MyHomePage extends StatelessWidget {
                 accountName: MediaQuery(
                   data: MediaQuery.of(context),
                   child: Container(
-                  width: MediaQuery.of(context).size.width*0.5,
-                  height: MediaQuery.of(context).size.height*0.03,
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 185, 192, 164).withOpacity(0.7), // Color de fondo
-                    borderRadius: BorderRadius.circular(
-                        15),
-                  ),
-                  child: Center( 
-                    child: AutoSizeText(
-                      '¡Bienvenido, Admin! 👋🏽',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 0, 0, 0),
-                        fontWeight: FontWeight.bold,
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    height: MediaQuery.of(context).size.height * 0.03,
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 185, 192, 164)
+                          .withOpacity(0.7), // Color de fondo
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: const Center(
+                      child: AutoSizeText(
+                        '¡Bienvenido, Admin! 👋🏽',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 0, 0, 0),
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 2,
+                        minFontSize: 12.0,
+                        maxFontSize: 20.0,
                       ),
-                      maxLines: 2,
-                      minFontSize: 12.0, 
-                      maxFontSize: 20.0,
                     ),
                   ),
-                ),),
+                ),
                 accountEmail: null,
                 currentAccountPicture: Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Color.fromARGB(255, 69, 87, 10), width: 2.0),
+                    border: Border.all(
+                        color: const Color.fromARGB(255, 69, 87, 10),
+                        width: 2.0),
                   ),
-                  child: CircleAvatar(
+                  child: const CircleAvatar(
                     backgroundColor: Color(0xFFF5F9F3),
                     radius: 30,
                     backgroundImage: AssetImage(
                         'assets/logo.png'), // Cambia la imagen según tus necesidades
                   ),
                 ),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     image: DecorationImage(
                   image: AssetImage('assets/fondo2.png'),
                   fit: BoxFit.cover,
                 )),
               ),
               ListTile(
-                leading: Icon(Icons.perm_identity_outlined, size: 25),
-                title: Text('Trabajador',
+                leading: const Icon(Icons.perm_identity_outlined, size: 25),
+                title: const Text('Trabajador',
                     style: TextStyle(
                       fontSize: 17.0,
                     )),
@@ -331,8 +333,8 @@ class MyHomePage extends StatelessWidget {
                 thickness: 1,
               ),
               ListTile(
-                leading: Icon(Icons.shopping_basket_outlined, size: 25),
-                title: Text('Recogida', style: TextStyle(fontSize: 17.0)),
+                leading: const Icon(Icons.shopping_basket_outlined, size: 25),
+                title: const Text('Recogida', style: TextStyle(fontSize: 17.0)),
                 onTap: () => {
                   navegarSiCosechaIniciada(context,
                       'No hay una cosecha iniciada,\n Iniciela en el botón inferior derecho verde')
@@ -343,11 +345,11 @@ class MyHomePage extends StatelessWidget {
                 thickness: 1,
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.receipt_long_sharp,
                   size: 25,
                 ),
-                title: Text('Gastos', style: TextStyle(fontSize: 17.0)),
+                title: const Text('Gastos', style: TextStyle(fontSize: 17.0)),
                 onTap: () => {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return const GastosPage();
@@ -359,8 +361,8 @@ class MyHomePage extends StatelessWidget {
                 thickness: 1,
               ),
               ListTile(
-                leading: Icon(Icons.view_timeline_outlined, size: 25),
-                title: Text('Jornal',
+                leading: const Icon(Icons.view_timeline_outlined, size: 25),
+                title: const Text('Jornal',
                     style: TextStyle(
                       fontSize: 17.0,
                     )),
@@ -376,11 +378,12 @@ class MyHomePage extends StatelessWidget {
                 thickness: 1,
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.view_list_outlined,
                   size: 25,
                 ),
-                title: Text('Vista Cosecha', style: TextStyle(fontSize: 17.0)),
+                title: const Text('Vista Cosecha',
+                    style: TextStyle(fontSize: 17.0)),
                 onTap: () => {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return const PaginaCosechas();
