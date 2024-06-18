@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class PaginaSemanaJornal extends StatefulWidget {
-  const PaginaSemanaJornal({Key? key}) : super(key: key);
+  const PaginaSemanaJornal({super.key});
 
   @override
   State<PaginaSemanaJornal> createState() => _PaginaSemanaJornalState();
@@ -35,23 +35,22 @@ class _PaginaSemanaJornalState extends State<PaginaSemanaJornal> {
     await initializeDateFormatting('es_ES', null);
     List<JornalModel> jornalBD = await JornalDao().readAll();
     List<Map<String, dynamic>> tempResultados = [];
-    
 
     for (JornalModel jornal in jornalBD) {
-        try {
-          Map<String, dynamic> resultado = await JornalDao().getJornalPorSemanaPago(jornal.idJornal);
-          tempResultados.add(resultado);
-        } catch (e) {
-          print('Error fetching data for id: ${jornal.idJornal} - $e');
-        }
+      try {
+        Map<String, dynamic> resultado =
+            await JornalDao().getJornalPorSemanaPago(jornal.idJornal);
+        tempResultados.add(resultado);
+      } catch (e) {
+        print('Error fetching data for id: ${jornal.idJornal} - $e');
       }
+    }
 
-    setState(() {   
+    setState(() {
       jornales = jornalBD;
       resultados = tempResultados;
     });
   }
-  
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -108,11 +107,7 @@ class _PaginaSemanaJornalState extends State<PaginaSemanaJornal> {
 
     return Container(
       decoration: const BoxDecoration(
-        border: Border(
-            top: BorderSide(
-                color: Colors.black,
-                width:
-                    1.0)),
+        border: Border(top: BorderSide(color: Colors.black, width: 1.0)),
       ),
       child: DataTable(
         headingRowColor: WidgetStateColor.resolveWith(
@@ -186,104 +181,114 @@ class _PaginaSemanaJornalState extends State<PaginaSemanaJornal> {
     }).toList();
   }
 
-void _sortData(String column, bool ascending) {
-  setState(() {
-    resultados.sort((a, b) {
-      int cmp = 0; 
+  void _sortData(String column, bool ascending) {
+    setState(() {
+      resultados.sort((a, b) {
+        int cmp = 0;
 
-      switch (column) {
-        case 'Fecha Inicio':
-          final fechaInicioA = DateTime.tryParse(a['fecha_inicio']?.toString() ?? '') ?? DateTime.now();
-          final fechaInicioB = DateTime.tryParse(b['fecha_inicio']?.toString() ?? '') ?? DateTime.now();
-          cmp = fechaInicioA.compareTo(fechaInicioB);
-          break;
-        case 'Fecha Fin':
-          final fechaFinA = DateTime.tryParse(a['fecha_fin']?.toString() ?? '') ?? DateTime.now();
-          final fechaFinB = DateTime.tryParse(b['fecha_fin']?.toString() ?? '') ?? DateTime.now();
-          cmp = fechaFinA.compareTo(fechaFinB);
-          break;
-        case 'Pagos Totales':
-          final pagoA = a['pagos'] ?? 0.0;
-          final pagoB = b['pagos'] ?? 0.0;
-          cmp = pagoA.compareTo(pagoB);
-          break;
-        default:
-          // Handle the default case (column name not found)
-          print('Error: Invalid column name: $column');
-          break;
-      }
+        switch (column) {
+          case 'Fecha Inicio':
+            final fechaInicioA =
+                DateTime.tryParse(a['fecha_inicio']?.toString() ?? '') ??
+                    DateTime.now();
+            final fechaInicioB =
+                DateTime.tryParse(b['fecha_inicio']?.toString() ?? '') ??
+                    DateTime.now();
+            cmp = fechaInicioA.compareTo(fechaInicioB);
+            break;
+          case 'Fecha Fin':
+            final fechaFinA =
+                DateTime.tryParse(a['fecha_fin']?.toString() ?? '') ??
+                    DateTime.now();
+            final fechaFinB =
+                DateTime.tryParse(b['fecha_fin']?.toString() ?? '') ??
+                    DateTime.now();
+            cmp = fechaFinA.compareTo(fechaFinB);
+            break;
+          case 'Pagos Totales':
+            final pagoA = a['pagos'] ?? 0.0;
+            final pagoB = b['pagos'] ?? 0.0;
+            cmp = pagoA.compareTo(pagoB);
+            break;
+          default:
+            // Handle the default case (column name not found)
+            print('Error: Invalid column name: $column');
+            break;
+        }
 
-      return ascending ? cmp : -cmp;
+        return ascending ? cmp : -cmp;
+      });
     });
-  });
-}
+  }
 
+  List<DataRow> getRows(List<Map<String, dynamic>> resultados) {
+    return resultados.map((Map<String, dynamic> res) {
+      final isOdd = resultados.indexOf(res) % 2 == 1;
+      final color = isOdd
+          ? const Color.fromARGB(255, 244, 244, 244)
+          : const Color.fromARGB(255, 205, 218, 166);
 
-List<DataRow> getRows(List<Map<String, dynamic>> resultados) {
-  return resultados.map((Map<String, dynamic> res) {
-    final isOdd = resultados.indexOf(res) % 2 == 1;
-    final color = isOdd ? const Color.fromARGB(255, 244, 244, 244) : const Color.fromARGB(255, 205, 218, 166); 
+      final idSemana = res['id_semana']?.toString() ?? '';
+      final id = res['id_semana'];
+      final inicio = DateTime.parse(res['fecha_inicio']);
+      final fechaInicio = DateFormat('dd/MM/yyyy').format(inicio);
 
+      final fechaFin = res['fecha_fin'] != null
+          ? DateFormat('dd/MM/yyyy').format(DateTime.parse(res['fecha_fin']))
+          : 'Fecha no disponible';
+      final pagoTotal = res['pagos']?.toString() ?? '';
 
-    final idSemana = res['id_semana']?.toString() ?? ''; 
-    final id = res['id_semana'];
-    final inicio =  DateTime.parse(res['fecha_inicio']);
-    final fechaInicio = DateFormat('dd/MM/yyyy').format(inicio);
-
-    final fechaFin = res['fecha_fin'] != null
-        ? DateFormat('dd/MM/yyyy').format(DateTime.parse(res['fecha_fin']))
-        : 'Fecha no disponible';
-    final pagoTotal = res['pagos']?.toString() ?? ''; 
-
-
-    final dataCells = [
-      DataCell(SizedBox(
-        width: 20,
-        child: Text(idSemana, style: const TextStyle(fontSize: 16)),
-      )),
-      DataCell(SizedBox(
-        width: 90,
-        child: Text(fechaInicio, style: const TextStyle(fontSize: 16)),
-      )),
-      DataCell(SizedBox(
-        width: 90,
-        child: Text(fechaFin, style: const TextStyle(fontSize: 16)),
-      )),
-      DataCell(SizedBox(
-        width: 90,
-        child: Text(pagoTotal, style: const TextStyle(fontSize: 16)),
-      )),
-      DataCell(InkWell(
-        onTap: (){
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => VerJornalesPage(idSemana: id)));
-        },
-        child: const SizedBox(
+      final dataCells = [
+        DataCell(SizedBox(
+          width: 20,
+          child: Text(idSemana, style: const TextStyle(fontSize: 16)),
+        )),
+        DataCell(SizedBox(
           width: 90,
-          child: Icon(
-            Icons.content_paste_go_outlined,
-            color: Colors.black,
-          ),
-        ),
-      )),
-      DataCell(InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PagosJornalesPage(semanaActual:id)));
-        },
-        child: const SizedBox(
+          child: Text(fechaInicio, style: const TextStyle(fontSize: 16)),
+        )),
+        DataCell(SizedBox(
           width: 90,
-          child: Icon(
-            Icons.content_paste_go_outlined,
-            color: Colors.black,
+          child: Text(fechaFin, style: const TextStyle(fontSize: 16)),
+        )),
+        DataCell(SizedBox(
+          width: 90,
+          child: Text(pagoTotal, style: const TextStyle(fontSize: 16)),
+        )),
+        DataCell(InkWell(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => VerJornalesPage(idSemana: id)));
+          },
+          child: const SizedBox(
+            width: 90,
+            child: Icon(
+              Icons.content_paste_go_outlined,
+              color: Colors.black,
+            ),
           ),
-        ),
-      )),
-    ];
-    return DataRow(color: WidgetStateProperty.resolveWith((states) => color), cells: dataCells);}).toList();
+        )),
+        DataCell(InkWell(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => PagosJornalesPage(semanaActual: id)));
+          },
+          child: const SizedBox(
+            width: 90,
+            child: Icon(
+              Icons.content_paste_go_outlined,
+              color: Colors.black,
+            ),
+          ),
+        )),
+      ];
+      return DataRow(
+          color: WidgetStateProperty.resolveWith((states) => color),
+          cells: dataCells);
+    }).toList();
   }
 }

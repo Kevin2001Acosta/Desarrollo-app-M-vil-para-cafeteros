@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
+import 'package:cafetero/DataBase/Dao/gastos_dao.dart';
 import 'package:cafetero/DataBase/Dao/recogida_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
+import 'package:cafetero/Screens/dash_board_page.dart';
 import 'package:cafetero/Screens/gastos_page.dart';
 import 'package:cafetero/Screens/trabajadores_page.dart';
 import 'package:cafetero/Screens/trabajo_recogida_page.dart';
@@ -397,11 +399,12 @@ class MyHomePage extends StatelessWidget {
                 thickness: 1,
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.view_list_outlined,
                   size: 25,
                 ),
-                title: Text('Vista Jornal Semana', style: TextStyle(fontSize: 17.0)),
+                title: const Text('Vista Jornal Semana',
+                    style: TextStyle(fontSize: 17.0)),
                 onTap: () => {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return const PaginaSemanaJornal();
@@ -421,6 +424,21 @@ class MyHomePage extends StatelessWidget {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return PrecioCafe();
                   }))
+                },
+              ),
+              Divider(
+                color: Colors.grey.withOpacity(0.5),
+                thickness: 1,
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.dashboard_outlined,
+                  size: 25,
+                ),
+                title:
+                    const Text('Dashboard', style: TextStyle(fontSize: 17.0)),
+                onTap: () async {
+                  print(await GastosDao().gastosbyYear(2024));
                 },
               ),
             ],

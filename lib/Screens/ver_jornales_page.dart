@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 class VerJornalesPage extends StatefulWidget {
   final int idSemana;
 
-  const VerJornalesPage({Key? key, required this.idSemana}) : super(key: key);
+  const VerJornalesPage({super.key, required this.idSemana});
 
   @override
   State<VerJornalesPage> createState() => _VerJornalesPage();
@@ -30,11 +30,9 @@ class _VerJornalesPage extends State<VerJornalesPage> {
     List<TrabajadorModel> trabajadoresDB = await TrabajadorDao().readAll();
     setState(() {
       trabajadores = trabajadoresDB;
-      trabajadoresMap = Map.fromIterable(
-        trabajadores,
-        key: (trabajador) => trabajador.id,
-        value: (trabajador) => trabajador,
-      );
+      trabajadoresMap = {
+        for (var trabajador in trabajadores) trabajador.id!: trabajador
+      };
       _isLoading = false;
     });
   }
@@ -91,30 +89,35 @@ class _VerJornalesPage extends State<VerJornalesPage> {
                 } else {
                   final jornales = snapshot.data!;
                   if (jornales.isEmpty) {
-                    return const Center(child:Row(
+                    return const Center(
+                        child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                         Icon(
-                          Icons.info_outline, 
+                        Icon(
+                          Icons.info_outline,
                           color: Colors.black,
-                          size: 25, 
+                          size: 25,
                         ),
-                        SizedBox(width: 8), 
+                        SizedBox(width: 8),
                         Text(
                           'No hay jornales para mostrar',
                           style: TextStyle(
-                            fontSize: 20, 
-                            color: Colors.black, 
+                            fontSize: 20,
+                            color: Colors.black,
                           ),
                         ),
-                      ],));
+                      ],
+                    ));
                   }
 
-                  jornales.sort((a, b) => _isDescending ? b.fecha.compareTo(a.fecha) : a.fecha.compareTo(b.fecha));
+                  jornales.sort((a, b) => _isDescending
+                      ? b.fecha.compareTo(a.fecha)
+                      : a.fecha.compareTo(b.fecha));
 
                   Map<DateTime, List<JornalModel>> groupedJornales = {};
                   for (var jornal in jornales) {
-                    final date = DateTime(jornal.fecha.year, jornal.fecha.month, jornal.fecha.day);
+                    final date = DateTime(jornal.fecha.year, jornal.fecha.month,
+                        jornal.fecha.day);
                     if (groupedJornales[date] == null) {
                       groupedJornales[date] = [];
                     }
@@ -132,21 +135,27 @@ class _VerJornalesPage extends State<VerJornalesPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.date_range, color: Colors.black),
+                                const Icon(Icons.date_range,
+                                    color: Colors.black),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
                                     DateFormat('yyyy-MM-dd').format(date),
-                                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ],
                             ),
                             ...jornalesPorFecha.map((jornal) {
-                              final trabajador = trabajadoresMap[jornal.idTrabajador];
+                              final trabajador =
+                                  trabajadoresMap[jornal.idTrabajador];
                               return _buildJornalCard(jornal, trabajador);
-                            }).toList(),
-                            const SizedBox(height: 20), // Espacio entre la Card y la siguiente fecha
+                            }),
+                            const SizedBox(
+                                height:
+                                    20), // Espacio entre la Card y la siguiente fecha
                           ],
                         );
                       }).toList(),
@@ -167,7 +176,9 @@ class _VerJornalesPage extends State<VerJornalesPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5), // Reduce el margen para pegar más la Card
+      margin: const EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 5), // Reduce el margen para pegar más la Card
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 20),
         title: Column(
@@ -187,7 +198,7 @@ class _VerJornalesPage extends State<VerJornalesPage> {
                   ),
                   const SizedBox(width: 10),
                   Text(
-                    '${trabajador?.nombre ?? "Desconocido"}',
+                    trabajador?.nombre ?? "Desconocido",
                     style: const TextStyle(fontSize: 22, color: Colors.black),
                   ),
                 ],
@@ -252,11 +263,3 @@ class _VerJornalesPage extends State<VerJornalesPage> {
     );
   }
 }
-
-
-
-
-
-
-
-

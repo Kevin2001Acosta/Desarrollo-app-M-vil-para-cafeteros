@@ -31,24 +31,29 @@ class _TrabajadoresPageState extends State<TrabajadoresPage> {
   // TODO: Método para agregar un nuevo trabajador
   Future<void> _addTrabajador() async {
     final String nombre = _nombreController.text;
-    final trabajadoresProvider = Provider.of<TrabajadoresProvider>(context, listen: false);
+    final trabajadoresProvider =
+        Provider.of<TrabajadoresProvider>(context, listen: false);
 
-    if(nombre.isEmpty){
+    if (nombre.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.redAccent,
-          content: Text('Por favor digita un nombre', style: TextStyle(color: Colors.white)),
+          content: Text('Por favor digita un nombre',
+              style: TextStyle(color: Colors.white)),
           duration: Duration(seconds: 3),
         ),
       );
       return;
     }
 
-    if(trabajadoresProvider.trabajadores.values.expand((list) => list).any((trabajador) => trabajador.nombre == nombre)) {
+    if (trabajadoresProvider.trabajadores.values
+        .expand((list) => list)
+        .any((trabajador) => trabajador.nombre == nombre)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.redAccent,
-          content: Text('El trabajador ya existe, Por favor digita otro nombre', style: TextStyle(color: Colors.white)),
+          content: Text('El trabajador ya existe, Por favor digita otro nombre',
+              style: TextStyle(color: Colors.white)),
           duration: Duration(seconds: 3),
         ),
       );
@@ -187,10 +192,8 @@ class _TrabajadoresPageState extends State<TrabajadoresPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("TRABAJADORES"),
-        titleTextStyle: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold
-        ),
+        titleTextStyle:
+            const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
