@@ -35,7 +35,7 @@ dependencies:
 
 
   # para tablas
-  data_table_2: ^2.5.12
+  data_table_2: ^2.5.15
 
   # para manejar la base de datos
   sqflite: ^2.3.2
