@@ -14,6 +14,7 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:cafetero/Screens/vista_cosecha_page.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cafetero/Screens/vista_jornales_semana_page.dart';
 
 // url de pdf info café: https://federaciondecafeteros.org/app/uploads/2019/10/precio_cafe.pdf
 
@@ -393,6 +394,18 @@ class MyHomePage extends StatelessWidget {
               Divider(
                 color: Colors.grey.withOpacity(0.5),
                 thickness: 1,
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.view_list_outlined,
+                  size: 25,
+                ),
+                title: Text('Vista Jornal Semana', style: TextStyle(fontSize: 17.0)),
+                onTap: () => {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const PaginaSemanaJornal();
+                  }))
+                },
               ),
             ],
           ),

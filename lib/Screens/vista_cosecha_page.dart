@@ -15,7 +15,6 @@ class PaginaCosechas extends StatefulWidget {
 
 class _PaginaCosechasState extends State<PaginaCosechas> {
   List<CosechaModel> cosechas = [];
-  bool isOdd = false;
   int? _sortColumnIndex;
   bool _sortAscending = true;
 
@@ -87,27 +86,29 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
       'Venta de café'
     ];
 
-    return SingleChildScrollView(
-      // Wrap the DataTable with SingleChildScrollView
-      child: Container(
-        decoration: const BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: Colors.black,
-              width: 1.0,
-            ), // Línea negra encima de los nombres de las columnas
-          ),
-        ),
-        child: DataTable(
-          headingRowColor: WidgetStateColor.resolveWith(
-              (states) => const Color.fromARGB(255, 255, 255, 255)),
-          sortColumnIndex: _sortColumnIndex,
-          sortAscending: _sortAscending,
-          columns: getColumns(columns),
-          rows: getRows(cosechas),
+    return SingleChildScrollView( // Wrap the DataTable with SingleChildScrollView
+    child: Container(
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: Colors.black,
+            width: 1.0,
+          ), // Línea negra encima de los nombres de las columnas
         ),
       ),
-    );
+      child: DataTable(
+        headingRowColor: WidgetStateColor.resolveWith((states) =>
+          Color.fromARGB(255, 255, 255, 255) ??
+          Color.fromARGB(255, 205, 218, 166)),
+        sortColumnIndex: _sortColumnIndex,
+        sortAscending: _sortAscending,
+        columns: getColumns(columns),
+        rows: getRows(cosechas),
+      ),
+    ),
+  );
+
+
   }
 
   List<DataColumn> getColumns(List<String> columns) {
@@ -194,11 +195,13 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
     });
   }
 
-  List<DataRow> getRows(List<CosechaModel> cosechas) =>
-      cosechas.map((CosechaModel cosechas) {
-        final color =
-            isOdd ? Colors.white : const Color.fromARGB(255, 205, 218, 166);
+  List<DataRow> getRows(List<CosechaModel> cosechas) {
+    bool isOdd = false;
+    return cosechas.map((CosechaModel cosechas) {
+        
+        final color = isOdd ? Colors.white : const Color.fromARGB(255, 205, 218, 166);
         isOdd = !isOdd;
+        
         return DataRow(
           color: WidgetStateColor.resolveWith((states) => color),
           cells: [
@@ -247,7 +250,7 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
                   width: 90,
                   child: Icon(
                     Icons
-                        .content_paste_go_outlined, // Choose an appropriate icon
+                        .content_paste_go_outlined, 
                     color: Colors.black,
                   ),
                 ))),
@@ -260,11 +263,15 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
                   width: 90,
                   child: Icon(
                     Icons
-                        .content_paste_go_outlined, // Choose an appropriate icon
+                        .content_paste_go_outlined,
                     color: Colors.black,
                   ),
                 )))
           ],
         );
       }).toList();
+<<<<<<< HEAD
 }
+=======
+}}
+>>>>>>> 058a1b587478c53b1a5a2a2e57a0a7cc7043c5ec
