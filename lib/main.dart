@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
         ),
         cardTheme: const CardTheme(
           color: Color.fromARGB(255, 131, 155, 42),
-          shadowColor: Color.fromARGB(255, 38, 98, 107),
+          shadowColor: Color.fromARGB(255, 38, 98, 107), 
           elevation: 10,
           shape: BeveledRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10)),

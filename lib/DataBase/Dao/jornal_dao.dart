@@ -42,4 +42,17 @@ class JornalDao {
       throw Exception('No data found for id: $id');
     }
   }
+
+    Future<Map<String, dynamic>> getJornalPorSemanaPago(int? id) async {
+    final data = await database.rawQuery('''
+    SELECT j.id_semana, m.fecha_inicio, m.fecha_fin, SUM(j.pago_trabajador) AS pagos
+    FROM jornal j JOIN  m_semana m ON m.id_semana = j.id_semana
+    GROUP BY j.id_semana, m.fecha_inicio, m.fecha_fin
+    HAVING j.id_semana = ? ''', [id]);
+    if (data.isNotEmpty) {
+      return data.first;
+    } else {
+      throw Exception('No data found for id: $id');
+    }
+  }
 }

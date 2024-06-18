@@ -47,8 +47,8 @@ class _VerJornalesPage extends State<VerJornalesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Jornales por semana"),
-        titleTextStyle: const TextStyle(fontSize: 20),
+        title: const Text('JORNALES EN SEMANA ACTUAL', style: TextStyle(
+                color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),),
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
