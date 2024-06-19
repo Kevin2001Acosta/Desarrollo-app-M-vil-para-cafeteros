@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cafetero/Screens/registrar_venta_cafe_page.dart';
 
 class PaginaCosechas extends StatefulWidget {
   const PaginaCosechas({super.key});
@@ -197,6 +198,8 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
   List<DataRow> getRows(List<CosechaModel> cosechas) {
     bool isOdd = false;
     return cosechas.map((CosechaModel cosechas) {
+      
+      final id = cosechas.idCosecha;
       final color =
           isOdd ? Colors.white : const Color.fromARGB(255, 205, 218, 166);
       isOdd = !isOdd;
@@ -254,8 +257,10 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
               ))),
           DataCell(InkWell(
               onTap: () {
-                // Define your onTap action here
-                print("SI");
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => RegistrarVenta(idCosecha: id ?? 0,)));
               },
               child: const SizedBox(
                 width: 90,
