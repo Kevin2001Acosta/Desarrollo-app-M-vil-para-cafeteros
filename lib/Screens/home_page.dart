@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
-import 'package:cafetero/DataBase/Dao/gastos_dao.dart';
 import 'package:cafetero/DataBase/Dao/recogida_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
 import 'package:cafetero/Screens/dash_board_page.dart';
@@ -11,42 +9,15 @@ import 'package:cafetero/Screens/jornal_page.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
 import 'package:cafetero/provider/recogida_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
-import 'package:html/parser.dart' as parser;
 import 'package:cafetero/Screens/vista_cosecha_page.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cafetero/Screens/vista_jornales_semana_page.dart';
 import 'package:cafetero/Screens/precio_cafe_page.dart';
 
-// url de pdf info café: https://federaciondecafeteros.org/app/uploads/2019/10/precio_cafe.pdf
-
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
-
-  // scrapping para obtener el precio del café
-  void peticion() async {
-    try {
-      final response = await http.get(
-          Uri.parse('https://federaciondecafeteros.org/wp/publicaciones/'));
-
-      if (response.statusCode == 200) {
-        final document = parser.parse(response.body);
-        final priceElement = document.querySelector('li > strong');
-
-        if (priceElement != null) {
-          final price = priceElement.text;
-          print('The price is $price');
-        } else {
-          print('Price element not found');
-        }
-      }
-    } on SocketException catch (_) {
-      print('No Internet connection');
-    } catch (e) {
-      print(e);
-    }
-  }
 
   Future<void> iniciarCosecha(BuildContext context) async {
     List<CosechaModel> cosechaIniciada = await CosechaDao().cosechaIniciada();
@@ -81,7 +52,6 @@ class MyHomePage extends StatelessWidget {
 
   Future<void> finalizarCosecha(
       BuildContext context, bool recogidaIniciada) async {
-    peticion();
     bool debeCancelar = false;
     Map<String, dynamic> kilos = {};
     if (!recogidaIniciada) {
@@ -410,19 +380,21 @@ class MyHomePage extends StatelessWidget {
                     return const PaginaSemanaJornal();
                   }))
                 },
-              ),Divider(
+              ),
+              Divider(
                 color: Colors.grey.withOpacity(0.5),
                 thickness: 1,
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.coffee,
                   size: 25,
                 ),
-                title: Text('Precio Actual del Café', style: TextStyle(fontSize: 17.0)),
+                title: const Text('Precio Actual del Café',
+                    style: TextStyle(fontSize: 17.0)),
                 onTap: () => {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return PrecioCafe();
+                    return const PrecioCafe();
                   }))
                 },
               ),
@@ -438,11 +410,81 @@ class MyHomePage extends StatelessWidget {
                 title:
                     const Text('Dashboard', style: TextStyle(fontSize: 17.0)),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const DashboardPage(
-                      year: 2024,
-                    );
-                  }));
+                  final TextEditingController controllerAnio =
+                      TextEditingController();
+                  showDialog<Map<String, dynamic>>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Elija el año'),
+                        content: SizedBox(
+                          height: 150.0,
+                          child: Column(
+                            children: <Widget>[
+                              TextField(
+                                controller: controllerAnio,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                decoration: InputDecoration(
+                                  //labelText: 'Precio por kilo',
+                                  label: const Text('Año',
+                                      style:
+                                          TextStyle(color: Color(0xFF356724))),
+                                  //labelStyle: const TextStyle(color: Colors.green),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: const BorderSide(
+                                        color: Color(0xFF356724)),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: Color(0xFF356724)),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: Color(0xFF356724)),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                keyboardType: TextInputType.number,
+                                onChanged: (value) {
+                                  // Guarda el valor en alguna parte
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('Cancelar',
+                                style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.surface)),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: Text(
+                              'aceptar',
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.surface),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return DashboardPage(
+                                    year: int.parse(controllerAnio.text));
+                              }));
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
               ),
             ],

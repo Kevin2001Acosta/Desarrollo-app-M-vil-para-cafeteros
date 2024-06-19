@@ -16,7 +16,7 @@ import 'package:cafetero/provider/recogida_provider.dart';
 import 'package:cafetero/Widgets/dialogo_valores_recogida.dart';
 
 class RecogidaPage extends StatefulWidget {
-  const RecogidaPage({Key? key}) : super(key: key);
+  const RecogidaPage({super.key});
 
   @override
   State<RecogidaPage> createState() => _RecogidaPageState();
@@ -101,7 +101,7 @@ class _RecogidaPageState extends State<RecogidaPage> {
         result = {'precioDia': 50000};
         break;
       case Recogida.kiliado:
-        if (!context.mounted) return;
+        if (!mounted) return;
         result = await mostrarDialogoRecogida(context, Recogida.kiliado);
         // ? lo mismo que al dia pero kiliado
         break;
@@ -113,7 +113,7 @@ class _RecogidaPageState extends State<RecogidaPage> {
       // Aquí puedes iniciar la recogida con los datos recogidos
       // llamado a bd hecho
       final jornals = result!['precioDia'] == null ? 0 : 1;
-      if (!context.mounted) return;
+      if (!mounted) return;
       context.read<RecogidaProvider>().iniciarRecogida(RecogidaModel(
             jornal: jornals,
             idCosecha: idCosecha!,
@@ -149,7 +149,7 @@ class _RecogidaPageState extends State<RecogidaPage> {
         kilosTotales: sumTrabajos[0]['kilos_totales'],
         idGastos: idGasto,
       );
-      if (!context.mounted) return;
+      if (!mounted) return;
       context.read<RecogidaProvider>().finalizarRecogida(recogidaFinal);
       context.read<RecogidaProvider>().cargarEstadoRecogida();
     }
@@ -227,27 +227,28 @@ class _RecogidaPageState extends State<RecogidaPage> {
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(
-  backgroundColor: Theme.of(context).colorScheme.surface,
-  onPressed: () { 
-    if (infoRecogida != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PagosRecogidasPage(idRecogida: infoRecogida.idRecogida!),
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          onPressed: () {
+            if (infoRecogida != null) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      PagosRecogidasPage(idRecogida: infoRecogida.idRecogida!),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                      'No hay una cosecha seleccionada para ver recogidas.'),
+                ),
+              );
+            }
+          },
+          label: const Text('Ver recogidas', style: TextStyle(fontSize: 16)),
+          icon: const Icon(Icons.history_sharp),
         ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No hay una cosecha seleccionada para ver recogidas.'),
-        ),
-      );
-    }
-  },
-  label: const Text('Ver recogidas', style: TextStyle(fontSize: 16)),
-  icon: const Icon(Icons.history_sharp),
-),
- 
       ),
     );
   }

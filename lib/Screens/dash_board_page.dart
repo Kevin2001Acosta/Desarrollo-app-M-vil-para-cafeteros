@@ -38,7 +38,7 @@ class DashboardPageState extends State<DashboardPage> {
           bottom: const TabBar(
             tabs: [
               Tab(text: 'Costos'),
-              Tab(text: 'Arrobas vendidas'),
+              Tab(text: 'Arrobas'),
               Tab(text: 'Ventas'),
               Tab(text: 'Totales'),
             ],
@@ -362,12 +362,35 @@ class DashboardPageState extends State<DashboardPage> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          Container(
+                            alignment: Alignment.bottomCenter,
+                            height: 50,
+                            child: const Text(
+                              'Costos',
+                              style:
+                                  TextStyle(fontSize: 24, color: Colors.brown),
+                            ),
+                          ),
                           SizedBox(
                             height: 350,
                             width: 470,
                             child: BarChart(BarChartData(
-                              //barTouchData: BarTouchData(enabled: false),
+                              barTouchData: BarTouchData(
+                                touchTooltipData: BarTouchTooltipData(
+                                  getTooltipItem:
+                                      (group, groupIndex, rod, rodIndex) {
+                                    String month = monthMap(snapshot.data!
+                                        .months[group.x.toInt() - 1].month);
+                                    String cost = snapshot
+                                        .data!.months[group.x.toInt() - 1].cost;
+                                    return BarTooltipItem(
+                                      '$month\nCosto: $cost \$',
+                                      const TextStyle(
+                                          color: Colors.white, fontSize: 16),
+                                    );
+                                  },
+                                ),
+                              ),
                               titlesData: FlTitlesData(
                                 //show: true,
                                 bottomTitles: AxisTitles(
@@ -446,26 +469,141 @@ class DashboardPageState extends State<DashboardPage> {
                           )
                         ],
                       ),
+                      const SizedBox(
+                        width: 30,
+                      ),
                       Column(
                         children: [
-                          const SizedBox(height: 20),
-                          SizedBox(
-                            height: 350,
+                          Container(
+                            alignment: Alignment.bottomCenter,
+                            height: 50,
+                            child: const Text(
+                              'arrobas vendidas',
+                              style:
+                                  TextStyle(fontSize: 24, color: Colors.brown),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(right: 20),
+                            height: 300,
                             width: 470,
                             child: LineChart(LineChartData(
+                                lineTouchData: LineTouchData(
+                                  touchTooltipData: LineTouchTooltipData(
+                                    getTooltipItems: (touchedSpots) {
+                                      return touchedSpots.map((touchedSpot) {
+                                        final month = monthMap(snapshot
+                                            .data!
+                                            .months[touchedSpot.spotIndex]
+                                            .month);
+                                        final arrobasSold = snapshot
+                                            .data!
+                                            .months[touchedSpot.spotIndex]
+                                            .arrobasSold;
+                                        return LineTooltipItem(
+                                            '$month\n@ vendidas: $arrobasSold @',
+                                            const TextStyle(
+                                                color: Colors.white));
+                                      }).toList();
+                                    },
+                                  ),
+                                ),
                                 lineBarsData: [
                                   LineChartBarData(
+                                      barWidth: 5,
+                                      isCurved: true,
+                                      color: Colors.brown,
                                       spots: snapshot.data!.months
                                           .map((monthData) {
-                                    double x =
-                                        double.tryParse(monthData.month) ?? 10;
-                                    double y = double.tryParse(
-                                            monthData.arrobasSold) ??
-                                        0;
-                                    return FlSpot(x, y);
-                                  }).toList())
+                                        double x =
+                                            double.tryParse(monthData.month) ??
+                                                10;
+                                        double y = double.tryParse(
+                                                monthData.arrobasSold) ??
+                                            0;
+                                        return FlSpot(x, y);
+                                      }).toList())
+                                ],
+                                titlesData: const FlTitlesData(
+                                    rightTitles: AxisTitles(
+                                        sideTitles:
+                                            SideTitles(showTitles: false)),
+                                    bottomTitles:
+                                        AxisTitles(axisNameSize: 20)))),
+                          ),
+                          Container(
+                            alignment: Alignment.bottomCenter,
+                            height: 50,
+                            child: const Text(
+                              'Ingresos y gastos',
+                              style:
+                                  TextStyle(fontSize: 24, color: Colors.green),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(right: 20),
+                            height: 300,
+                            width: 470,
+                            child: LineChart(LineChartData(
+                                lineTouchData: LineTouchData(
+                                  touchTooltipData: LineTouchTooltipData(
+                                    getTooltipItems: (touchedSpots) {
+                                      return touchedSpots.map((touchedSpot) {
+                                        final month = monthMap(snapshot
+                                            .data!
+                                            .months[touchedSpot.spotIndex]
+                                            .month);
+                                        final sale = snapshot.data!
+                                            .months[touchedSpot.spotIndex].sale;
+                                        final cost = snapshot.data!
+                                            .months[touchedSpot.spotIndex].cost;
+                                        return LineTooltipItem(
+                                            '$month\nIngresos: $sale \$\nGastos: $cost \$',
+                                            const TextStyle(
+                                                color: Colors.white));
+                                      }).toList();
+                                    },
+                                  ),
+                                ),
+                                lineBarsData: [
+                                  LineChartBarData(
+                                    barWidth: 5,
+                                    isCurved: true,
+                                    color: Colors.green,
+                                    spots:
+                                        snapshot.data!.months.map((monthData) {
+                                      double x =
+                                          double.tryParse(monthData.month) ??
+                                              10;
+                                      double y =
+                                          double.tryParse(monthData.sale) ?? 0;
+                                      return FlSpot(x, y);
+                                    }).toList(),
+                                  ),
+                                  LineChartBarData(
+                                      barWidth: 5,
+                                      isCurved: true,
+                                      color: Colors.red,
+                                      spots: snapshot.data!.months
+                                          .map((monthData) {
+                                        double x =
+                                            double.tryParse(monthData.month) ??
+                                                10;
+                                        double y =
+                                            double.tryParse(monthData.cost) ??
+                                                0;
+                                        return FlSpot(x, y);
+                                      }).toList())
                                 ],
                                 titlesData: FlTitlesData(
+                                    leftTitles: const AxisTitles(
+                                        sideTitles: SideTitles(
+                                      showTitles: true,
+                                      reservedSize: 50,
+                                    )),
+                                    rightTitles: const AxisTitles(
+                                        sideTitles:
+                                            SideTitles(showTitles: false)),
                                     bottomTitles: AxisTitles(
                                         axisNameSize: 20,
                                         sideTitles: SideTitles(
