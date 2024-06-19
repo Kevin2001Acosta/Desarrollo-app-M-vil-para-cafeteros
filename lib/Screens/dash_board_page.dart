@@ -101,7 +101,7 @@ class DashboardPageState extends State<DashboardPage> {
                       double arrobasSold = double.parse(monthData.arrobasSold);
 
                       String formattedArrobasSold =
-                          NumberFormat('#,##0').format(arrobasSold);
+                          NumberFormat('#,##0.00').format(arrobasSold);
                       return Padding(
                         padding: EdgeInsets.only(top: index == 0 ? 8.0 : 0),
                         child: Card(
@@ -178,8 +178,8 @@ class DashboardPageState extends State<DashboardPage> {
                         children: [
                           const SizedBox(height: 20),
                           SizedBox(
-                            width: 400,
-                            height: 250,
+                            width: 420,
+                            height: 260,
                             child: Card(
                               color: const Color.fromARGB(255, 205, 218, 166),
                               shape: RoundedRectangleBorder(
@@ -195,7 +195,7 @@ class DashboardPageState extends State<DashboardPage> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                0.6,
+                                                0.55,
                                             child: const Text(
                                               'Total Costo:',
                                               style: TextStyle(fontSize: 19),
@@ -204,9 +204,9 @@ class DashboardPageState extends State<DashboardPage> {
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                              0.3,
+                                              0.35,
                                           child: Text(
-                                              '${snapshot.data!.totalCost}',
+                                              '${NumberFormat('#,##0').format(snapshot.data!.totalCost)}\$',
                                               style:
                                                   const TextStyle(fontSize: 20),
                                               textAlign: TextAlign.left),
@@ -219,7 +219,7 @@ class DashboardPageState extends State<DashboardPage> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                0.6,
+                                                0.55,
                                             child: const Text(
                                               'Total @ vendidas:',
                                               style: TextStyle(fontSize: 18),
@@ -228,7 +228,7 @@ class DashboardPageState extends State<DashboardPage> {
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                              0.3,
+                                              0.35,
                                           child: Text(
                                               '${snapshot.data!.totalArrobasSold}',
                                               style:
@@ -243,7 +243,7 @@ class DashboardPageState extends State<DashboardPage> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                0.6,
+                                                0.55,
                                             child: const Text(
                                               'Total Ventas:',
                                               style: TextStyle(fontSize: 18),
@@ -252,9 +252,9 @@ class DashboardPageState extends State<DashboardPage> {
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                              0.3,
+                                              0.35,
                                           child: Text(
-                                              '${snapshot.data!.totalSales}',
+                                              '${NumberFormat('#,##0').format(snapshot.data!.totalSales)}\$',
                                               style:
                                                   const TextStyle(fontSize: 20),
                                               textAlign: TextAlign.left),
@@ -267,7 +267,7 @@ class DashboardPageState extends State<DashboardPage> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                0.6,
+                                                0.55,
                                             child: const Text(
                                               'Costo por @:',
                                               style: TextStyle(fontSize: 18),
@@ -276,9 +276,9 @@ class DashboardPageState extends State<DashboardPage> {
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                              0.3,
+                                              0.35,
                                           child: Text(
-                                              '${snapshot.data!.costoArroba}',
+                                              '${NumberFormat('#,##0.00').format(snapshot.data!.costoArroba)}\$',
                                               style:
                                                   const TextStyle(fontSize: 20),
                                               textAlign: TextAlign.left),
@@ -291,7 +291,7 @@ class DashboardPageState extends State<DashboardPage> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                0.6,
+                                                0.55,
                                             child: const Text(
                                               'Precio Libre por @:',
                                               style: TextStyle(fontSize: 18),
@@ -300,9 +300,9 @@ class DashboardPageState extends State<DashboardPage> {
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                              0.3,
+                                              0.35,
                                           child: Text(
-                                              '${snapshot.data!.precioLibreArroba}',
+                                              '${NumberFormat('#,##0.00').format(snapshot.data!.precioLibreArroba)}\$',
                                               style:
                                                   const TextStyle(fontSize: 20),
                                               textAlign: TextAlign.left),
@@ -315,7 +315,7 @@ class DashboardPageState extends State<DashboardPage> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                0.6,
+                                                0.55,
                                             child: const Text(
                                               'Precio Venta por @:',
                                               style: TextStyle(fontSize: 18),
@@ -324,9 +324,9 @@ class DashboardPageState extends State<DashboardPage> {
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                              0.3,
+                                              0.35,
                                           child: Text(
-                                              '${snapshot.data!.precioVentaArroba}',
+                                              '${NumberFormat('#,##0.00').format(snapshot.data!.precioVentaArroba)}\$',
                                               style:
                                                   const TextStyle(fontSize: 20),
                                               textAlign: TextAlign.left),
@@ -339,7 +339,7 @@ class DashboardPageState extends State<DashboardPage> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                0.6,
+                                                0.55,
                                             child: const Text(
                                               'Rentabilidad:',
                                               style: TextStyle(fontSize: 18),
@@ -348,9 +348,9 @@ class DashboardPageState extends State<DashboardPage> {
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                              0.3,
+                                              0.35,
                                           child: Text(
-                                              '${snapshot.data!.rentabilidad}%',
+                                              '${NumberFormat('#,##0.00').format(snapshot.data!.rentabilidad)}%',
                                               style:
                                                   const TextStyle(fontSize: 20),
                                               textAlign: TextAlign.left),
@@ -384,7 +384,7 @@ class DashboardPageState extends State<DashboardPage> {
                                     String cost = snapshot
                                         .data!.months[group.x.toInt() - 1].cost;
                                     return BarTooltipItem(
-                                      '$month\nCosto: $cost \$',
+                                      '$month\nCosto: ${NumberFormat('#,##0').format((int.parse(cost)))} \$',
                                       const TextStyle(
                                           color: Colors.white, fontSize: 16),
                                     );
@@ -547,20 +547,29 @@ class DashboardPageState extends State<DashboardPage> {
                             child: LineChart(LineChartData(
                                 lineTouchData: LineTouchData(
                                   touchTooltipData: LineTouchTooltipData(
+                                    maxContentWidth: 350,
                                     getTooltipItems: (touchedSpots) {
                                       return touchedSpots.map((touchedSpot) {
-                                        final month = monthMap(snapshot
-                                            .data!
-                                            .months[touchedSpot.spotIndex]
-                                            .month);
-                                        final sale = snapshot.data!
-                                            .months[touchedSpot.spotIndex].sale;
-                                        final cost = snapshot.data!
-                                            .months[touchedSpot.spotIndex].cost;
-                                        return LineTooltipItem(
-                                            '$month\nIngresos: $sale \$\nGastos: $cost \$',
-                                            const TextStyle(
-                                                color: Colors.white));
+                                        if (touchedSpot.barIndex == 0) {
+                                          final month = monthMap(snapshot
+                                              .data!
+                                              .months[touchedSpot.spotIndex]
+                                              .month);
+                                          final sale = snapshot
+                                              .data!
+                                              .months[touchedSpot.spotIndex]
+                                              .sale;
+                                          final cost = snapshot
+                                              .data!
+                                              .months[touchedSpot.spotIndex]
+                                              .cost;
+                                          return LineTooltipItem(
+                                              '$month\nIngresos: ${NumberFormat('#,##0').format(int.parse(sale))} \$\nGastos: ${NumberFormat('#,##0').format(int.parse(cost))} \$',
+                                              const TextStyle(
+                                                  color: Colors.white));
+                                        } else {
+                                          return null;
+                                        }
                                       }).toList();
                                     },
                                   ),
