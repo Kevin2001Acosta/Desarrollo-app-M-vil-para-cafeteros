@@ -90,7 +90,7 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
     return SingleChildScrollView(
       // Wrap the DataTable with SingleChildScrollView
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           border: Border(
             top: BorderSide(
               color: Colors.black,
@@ -99,9 +99,8 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
           ),
         ),
         child: DataTable(
-          headingRowColor: WidgetStateColor.resolveWith((states) =>
-              Color.fromARGB(255, 255, 255, 255) ??
-              Color.fromARGB(255, 205, 218, 166)),
+          headingRowColor: WidgetStateColor.resolveWith(
+              (states) => const Color.fromARGB(255, 255, 255, 255)),
           sortColumnIndex: _sortColumnIndex,
           sortAscending: _sortAscending,
           columns: getColumns(columns),
@@ -246,7 +245,9 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => VistaRecogidasPage()));
+                        builder: (context) => VistaRecogidasPage(
+                              idCosecha: cosechas.idCosecha!,
+                            )));
               },
               child: const SizedBox(
                 width: 90,

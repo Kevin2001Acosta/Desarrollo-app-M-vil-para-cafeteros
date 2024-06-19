@@ -14,7 +14,7 @@ class _PagosRecogidasPage extends State<PagosRecogidasPage> {
   final scrollController = ScrollController();
   List<Map<String, dynamic>> pagosTrabajadores = [];
   bool isOdd = false;
-   List<Color> rowColors = [];
+  List<Color> rowColors = [];
 
   bool sortAscending = true;
   int sortColumnIndex = 0;

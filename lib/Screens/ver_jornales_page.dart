@@ -7,8 +7,7 @@ import 'package:intl/intl.dart';
 
 class VerJornalesPage extends StatefulWidget {
   final int idSemana;
-
-  const VerJornalesPage({super.key, required this.idSemana});
+  const VerJornalesPage({Key? key, required this.idSemana}) : super(key: key);
 
   @override
   State<VerJornalesPage> createState() => _VerJornalesPage();
@@ -36,7 +35,249 @@ class _VerJornalesPage extends State<VerJornalesPage> {
       _isLoading = false;
     });
   }
+  
+  Future<void> actualizarJornales(JornalModel jornal, TrabajadorModel? trabajador) async {
+  final TextEditingController descripcionController = TextEditingController(text: jornal.descripcion);
+  final TextEditingController pagoController = TextEditingController(text: jornal.pagoTrabajador.toString());
+  final TextEditingController fechaController = TextEditingController(text: DateFormat('yyyy-MM-dd').format(jornal.fecha));
+  TrabajadorModel? trabajadorSeleccionado = trabajador;
+  await showModalBottomSheet(
+    elevation: 5,
+    isScrollControlled: true,
+    context: context,
+    builder: (_) => StatefulBuilder(
+      builder: (BuildContext context, StateSetter setModalState) {
+        return Container(
+          padding: EdgeInsets.only(
+            top: 30,
+            left: 15,
+            right: 15,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 50,
+          ),
+          color: Theme.of(context).colorScheme.surfaceVariant,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              DropdownButtonFormField<TrabajadorModel>(
+                value: trabajadorSeleccionado,
+                items: trabajadores.map((trabajador) {
+                  return DropdownMenuItem<TrabajadorModel>(
+                    value: trabajador,
+                    child: Text(trabajador.nombre),
+                  );
+                }).toList(),
+                onChanged: (TrabajadorModel? newValue) {
+                  setModalState(() {
+                    trabajadorSeleccionado = newValue;
+                  });
+                },
+                decoration: InputDecoration(
+                  labelStyle: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                  labelText: 'Nombre',
+                  border: OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                      width: 1.0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: descripcionController,
+                decoration: InputDecoration(
+                  labelStyle: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                  labelText: 'Descripción',
+                  border: OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                      width: 1.0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: pagoController,
+                decoration: InputDecoration(
+                  labelStyle: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                  labelText: 'Pago',
+                  border: OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                      width: 1.0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                ),
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: fechaController,
+                readOnly: true,
+                onTap: () async {
+                  final DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: jornal.fecha,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    builder: (BuildContext context, Widget? child) {
+                      return Theme(
+                        data: ThemeData.light().copyWith(
+                          primaryColor: Colors.black, // Color del header
+                          colorScheme: const ColorScheme.light(
+                            primary: Color.fromARGB(255, 131, 155, 42), // Color del header
+                            onPrimary: Colors.white, // Color del texto en el header
+                            surface: Color(0xFFC9D1B3), // Color de fondo de los items
+                            onSurface: Colors.black, // Color del texto de los items
+                          ),
+                          buttonTheme: const ButtonThemeData(
+                            textTheme: ButtonTextTheme.primary, // Estilo del texto del botón 'OK'
+                          ),
+                        ),
+                        child: child!,
+                      );
+                    },
+                  );
+                  if (pickedDate != null) {
+                    setModalState(() {
+                      fechaController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+                      jornal.fecha = pickedDate;
+                    });
+                  }
+                },
+                decoration: InputDecoration(
+                  labelText: 'Fecha',
+                  labelStyle: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                  border: OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                      width: 1.0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                  ),
+                  onPressed: () async {
+                    // Validar campos antes de actualizar
+                     if (descripcionController.text.isEmpty) {
+                      mostrarAlertDialog(context, 'Por favor, ingresa la descripción');
+                      return;
+                    }
+                    if (pagoController.text.isEmpty) {
+                      mostrarAlertDialog(context, 'Por favor, ingresa el pago');
+                      return;
+                    }
+                    jornal.descripcion = descripcionController.text;
+                    jornal.pagoTrabajador = int.tryParse(pagoController.text) ?? 0;
+                    if (trabajadorSeleccionado?.id != null) {
+                      jornal.idTrabajador = trabajadorSeleccionado!.id!;
+                    }
+                    await JornalDao().update(jornal);
+                    if (!mounted) return;
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Center(
+                          child: Text(
+                            'Jornal actualizado con éxito',
+                            style: TextStyle(color: Theme.of(context).colorScheme.surface),
+                          ),
+                        ),
+                        elevation: 5.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        backgroundColor: Theme.of(context).colorScheme.onError,
+                      ),
+                    );
+                    cargarTrabajadores();
+                    setState(() {});
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(18),
+                    child: Text(
+                      'Actualizar',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    ),
+  );
+  setState(() {});
+}
 
+void mostrarAlertDialog(BuildContext context, String mensaje) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Advertencia', ),
+        content: Text(mensaje),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Aceptar',  style: TextStyle(color: Theme.of(context).colorScheme.surface)),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+  Future<void> borrarJornal(JornalModel jornal) async {
+    await JornalDao().delete(jornal);
+    cargarTrabajadores();
+  }
   void _toggleSortOrder() {
     setState(() {
       _isDescending = !_isDescending;
@@ -47,8 +288,11 @@ class _VerJornalesPage extends State<VerJornalesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('JORNALES EN SEMANA ACTUAL', style: TextStyle(
-                color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),),
+        title: const Text('JORNALES EN SEMANA ACTUAL',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold)),
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -63,18 +307,21 @@ class _VerJornalesPage extends State<VerJornalesPage> {
                 color: Colors.white,
               ),
               label: Text(
-                _isDescending ? 'Ordenar descendente' : 'Ordenar ascendente',
+                _isDescending
+                    ? 'Ordenar descendente'
+                    : 'Ordenar ascendente',
                 style: const TextStyle(fontSize: 15, color: Colors.white),
               ),
             ),
           ),
-          const SizedBox(height: 10), // Espacio entre el botón y la fecha
+          const SizedBox(height: 10),
           Expanded(
             child: FutureBuilder<List<JornalModel>>(
               future: JornalDao().getJornalesPorSemana(widget.idSemana),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                      child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(
                     child: Container(
@@ -82,7 +329,8 @@ class _VerJornalesPage extends State<VerJornalesPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         'Error: ${snapshot.error}',
-                        style: const TextStyle(color: Colors.red, fontSize: 16),
+                        style:
+                            const TextStyle(color: Colors.red, fontSize: 16),
                       ),
                     ),
                   );
@@ -109,11 +357,8 @@ class _VerJornalesPage extends State<VerJornalesPage> {
                       ],
                     ));
                   }
-
-                  jornales.sort((a, b) => _isDescending
-                      ? b.fecha.compareTo(a.fecha)
-                      : a.fecha.compareTo(b.fecha));
-
+                  jornales.sort((a, b) =>
+                      _isDescending ? b.fecha.compareTo(a.fecha) : a.fecha.compareTo(b.fecha));
                   Map<DateTime, List<JornalModel>> groupedJornales = {};
                   for (var jornal in jornales) {
                     final date = DateTime(jornal.fecha.year, jornal.fecha.month,
@@ -123,7 +368,6 @@ class _VerJornalesPage extends State<VerJornalesPage> {
                     }
                     groupedJornales[date]!.add(jornal);
                   }
-
                   return SingleChildScrollView(
                     child: Column(
                       children: groupedJornales.entries.map((entry) {
@@ -153,9 +397,7 @@ class _VerJornalesPage extends State<VerJornalesPage> {
                                   trabajadoresMap[jornal.idTrabajador];
                               return _buildJornalCard(jornal, trabajador);
                             }),
-                            const SizedBox(
-                                height:
-                                    20), // Espacio entre la Card y la siguiente fecha
+                            const SizedBox(height: 20),
                           ],
                         );
                       }).toList(),
@@ -176,9 +418,7 @@ class _VerJornalesPage extends State<VerJornalesPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
-      margin: const EdgeInsets.symmetric(
-          horizontal: 10,
-          vertical: 5), // Reduce el margen para pegar más la Card
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 20),
         title: Column(
@@ -254,6 +494,64 @@ class _VerJornalesPage extends State<VerJornalesPage> {
                       ],
                     ),
                   ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.edit, color: Colors.black),
+                  onPressed: () {
+                     actualizarJornales(jornal, trabajador);
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.black),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Confirmación'),
+                          content: const Text('¿Estás seguro de eliminar este jornal?'),
+                          actions: <Widget>[
+                            TextButton(
+                              child: Text('Cancelar', 
+                              style: TextStyle(color: Theme.of(context).colorScheme.surface),),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: Text('Eliminar', 
+                              style: TextStyle(color: Theme.of(context).colorScheme.surface),),
+                              onPressed: () {
+                                borrarJornal(jornal);
+                                Navigator.of(context).pop();
+                                if (!mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Center(
+                                    child: Text(
+                                      'Eliminado con exito',
+                                      style: TextStyle(color: Theme.of(context).colorScheme.surface),
+                                    ),
+                                  ),
+                                  elevation: 5.0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  backgroundColor: Theme.of(context).colorScheme.onError,
+                                ),
+                              );
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
                 ),
               ],
             ),
