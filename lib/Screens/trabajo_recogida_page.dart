@@ -263,25 +263,25 @@ class _RecogidaPageState extends State<RecogidaPage> {
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(
-  backgroundColor: Theme.of(context).colorScheme.surface,
-  onPressed: () { 
-    if (infoRecogida != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PagosRecogidasPage(idRecogida: infoRecogida.idRecogida!),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No hay una cosecha seleccionada para ver recogidas.'),
-        ),
-      );
-    }
-  },
-  label: const Text('Ver recogidas', style: TextStyle(fontSize: 16)),
-  icon: const Icon(Icons.history_sharp),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        onPressed: () { 
+          if (infoRecogida != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PagosRecogidasPage(idRecogida: infoRecogida.idRecogida!),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('No hay una cosecha seleccionada para ver recogidas.'),
+              ),
+            );
+          }
+        },
+        label: const Text('Ver recogidas', style: TextStyle(fontSize: 16)),
+        icon: const Icon(Icons.history_sharp),
 ),
  
       ),
