@@ -4,20 +4,18 @@ import 'package:cafetero/Models/ventas_cafe_model.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
+
 class RegistrarVenta extends StatefulWidget {
   final int idCosecha;
 
-  const RegistrarVenta({required this.idCosecha,super.key});
+  const RegistrarVenta({required this.idCosecha, super.key});
 
   @override
   _RegistrarVentaState createState() => _RegistrarVentaState();
 }
 
 class _RegistrarVentaState extends State<RegistrarVenta> {
-
   bool guardando = false;
-
-  Map<String, dynamic>? result;
   List<VentasCafeModel> ventas = [];
   int ventaTotal = 0;
   int valorKilo = 0;
@@ -36,7 +34,7 @@ class _RegistrarVentaState extends State<RegistrarVenta> {
     //print(venta);
     //}
   }
-
+  
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -52,7 +50,6 @@ class _RegistrarVentaState extends State<RegistrarVenta> {
     }
   }
 
-  
   void limpiarCampos() {
     valorPorKiloController.clear();
     pagoTotalController.clear();
@@ -81,7 +78,7 @@ class _RegistrarVentaState extends State<RegistrarVenta> {
     if ( ventaTotal > 0 && valorKilo > 0 && kilosVendidos > 0) 
     {
       final int? id = widget.idCosecha;
-      if (id != null && id !=0) {
+      if (id != null && id != 0) {
         final VentasCafeModel venta = VentasCafeModel(
           valorKilo: valorKilo,
           ventaTotal: ventaTotal,
