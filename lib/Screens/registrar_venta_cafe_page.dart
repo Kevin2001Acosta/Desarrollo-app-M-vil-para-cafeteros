@@ -36,7 +36,7 @@ class _RegistrarVentaState extends State<RegistrarVenta> {
     print(venta);
     }
   }
-  
+
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -54,27 +54,32 @@ class _RegistrarVentaState extends State<RegistrarVenta> {
 
   
   void limpiarCampos() {
-      for (var venta in ventas) {
-  print('Fecha: ${venta.fecha}, Kilos Vendidos: ${venta.kilosVendidos}, IDCOSECHA: ${venta.idCosecha}');
-}
     valorPorKiloController.clear();
     pagoTotalController.clear();
     kilosVendidosController.clear();
     selectedDate = DateTime.now();
     setState(() {
-      int ventaTotal = 0;
-      int valorKilo = 0;
-      int kilosVendidos = 0;
+      ventaTotal = 0;
+      valorKilo = 0;
+      kilosVendidos = 0;
+      ventas = [];
     });
   }
 
 
+  Future<void> mostrarVentasGuardadas() async {
+    List<VentasCafeModel> ventasBD = await VentasCafeDao().readAll();
+    setState(() {
+      ventas = ventasBD;
+    });
+    for (var venta in ventas) {
+          print('Fecha: ${venta.fecha}, Kilos Vendidos: ${venta.kilosVendidos}, IDCOSECHA: ${venta.idCosecha}');
+        }
+  }
 
-    void guardarJornal() async {
-
+  void guardarJornal() async {
     if ( ventaTotal > 0 && valorKilo > 0 && kilosVendidos > 0) 
     {
-
       final int? id = widget.idCosecha;
       if (id != null && id !=0) {
         final VentasCafeModel venta = VentasCafeModel(
@@ -127,12 +132,7 @@ class _RegistrarVentaState extends State<RegistrarVenta> {
     }
   }
 
-  Future<void> mostrarVentasGuardadas() async {
-    List<VentasCafeModel> ventasBD = await VentasCafeDao().readAll();
-    setState(() {
-      ventas = ventasBD;
-    });
-  }
+
   
 
   @override
