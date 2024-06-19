@@ -47,4 +47,29 @@ class TrabajaDao {
   ''', [id]);
     return data;
   }
+
+  // Nueva función modificada
+  Future<List<Map<String, dynamic>>> getDatosPorRecogida(int? idRecogida) async {
+    final data = await database.rawQuery('''
+    SELECT Trabaja.fecha, Trabajador.nombre, Trabaja.kilos_trabajador, Trabaja.pago
+    FROM Trabaja
+    INNER JOIN Trabajador ON Trabaja.id_trabajador = Trabajador.id_trabajador
+    WHERE Trabaja.id_recogida = ?
+    ORDER BY Trabaja.fecha DESC
+    ''', [idRecogida]);
+
+    if (data.isNotEmpty) {
+      // Devuelve la lista de mapas directamente
+      return data.map((row) {
+        return {
+          'fecha': row['fecha'],
+          'nombre': row['nombre'] ?? 'Desconocido',
+          'kilos_trabajador': row['kilos_trabajador'] ?? 0.0,
+          'pago': row['pago'] ?? 0.0,
+        };
+      }).toList();
+    } else {
+      throw Exception('No data found for id_recogida: $idRecogida');
+    }
+  }
 }

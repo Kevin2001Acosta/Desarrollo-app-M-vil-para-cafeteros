@@ -5,6 +5,7 @@ import 'package:cafetero/Models/gastos_model.dart';
 import 'package:cafetero/Models/recogida_model.dart';
 import 'package:cafetero/Models/trabaja_model.dart';
 import 'package:cafetero/Screens/home_page.dart';
+import 'package:cafetero/Screens/vista_recogidas_page.dart';
 import 'package:cafetero/Widgets/recogida_dia_trabajo.dart';
 import 'package:cafetero/Widgets/recogida_kilos_trabajo.dart';
 import 'package:cafetero/provider/cosecha_provider.dart';
@@ -15,7 +16,7 @@ import 'package:cafetero/provider/recogida_provider.dart';
 import 'package:cafetero/Widgets/dialogo_valores_recogida.dart';
 
 class RecogidaPage extends StatefulWidget {
-  const RecogidaPage({Key? key}) : super(key: key);
+  const RecogidaPage({super.key});
 
   @override
   State<RecogidaPage> createState() => _RecogidaPageState();
@@ -100,7 +101,7 @@ class _RecogidaPageState extends State<RecogidaPage> {
         result = {'precioDia': 50000};
         break;
       case Recogida.kiliado:
-        if (!context.mounted) return;
+        if (!mounted) return;
         result = await mostrarDialogoRecogida(context, Recogida.kiliado);
         // ? lo mismo que al dia pero kiliado
         break;
@@ -112,7 +113,7 @@ class _RecogidaPageState extends State<RecogidaPage> {
       // Aquí puedes iniciar la recogida con los datos recogidos
       // llamado a bd hecho
       final jornals = result!['precioDia'] == null ? 0 : 1;
-      if (!context.mounted) return;
+      if (!mounted) return;
       context.read<RecogidaProvider>().iniciarRecogida(RecogidaModel(
             jornal: jornals,
             idCosecha: idCosecha!,
@@ -123,54 +124,20 @@ class _RecogidaPageState extends State<RecogidaPage> {
       context.read<RecogidaProvider>().cargarEstadoRecogida();
     }
   }
- 
+
   void finalizarRecogida() async {
-  final recogida = await RecogidaDao().recogidaIniciada();
-  if (recogida.isNotEmpty && recogida.length == 1) {
-    final sumTrabajos = await TrabajaDao().kilosRecogida(recogida[0].idRecogida.toString());
-    
-    if (sumTrabajos.isEmpty || sumTrabajos[0]['kilos_totales'] == 0) {
-      // No hay trabajos en la recogida, preguntar si desea eliminarla
-      if (!context.mounted) return;
-      final bool eliminar = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Eliminar recogida'),
-            content: const Text('No hay trabajos en esta recogida. ¿Desea eliminarla?'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('No',
-                 style:
-                        TextStyle(color: Theme.of(context).colorScheme.surface),),
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-              ),
-              TextButton(
-                child: Text('Sí', 
-                 style:
-                        TextStyle(color: Theme.of(context).colorScheme.surface),),
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-              ),
-            ],
-          );
-        },
-      );
-      if (eliminar) {
-        await RecogidaDao().delete(recogida[0]); 
-        if (!context.mounted) return;
-        context.read<RecogidaProvider>().cargarEstadoRecogida();
-      }
-    } else {
-      // Hay trabajos en la recogida, proceder a finalizarla
+    final recogida = await RecogidaDao().recogidaIniciada();
+    final sumTrabajos =
+        await TrabajaDao().kilosRecogida(recogida[0].idRecogida.toString());
+    if (recogida.isNotEmpty && recogida.length == 1 && sumTrabajos.isNotEmpty) {
+      // Todo: si no hay trabajos en la recogida no finalizar recogida
+      // Todo: preguntar si desea eliminar la recogida ya que no hay registros
+
+      // creo una insidencia de gastos y le agrego los pagos de los trabajadores
       final GastosModel gasto = GastosModel(
-        nombre: 'Recolecta de café',
-        valor: sumTrabajos[0]['pagos'] as int,
-        fecha: DateTime.now(),
-      );
+          nombre: 'Recolecta de café',
+          valor: sumTrabajos[0]['pagos'] as int,
+          fecha: DateTime.now());
       final idGasto = await GastosDao().insert(gasto);
       final RecogidaModel recogidaFinal = RecogidaModel(
         idRecogida: recogida[0].idRecogida as int,
@@ -182,16 +149,14 @@ class _RecogidaPageState extends State<RecogidaPage> {
         kilosTotales: sumTrabajos[0]['kilos_totales'],
         idGastos: idGasto,
       );
-      if (!context.mounted) return;
+      if (!mounted) return;
       context.read<RecogidaProvider>().finalizarRecogida(recogidaFinal);
       context.read<RecogidaProvider>().cargarEstadoRecogida();
     }
+    setState(() {
+      trabajos = {};
+    });
   }
-  setState(() {
-    trabajos = {};
-  });
-}
-  
 
   @override
   Widget build(BuildContext context) {
@@ -262,21 +227,26 @@ class _RecogidaPageState extends State<RecogidaPage> {
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(
-  backgroundColor: Theme.of(context).colorScheme.surface,
-  onPressed: () { 
-    if (infoRecogida != null) {
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No hay una cosecha seleccionada para ver recogidas.'),
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        VistaRecogidasPage(idCosecha: idCosecha!)));
+            if (infoRecogida != null) {
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                      'No hay una cosecha seleccionada para ver recogidas.'),
+                ),
+              );
+            }
+          },
+          label: const Text('Ver recogidas', style: TextStyle(fontSize: 16)),
+          icon: const Icon(Icons.history_sharp),
         ),
-      );
-    }
-  },
-  label: const Text('Ver recogidas', style: TextStyle(fontSize: 16)),
-  icon: const Icon(Icons.history_sharp),
-),
- 
       ),
     );
   }
