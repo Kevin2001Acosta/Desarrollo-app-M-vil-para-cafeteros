@@ -72,14 +72,15 @@ class PdfDownloadScreenState extends State<PdfDownloadScreen> {
                       content: AutoSizeText(
                         "No tienes conexión a internet, prueba en otro momento.",
                         style: TextStyle(
-                          color: Colors.red,
+                          color: Colors.white,
                         ),
                         maxLines: 3,
                         minFontSize: 20.0,
                         maxFontSize: 25.0,
                         textAlign: TextAlign.center,
                       ),
-                      backgroundColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      duration: Duration(seconds: 3),
                     ));
                   } else {
                     Map<Permission, PermissionStatus> statuses = await [
@@ -107,7 +108,7 @@ class PdfDownloadScreenState extends State<PdfDownloadScreen> {
                             content: AutoSizeText(
                               "Archivo Descargado Exitosamente en la dirección: $dir",
                               style: const TextStyle(
-                                color: const Color.fromARGB(255, 131, 155, 42),
+                                color: Color.fromARGB(255, 255, 255, 255),
                               ),
                               maxLines: 3,
                               minFontSize: 20.0,
@@ -115,7 +116,8 @@ class PdfDownloadScreenState extends State<PdfDownloadScreen> {
                               textAlign: TextAlign.center,
                             ),
                             backgroundColor:
-                                const Color.fromARGB(255, 255, 255, 255),
+                                const Color.fromARGB(255, 131, 155, 42),
+                            duration: Duration(seconds: 3),
                           ));
                           OpenFile.open(savePath);
                         } on DioError catch (e) {
@@ -130,14 +132,15 @@ class PdfDownloadScreenState extends State<PdfDownloadScreen> {
                         content: AutoSizeText(
                           "Permiso Denegado, por favor intentelo de nuevo.",
                           style: TextStyle(
-                            color: Colors.red,
+                            color: Colors.white,
                           ),
                           maxLines: 3,
                           minFontSize: 20.0,
                           maxFontSize: 25.0,
                           textAlign: TextAlign.center,
                         ),
-                        backgroundColor: Colors.white,
+                        backgroundColor: Colors.red,
+                        duration: Duration(seconds: 3),
                       ));
                     }
                   }

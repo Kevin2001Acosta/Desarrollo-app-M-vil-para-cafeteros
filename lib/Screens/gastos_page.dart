@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cafetero/DataBase/Dao/gastos_dao.dart';
 import 'package:cafetero/Models/gastos_model.dart';
 import 'package:cafetero/Screens/vista_gastos_page.dart';
@@ -176,17 +177,21 @@ class _GastosPageState extends State<GastosPage> {
                         await GastosDao().insert(gasto);
                         if (!mounted) return;
                         Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            backgroundColor: Colors.white,
-                            content: Text(
-                              'Gasto registrado con éxito',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Color.fromARGB(255, 33, 85, 35)),
-                            ),
-                          ),
-                        );
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: AutoSizeText(
+                            "Gasto registrado con exito",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              ),
+                              maxLines: 3,
+                              minFontSize: 20.0,
+                              maxFontSize: 25.0,
+                              textAlign: TextAlign.center,
+                              ),
+                              backgroundColor: Color.fromARGB(255, 131, 155, 42),
+                              duration: Duration(seconds: 3),
+                        ));
+
                         setState(() {
                           gastoActual = null;
                           valorGasto = 0;
@@ -194,15 +199,19 @@ class _GastosPageState extends State<GastosPage> {
                         });
                       } else {
                         Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            backgroundColor: Colors.white,
-                            content: Text(
-                              'Por favor, complete todos los campos',
-                              style: TextStyle(fontSize: 15, color: Colors.red),
-                            ),
-                          ),
-                        );
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: AutoSizeText(
+                            "Por favor complete todos los campos",
+                            style: const TextStyle(
+                              color: Colors.white,),
+                              maxLines: 3,
+                              minFontSize: 20.0,
+                              maxFontSize: 25.0,
+                              textAlign: TextAlign.center,
+                              ),
+                              backgroundColor: Colors.red,
+                              duration: Duration(seconds: 3),
+                        ));
                       }
                     },
                     label: const Text(

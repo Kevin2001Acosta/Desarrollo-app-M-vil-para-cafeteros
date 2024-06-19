@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cafetero/DataBase/Dao/cosecha_dao.dart';
 import 'package:cafetero/Models/cosecha_model.dart';
 import 'package:cafetero/Screens/vista_recogidas_page.dart';
+import 'package:cafetero/Screens/registrar_venta_cafe_page.dart';
 
 class PaginaCosechas extends StatefulWidget {
   const PaginaCosechas({Key? key}) : super(key: key);
@@ -263,8 +264,10 @@ class _PaginaCosechasState extends State<PaginaCosechas> {
               ))),
           DataCell(InkWell(
               onTap: () {
-                // Define your onTap action here
-                print("SI");
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => RegistrarVenta(idCosecha: cosecha.idCosecha ?? 0,)));
               },
               child: const SizedBox(
                 width: 90,

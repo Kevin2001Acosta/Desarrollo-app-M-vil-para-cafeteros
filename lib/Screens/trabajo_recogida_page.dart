@@ -125,20 +125,54 @@ class _RecogidaPageState extends State<RecogidaPage> {
       context.read<RecogidaProvider>().cargarEstadoRecogida();
     }
   }
-
+ 
   void finalizarRecogida() async {
-    final recogida = await RecogidaDao().recogidaIniciada();
-    final sumTrabajos =
-        await TrabajaDao().kilosRecogida(recogida[0].idRecogida.toString());
-    if (recogida.isNotEmpty && recogida.length == 1 && sumTrabajos.isNotEmpty) {
-      // Todo: si no hay trabajos en la recogida no finalizar recogida
-      // Todo: preguntar si desea eliminar la recogida ya que no hay registros
-
-      // creo una insidencia de gastos y le agrego los pagos de los trabajadores
+  final recogida = await RecogidaDao().recogidaIniciada();
+  if (recogida.isNotEmpty && recogida.length == 1) {
+    final sumTrabajos = await TrabajaDao().kilosRecogida(recogida[0].idRecogida.toString());
+    
+    if (sumTrabajos.isEmpty || sumTrabajos[0]['kilos_totales'] == 0) {
+      // No hay trabajos en la recogida, preguntar si desea eliminarla
+      if (!context.mounted) return;
+      final bool eliminar = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Eliminar recogida'),
+            content: const Text('No hay trabajos en esta recogida. ¿Desea eliminarla?'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('No',
+                 style:
+                        TextStyle(color: Theme.of(context).colorScheme.surface),),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              TextButton(
+                child: Text('Sí', 
+                 style:
+                        TextStyle(color: Theme.of(context).colorScheme.surface),),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+            ],
+          );
+        },
+      );
+      if (eliminar) {
+        await RecogidaDao().delete(recogida[0]); 
+        if (!context.mounted) return;
+        context.read<RecogidaProvider>().cargarEstadoRecogida();
+      }
+    } else {
+      // Hay trabajos en la recogida, proceder a finalizarla
       final GastosModel gasto = GastosModel(
-          nombre: 'Recolecta de café',
-          valor: sumTrabajos[0]['pagos'] as int,
-          fecha: DateTime.now());
+        nombre: 'Recolecta de café',
+        valor: sumTrabajos[0]['pagos'] as int,
+        fecha: DateTime.now(),
+      );
       final idGasto = await GastosDao().insert(gasto);
       final RecogidaModel recogidaFinal = RecogidaModel(
         idRecogida: recogida[0].idRecogida as int,
@@ -154,10 +188,12 @@ class _RecogidaPageState extends State<RecogidaPage> {
       context.read<RecogidaProvider>().finalizarRecogida(recogidaFinal);
       context.read<RecogidaProvider>().cargarEstadoRecogida();
     }
-    setState(() {
-      trabajos = {};
-    });
   }
+  setState(() {
+    trabajos = {};
+  });
+}
+  
 
   @override
   Widget build(BuildContext context) {
@@ -230,7 +266,18 @@ class _RecogidaPageState extends State<RecogidaPage> {
         floatingActionButton: FloatingActionButton.extended(
   backgroundColor: Theme.of(context).colorScheme.surface,
   onPressed: () { 
+<<<<<<< HEAD
     Navigator.push(context, MaterialPageRoute(builder: (context) => VistaRecogidasPage(idCosecha: idCosecha!)));
+=======
+    if (infoRecogida != null) {
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No hay una cosecha seleccionada para ver recogidas.'),
+        ),
+      );
+    }
+>>>>>>> 92ea6e283c5f95328a038855b2372823e93a3bd4
   },
   label: const Text('Ver recogidas', style: TextStyle(fontSize: 16)),
   icon: const Icon(Icons.history_sharp),

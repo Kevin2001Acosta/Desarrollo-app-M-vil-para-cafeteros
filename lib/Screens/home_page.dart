@@ -19,6 +19,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cafetero/Screens/vista_jornales_semana_page.dart';
 import 'package:cafetero/Screens/precio_cafe_page.dart';
 
+
 // url de pdf info café: https://federaciondecafeteros.org/app/uploads/2019/10/precio_cafe.pdf
 
 class MyHomePage extends StatelessWidget {
@@ -61,21 +62,20 @@ class MyHomePage extends StatelessWidget {
           MaterialPageRoute(builder: (context) => const RecogidaPage()));
     } else {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Center(
-            child: Text(
-              'Ya hay una cosecha iniciada',
-              style: TextStyle(color: Theme.of(context).colorScheme.surface),
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: AutoSizeText(
+          "Ya hay una cosecha iniciada",
+          style: const TextStyle(
+            color: Colors.white,),
+            maxLines: 3,
+            minFontSize: 20.0,
+            maxFontSize: 25.0,
+            textAlign: TextAlign.center,
             ),
-          ),
-          elevation: 5.0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          backgroundColor: Theme.of(context).colorScheme.onError,
-        ),
-      );
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+      ));
+
     }
   }
 
@@ -118,23 +118,20 @@ class MyHomePage extends StatelessWidget {
                     onPressed: () async {
                       await CosechaDao().delete(cosechaIniciada[0]);
                       if (!context.mounted) return;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Center(
-                            child: Text(
-                              'Cosecha eliminada exitosamente',
-                              style: TextStyle(
-                                  color: Theme.of(context).colorScheme.surface),
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: AutoSizeText(
+                          "Cosecha eliminada exitosamente",
+                          style: const TextStyle(
+                            color: Colors.white,
                             ),
-                          ),
-                          elevation: 5.0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          backgroundColor:
-                              Theme.of(context).colorScheme.onError,
-                        ),
-                      );
+                            maxLines: 3,
+                            minFontSize: 20.0,
+                            maxFontSize: 25.0,
+                            textAlign: TextAlign.center,
+                            ),
+                            backgroundColor: Color.fromARGB(255, 131, 155, 42),
+                            duration: Duration(seconds: 3),
+                      ));
                       debeCancelar = true;
                       Navigator.of(context).pop(); // Cierra el diálogo
                     },
@@ -157,76 +154,68 @@ class MyHomePage extends StatelessWidget {
         try {
           await CosechaDao().update(cosecha);
           if (!context.mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Center(
-                child: Text(
-                  'Finalización exitosa',
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.surface),
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: AutoSizeText(
+              "Finalización exitosa",
+              style: const TextStyle(
+                color: Colors.white,
                 ),
-              ),
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              backgroundColor: Theme.of(context).colorScheme.onError,
-            ),
-          );
+                maxLines: 3,
+                minFontSize: 20.0,
+                maxFontSize: 25.0,
+                textAlign: TextAlign.center,
+                ),
+                backgroundColor: Color.fromARGB(255, 131, 155, 42),
+                duration: Duration(seconds: 3),
+          ));
+
         } catch (e) {
           if (!context.mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Center(
-                child: Text(
-                  'Error al finalizar, intentelo nuevamente',
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: AutoSizeText(
+              "Error al finalizar, intentelo de nuevo",
+              style: const TextStyle(
+                color: Colors.white,),
+                maxLines: 3,
+                minFontSize: 20.0,
+                maxFontSize: 25.0,
+                textAlign: TextAlign.center,
                 ),
-              ),
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              backgroundColor: Theme.of(context).colorScheme.onError,
-            ),
-          );
+                backgroundColor: Colors.red,
+                duration: Duration(seconds: 3),
+          ));
         }
       } else {
         if (!context.mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Center(
-              child: Text(
-                'No hay cosecha iniciada para finalizar',
-                style: TextStyle(color: Theme.of(context).colorScheme.surface),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: AutoSizeText(
+            "No hay consecha inicializada para finalizar",
+            style: const TextStyle(
+              color: Colors.white,),
+              maxLines: 3,
+              minFontSize: 20.0,
+              maxFontSize: 25.0,
+              textAlign: TextAlign.center,
               ),
-            ),
-            elevation: 5.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            backgroundColor: Theme.of(context).colorScheme.onError,
-          ),
-        );
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+        ));
       }
     } else {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.white,
-          content: const Center(
-            child: Text(
-              'Hay una recogida iniciada, Finalicela antes de cerrar la cosecha',
-              style: TextStyle(color: Colors.red),
-            ),
-          ),
-          dismissDirection: DismissDirection.up,
-          elevation: 5.0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-        ),
-      );
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: AutoSizeText(
+                "Hay una recogida iniciada, Finalicela antes de cerrar la cosecha",
+                style: const TextStyle(
+                  color: Colors.white,),
+                  maxLines: 3,
+                  minFontSize: 20.0,
+                  maxFontSize: 25.0,
+                  textAlign: TextAlign.center,
+                  ),
+                  backgroundColor: Colors.red,
+                  duration: Duration(seconds: 3),
+            ));
     }
   }
 
@@ -464,15 +453,17 @@ class MyHomePage extends StatelessWidget {
             Stack(alignment: Alignment.bottomRight, children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(bottom: 70.0),
-            child: FloatingActionButton(
+            child: FloatingActionButton.extended(
               heroTag: null,
               backgroundColor: Theme.of(context).colorScheme.surface,
               onPressed: () => iniciarCosecha(context),
               tooltip: 'Empezar Cosecha',
-              child: const Icon(Icons.agriculture_rounded),
+              label: Text('Empezar Cosecha'), 
+              icon: Icon(Icons.agriculture_rounded), 
             ),
+            
           ),
-          FloatingActionButton(
+          FloatingActionButton.extended(
               heroTag: null,
               backgroundColor: Theme.of(context).colorScheme.secondary,
               onPressed: () async {
@@ -482,7 +473,9 @@ class MyHomePage extends StatelessWidget {
                 await finalizarCosecha(context, recogidaIniciada);
               },
               tooltip: 'Finalizar Cosecha',
-              child: const Icon(Icons.agriculture_sharp)),
+              label: Text('Finalizar Cosecha'), 
+              icon: Icon(Icons.agriculture_rounded),  
+              ),
         ]));
   }
 }
