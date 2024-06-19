@@ -234,6 +234,15 @@ class _RecogidaPageState extends State<RecogidaPage> {
                 MaterialPageRoute(
                     builder: (context) =>
                         VistaRecogidasPage(idCosecha: idCosecha!)));
+            if (infoRecogida != null) {
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                      'No hay una cosecha seleccionada para ver recogidas.'),
+                ),
+              );
+            }
           },
           label: const Text('Ver recogidas', style: TextStyle(fontSize: 16)),
           icon: const Icon(Icons.history_sharp),
