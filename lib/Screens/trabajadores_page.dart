@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cafetero/Models/trabajador_model.dart';
@@ -35,27 +36,40 @@ class _TrabajadoresPageState extends State<TrabajadoresPage> {
         Provider.of<TrabajadoresProvider>(context, listen: false);
 
     if (nombre.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text('Por favor digita un nombre',
-              style: TextStyle(color: Colors.white)),
-          duration: Duration(seconds: 3),
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: AutoSizeText(
+                              "Por favor digita tu nombre",
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                              maxLines: 3,
+                              minFontSize: 20.0,
+                              maxFontSize: 25.0,
+                              textAlign: TextAlign.center,
+                            ),
+                            backgroundColor: Colors.red,
+                            duration: Duration(seconds: 3),
+                          ));
+
       return;
     }
 
     if (trabajadoresProvider.trabajadores.values
         .expand((list) => list)
         .any((trabajador) => trabajador.nombre == nombre)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text('El trabajador ya existe, Por favor digita otro nombre',
-              style: TextStyle(color: Colors.white)),
-          duration: Duration(seconds: 3),
-        ),
+ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: AutoSizeText(
+          "El trabajador ya existe, por favor digita otro nombre",
+          style: const TextStyle(
+            color: Colors.white,),
+            maxLines: 3,
+            minFontSize: 20.0,
+            maxFontSize: 25.0,
+            textAlign: TextAlign.center,
+            ),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+      )
       );
       return;
     }
@@ -83,12 +97,21 @@ class _TrabajadoresPageState extends State<TrabajadoresPage> {
       final int? id = trabajadoresProvider.trabajadores[nombre]!.first.id;
       await trabajadoresProvider
           .borrarTrabajadores(TrabajadorModel(id: id, nombre: nombre));
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text('Trabajador eliminado'),
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: AutoSizeText(
+          "Trabajador eliminado exitosamente",
+          style: const TextStyle(
+            color: Colors.white,
+            ),
+            maxLines: 3,
+            minFontSize: 20.0,
+            maxFontSize: 25.0,
+            textAlign: TextAlign.center,
+            ),
+            backgroundColor: Color.fromARGB(255, 131, 155, 42),
+            duration: Duration(seconds: 3),
+      ));
+
       _cargarTrabajadores();
     } else {
       print('El nombre del trabajador no es válido: $nombre');
