@@ -30,10 +30,11 @@ class _RegistrarVentaState extends State<RegistrarVenta> {
   void initState() {
     super.initState();
     mostrarVentasGuardadas();
-     for (var venta in ventas) {
-    print(venta);
-    }
+    //for (var venta in ventas) {
+    //print(venta);
+    //}
   }
+  
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -50,9 +51,6 @@ class _RegistrarVentaState extends State<RegistrarVenta> {
   }
 
   void limpiarCampos() {
-      for (var venta in ventas) {
-    print('Fecha: ${venta.fecha}, Kilos Vendidos: ${venta.kilosVendidos}, IDCOSECHA: ${venta.idCosecha}');
-  }
     valorPorKiloController.clear();
     pagoTotalController.clear();
     kilosVendidosController.clear();
@@ -61,12 +59,24 @@ class _RegistrarVentaState extends State<RegistrarVenta> {
       ventaTotal = 0;
       valorKilo = 0;
       kilosVendidos = 0;
-      selectedDate = DateTime.now();
+      ventas = [];
     });
   }
 
-  Future<void> guardarJornal() async {
-    if (ventaTotal > 0 && valorKilo > 0 && kilosVendidos > 0) {
+
+  Future<void> mostrarVentasGuardadas() async {
+    List<VentasCafeModel> ventasBD = await VentasCafeDao().readAll();
+    setState(() {
+      ventas = ventasBD;
+    });
+    for (var venta in ventas) {
+          print('Fecha: ${venta.fecha}, Kilos Vendidos: ${venta.kilosVendidos}, IDCOSECHA: ${venta.idCosecha}');
+        }
+  }
+
+  void guardarJornal() async {
+    if ( ventaTotal > 0 && valorKilo > 0 && kilosVendidos > 0) 
+    {
       final int? id = widget.idCosecha;
       if (id != null && id != 0) {
         final VentasCafeModel venta = VentasCafeModel(
@@ -119,12 +129,8 @@ class _RegistrarVentaState extends State<RegistrarVenta> {
     }
   }
 
-  Future<void> mostrarVentasGuardadas() async {
-    List<VentasCafeModel> ventasBD = await VentasCafeDao().readAll();
-    setState(() {
-      ventas = ventasBD;
-    });
-  }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -138,10 +144,8 @@ class _RegistrarVentaState extends State<RegistrarVenta> {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(140.0, 20.0, 20.0, 20.0),
+        child: Center( 
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const SizedBox(height: 20),
               Column(
@@ -281,15 +285,20 @@ class _RegistrarVentaState extends State<RegistrarVenta> {
                           builder: (BuildContext context, Widget? child) {
                             return Theme(
                               data: ThemeData.light().copyWith(
-                                primaryColor: Colors.black,
+                                primaryColor: Colors.black, 
                                 colorScheme: const ColorScheme.light(
-                                  primary: Color.fromARGB(255, 131, 155, 42),
-                                  onPrimary: Colors.white,
-                                  surface: Color(0xFFC9D1B3),
-                                  onSurface: Colors.black,
+                                  primary: Color.fromARGB(
+                                      255, 131, 155, 42), 
+                                  onPrimary: Colors
+                                      .white, 
+                                  surface: Color(
+                                      0xFFC9D1B3), 
+                                  onSurface: Colors
+                                      .black, 
                                 ),
                                 buttonTheme: const ButtonThemeData(
-                                  textTheme: ButtonTextTheme.primary,
+                                  textTheme: ButtonTextTheme
+                                      .primary, 
                                 ),
                               ),
                               child: child!,
@@ -311,7 +320,8 @@ class _RegistrarVentaState extends State<RegistrarVenta> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           DateFormat('yyyy-MM-dd').format(selectedDate),
-                          style: const TextStyle(fontSize: 15, color: Colors.black),
+                          style: const TextStyle(
+                              fontSize: 15, color: Colors.black),
                         ),
                       ),
                     ),
@@ -319,20 +329,14 @@ class _RegistrarVentaState extends State<RegistrarVenta> {
                 ],
               ),
               const SizedBox(height: 30),
-              Row(
-                children: [
-                  const SizedBox(height: 30, width: 65), // Your SizedBox
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(),
                     onPressed: guardarJornal,
                     child: const Text('Guardar'),
                   ),
-                ],
-              ),
             ],
           ),
-        ),
-      ),
+        ))
     );
   }
 }
