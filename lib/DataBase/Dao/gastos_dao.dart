@@ -33,14 +33,14 @@ class GastosDao {
     return data.map((e) => GastosModel.fromJson(e)).toList();
   }
 
-  Future<List<Map<String, dynamic>>> gastosbyYear(int year) async {
+  Future<List<Map<String, dynamic>>> getGastosbyYear(String year) async {
     final data = await database.rawQuery('''
-    SELECT strftime('%m', fecha) as mes, SUM(valor) as total
+    SELECT strftime('%m', fecha) as mes, SUM(valor) as costo
     FROM Gastos
     WHERE strftime('%Y', fecha) = ?
     GROUP BY mes
     ORDER BY mes
-  ''', [year.toString()]);
+  ''', [year]);
     return data;
   }
 }

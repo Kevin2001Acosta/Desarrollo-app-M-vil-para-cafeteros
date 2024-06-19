@@ -421,8 +421,12 @@ class MyHomePage extends StatelessWidget {
                 ),
                 title:
                     const Text('Dashboard', style: TextStyle(fontSize: 17.0)),
-                onTap: () async {
-                  print(await GastosDao().gastosbyYear(2024));
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const DashboardPage(
+                      year: 2024,
+                    );
+                  }));
                 },
               ),
             ],
