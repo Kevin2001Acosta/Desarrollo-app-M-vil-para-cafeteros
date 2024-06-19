@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cafetero/DataBase/Dao/gastos_dao.dart';
 import 'package:cafetero/DataBase/Dao/m_semana_dao.dart';
 import 'package:cafetero/Models/gastos_model.dart';
@@ -155,21 +156,20 @@ class _JornalPageState extends State<JornalPage> {
     final List<MSemanaModel> semanaActual = await MSemanaDao().semanaIniciada();
     if (semanaActual.isEmpty) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Center(
-            child: Text(
-              'Debe iniciar una semana antes de guardar un jornal.',
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: AutoSizeText(
+          "Debe iniciar una semana antes de guardar un jornal.",
+          style: const TextStyle(
+            color: Colors.white,),
+            maxLines: 3,
+            minFontSize: 20.0,
+            maxFontSize: 25.0,
+            textAlign: TextAlign.center,
             ),
-          ),
-          elevation: 5.0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          backgroundColor: Theme.of(context).colorScheme.onError,
-        ),
-      );
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+      ));
+
       return;
     }
     if (semanaActual.isNotEmpty &&
@@ -187,21 +187,21 @@ class _JornalPageState extends State<JornalPage> {
         );
         await JornalDao().insert(jornal);
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Center(
-              child: Text(
-                'Registro exitoso',
-                style: TextStyle(color: Theme.of(context).colorScheme.surface),
-              ),
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: AutoSizeText(
+          "Registro exitoso",
+          style: const TextStyle(
+            color: Colors.white,
             ),
-            elevation: 5.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+            maxLines: 3,
+            minFontSize: 20.0,
+            maxFontSize: 25.0,
+            textAlign: TextAlign.center,
             ),
-            backgroundColor: Theme.of(context).colorScheme.onError,
-          ),
-        );
+            backgroundColor: Color.fromARGB(255, 131, 155, 42),
+            duration: Duration(seconds: 3),
+      ));
+
         mostrarJornalesGuardados();
         limpiarCampos();
       } else {
@@ -213,18 +213,18 @@ class _JornalPageState extends State<JornalPage> {
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Center(
-          child: Text(
-            'Por favor, llena todos los campos',
-            style: TextStyle(color: Theme.of(context).colorScheme.error),
-          ),
-        ),
-        elevation: 5.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        backgroundColor: Theme.of(context).colorScheme.onError,
-      ));
+              content: AutoSizeText(
+                "Por favor, llena todos los campos",
+                style: const TextStyle(
+                  color: Colors.white,),
+                  maxLines: 3,
+                  minFontSize: 20.0,
+                  maxFontSize: 25.0,
+                  textAlign: TextAlign.center,
+                  ),
+                  backgroundColor: Colors.red,
+                  duration: Duration(seconds: 3),
+            ));
     }
   }
 
@@ -465,18 +465,19 @@ class _JornalPageState extends State<JornalPage> {
           } else {
             if (!context.mounted) return;
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Center(
-                child: Text(
-                  'No hay una semana iniciada',
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
-                ),
-              ),
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              backgroundColor: Theme.of(context).colorScheme.onError,
-            ));
+                    content: AutoSizeText(
+                      "No hay una semana iniciada",
+                      style: const TextStyle(
+                        color: Colors.white,),
+                        maxLines: 3,
+                        minFontSize: 20.0,
+                        maxFontSize: 25.0,
+                        textAlign: TextAlign.center,
+                        ),
+                        backgroundColor: Colors.red,
+                        duration: Duration(seconds: 3),
+                  ));
+
           }
         },
         label: const Text('Ver jornal', style: TextStyle(fontSize: 16)),

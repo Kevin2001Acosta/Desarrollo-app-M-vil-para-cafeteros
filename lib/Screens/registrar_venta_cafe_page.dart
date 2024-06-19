@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:cafetero/DataBase/Dao/ventas_cafe_dao.dart';
 import 'package:cafetero/Models/ventas_cafe_model.dart';
@@ -88,21 +89,20 @@ class _RegistrarVentaState extends State<RegistrarVenta> {
         );
         await VentasCafeDao().insert(venta);
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Center(
-              child: Text(
-                'Registro exitoso',
-                style: TextStyle(color: Theme.of(context).colorScheme.surface),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: AutoSizeText(
+            "Registro exitoso",
+            style: const TextStyle(
+              color: Colors.white,
               ),
-            ),
-            elevation: 5.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            backgroundColor: Theme.of(context).colorScheme.onError,
-          ),
-        );
+              maxLines: 3,
+              minFontSize: 20.0,
+              maxFontSize: 25.0,
+              textAlign: TextAlign.center,
+              ),
+              backgroundColor: Color.fromARGB(255, 131, 155, 42),
+              duration: Duration(seconds: 3),
+        ));
         limpiarCampos();
         mostrarVentasGuardadas();
       } else {
@@ -114,18 +114,18 @@ class _RegistrarVentaState extends State<RegistrarVenta> {
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Center(
-          child: Text(
-            'Por favor, llena todos los campos',
-            style: TextStyle(color: Theme.of(context).colorScheme.error),
-          ),
-        ),
-        elevation: 5.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        backgroundColor: Theme.of(context).colorScheme.onError,
-      ));
+              content: AutoSizeText(
+                "Por favor, llena todos los campos",
+                style: const TextStyle(
+                  color: Colors.white,),
+                  maxLines: 3,
+                  minFontSize: 20.0,
+                  maxFontSize: 25.0,
+                  textAlign: TextAlign.center,
+                  ),
+                  backgroundColor: Colors.red,
+                  duration: Duration(seconds: 3),
+            ));
     }
   }
 

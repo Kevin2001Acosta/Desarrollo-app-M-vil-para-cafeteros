@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:cafetero/Models/jornal_model.dart';
 import 'package:cafetero/DataBase/Dao/jornal_dao.dart';
@@ -214,21 +215,21 @@ class _VerJornalesPage extends State<VerJornalesPage> {
                     await JornalDao().update(jornal);
                     if (!mounted) return;
                     Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Center(
-                          child: Text(
-                            'Jornal actualizado con éxito',
-                            style: TextStyle(color: Theme.of(context).colorScheme.surface),
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: AutoSizeText(
+                        "Jornal actualizado con exito",
+                        style: const TextStyle(
+                          color: Colors.white,
                           ),
-                        ),
-                        elevation: 5.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        backgroundColor: Theme.of(context).colorScheme.onError,
-                      ),
-                    );
+                          maxLines: 3,
+                          minFontSize: 20.0,
+                          maxFontSize: 25.0,
+                          textAlign: TextAlign.center,
+                          ),
+                          backgroundColor: Color.fromARGB(255, 131, 155, 42),
+                          duration: Duration(seconds: 3),
+                    ));
+
                     cargarTrabajadores();
                     setState(() {});
                   },
@@ -530,21 +531,20 @@ void mostrarAlertDialog(BuildContext context, String mensaje) {
                                 borrarJornal(jornal);
                                 Navigator.of(context).pop();
                                 if (!mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Center(
-                                    child: Text(
-                                      'Eliminado con exito',
-                                      style: TextStyle(color: Theme.of(context).colorScheme.surface),
-                                    ),
-                                  ),
-                                  elevation: 5.0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  backgroundColor: Theme.of(context).colorScheme.onError,
-                                ),
-                              );
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: AutoSizeText(
+                                    "Jornal eliminado con exito",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      ),
+                                      maxLines: 3,
+                                      minFontSize: 20.0,
+                                      maxFontSize: 25.0,
+                                      textAlign: TextAlign.center,
+                                      ),
+                                      backgroundColor: Color.fromARGB(255, 131, 155, 42),
+                                      duration: Duration(seconds: 3),
+                                ));
                               },
                             ),
                           ],
