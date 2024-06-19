@@ -230,12 +230,6 @@ class _RecogidaPageState extends State<RecogidaPage> {
   backgroundColor: Theme.of(context).colorScheme.surface,
   onPressed: () { 
     if (infoRecogida != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PagosRecogidasPage(idRecogida: infoRecogida.idRecogida!),
-        ),
-      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
