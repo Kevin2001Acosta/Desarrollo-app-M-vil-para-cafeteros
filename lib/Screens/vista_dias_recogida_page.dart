@@ -51,7 +51,7 @@ class _VistaDiasRecogidaPageState extends State<VistaDiasRecogidaPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'JORNALES EN SEMANA ACTUAL',
+          'RECOGIDAS EN SEMANA',
           style: TextStyle(
               color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
         ),
@@ -92,7 +92,7 @@ class _VistaDiasRecogidaPageState extends State<VistaDiasRecogidaPage> {
                               ),
                               SizedBox(width: 8),
                               Text(
-                                'No hay jornales para mostrar',
+                                'No hay recogidas para mostrar',
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.black,

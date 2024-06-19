@@ -199,8 +199,12 @@ class _VistaRecogidasPageState extends State<VistaRecogidasPage> {
               ))),
           DataCell(InkWell(
               onTap: () {
-                // Define your onTap action here
-                print("Funciono");
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PagosRecogidasPage(
+                              idRecogida: recogida.idRecogida!,
+                            )));
               },
               child: const SizedBox(
                 width: 90,
