@@ -1,5 +1,6 @@
 import 'package:cafetero/DataBase/Dao/gastos_dao.dart';
 import 'package:cafetero/Models/gastos_model.dart';
+import 'package:cafetero/Screens/vista_gastos_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -501,13 +502,23 @@ class _GastosPageState extends State<GastosPage> {
               ),
             ]),
             const SizedBox(height: 20),
-            ElevatedButton.icon(
-                onPressed: () {
-                  // Todo: enviar a la pagina con los filtros
-                },
-                icon: const Icon(Icons.content_paste_go_outlined),
-                label:
-                    const Text('Ver gastos', style: TextStyle(fontSize: 18))),
+              ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => VerGastosPage(
+                      selectedDates: selectedDates,
+                      selectedGastos: selectedGastos,
+                      valorMinGasto: valorMinGasto,
+                      valorMaxGasto: valorMaxGasto,
+                    ),
+                  ),
+                );
+              },
+              icon: Icon(Icons.content_paste_go_outlined),
+              label: Text('Ver gastos', style: TextStyle(fontSize: 18)),
+            ),
           ],
         ),
       ),
