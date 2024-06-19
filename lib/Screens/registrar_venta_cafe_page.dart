@@ -32,9 +32,9 @@ class _RegistrarVentaState extends State<RegistrarVenta> {
   void initState() {
     super.initState();
     mostrarVentasGuardadas();
-    for (var venta in ventas) {
-    print(venta);
-    }
+    //for (var venta in ventas) {
+    //print(venta);
+    //}
   }
 
 
@@ -136,217 +136,210 @@ class _RegistrarVentaState extends State<RegistrarVenta> {
   
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: const Text(
-        "VENTA DE CAFE",
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "VENTA DE CAFE",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
-      centerTitle: true,
-      iconTheme: const IconThemeData(color: Colors.white),
-    ),
-    body: SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(140.0, 20.0, 20.0, 20.0), 
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(width: 3),
-                const Text('Valor por Kilo:'),
-                Container(
-                  width: 230,
-                  padding: const EdgeInsets.only(top: 4),
-                  child: TextField(
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    controller: valorPorKiloController,
-                    onChanged: (value) {
-                      setState(() {
-                        valorKilo = int.tryParse(value) ?? 0;
-                      });
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Ingresa el valor',
-                      labelStyle: const TextStyle(color: Colors.black),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(width: 3),
-                const Text('Venta Total:'),
-                Container(
-                  width: 230,
-                  padding: const EdgeInsets.only(top: 4),
-                  child: TextField(
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    controller: pagoTotalController,
-                    onChanged: (value) {
-                      setState(() {
-                        ventaTotal = int.tryParse(value) ?? 0;
-                      });
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Ingresa el pago total',
-                      labelStyle: const TextStyle(color: Colors.black),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(width: 3),
-                const Text('Kilos Vendidos:'),
-                Container(
-                  width: 230,
-                  padding: const EdgeInsets.only(top: 4),
-                  child: TextField(
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    controller: kilosVendidosController,
-                    onChanged: (value) {
-                      setState(() {
-                        kilosVendidos = int.tryParse(value) ?? 0;
-                      });
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Ingresa los kilos',
-                      labelStyle: const TextStyle(color: Colors.black),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Fecha:'),
-                Container(
-                  width: 230,
-                  height: 65,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: TextButton(
-                    onPressed: () async {
-                      final DateTime? pickedDate = await showDatePicker(
-                        builder: (BuildContext context, Widget? child) {
-                          return Theme(
-                            data: ThemeData.light().copyWith(
-                              primaryColor: Colors.black, 
-                              colorScheme: const ColorScheme.light(
-                                primary: Color.fromARGB(
-                                    255, 131, 155, 42), 
-                                onPrimary: Colors
-                                    .white, 
-                                surface: Color(
-                                    0xFFC9D1B3), 
-                                onSurface: Colors
-                                    .black, 
-                              ),
-                              buttonTheme: const ButtonThemeData(
-                                textTheme: ButtonTextTheme
-                                    .primary, 
-                              ),
-                            ),
-                            child: child!,
-                          );
-                        },
-                        context: context,
-                        initialDate: selectedDate,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2100),
-                      );
-
-                      if (pickedDate != null) {
+      body: SingleChildScrollView(
+        child: Center( 
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(width: 3),
+                  const Text('Valor por Kilo:'),
+                  Container(
+                    width: 230,
+                    padding: const EdgeInsets.only(top: 4),
+                    child: TextField(
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      controller: valorPorKiloController,
+                      onChanged: (value) {
                         setState(() {
-                          selectedDate = pickedDate;
+                          valorKilo = int.tryParse(value) ?? 0;
                         });
-                      }
-                    },
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        DateFormat('yyyy-MM-dd').format(selectedDate),
-                        style: const TextStyle(
-                            fontSize: 15, color: Colors.black),
+                      },
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Ingresa el valor',
+                        labelStyle: const TextStyle(color: Colors.black),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.grey),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 30),
-            Row(  children: [
-              const SizedBox(height: 30, width: 65), // Your SizedBox
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(),
-                onPressed: guardarJornal,
-                child: const Text('Guardar'),
+                ],
               ),
+              const SizedBox(height: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(width: 3),
+                  const Text('Venta Total:'),
+                  Container(
+                    width: 230,
+                    padding: const EdgeInsets.only(top: 4),
+                    child: TextField(
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      controller: pagoTotalController,
+                      onChanged: (value) {
+                        setState(() {
+                          ventaTotal = int.tryParse(value) ?? 0;
+                        });
+                      },
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Ingresa el pago total',
+                        labelStyle: const TextStyle(color: Colors.black),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.grey),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(width: 3),
+                  const Text('Kilos Vendidos:'),
+                  Container(
+                    width: 230,
+                    padding: const EdgeInsets.only(top: 4),
+                    child: TextField(
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      controller: kilosVendidosController,
+                      onChanged: (value) {
+                        setState(() {
+                          kilosVendidos = int.tryParse(value) ?? 0;
+                        });
+                      },
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Ingresa los kilos',
+                        labelStyle: const TextStyle(color: Colors.black),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.grey),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Fecha:'),
+                  Container(
+                    width: 230,
+                    height: 65,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TextButton(
+                      onPressed: () async {
+                        final DateTime? pickedDate = await showDatePicker(
+                          builder: (BuildContext context, Widget? child) {
+                            return Theme(
+                              data: ThemeData.light().copyWith(
+                                primaryColor: Colors.black, 
+                                colorScheme: const ColorScheme.light(
+                                  primary: Color.fromARGB(
+                                      255, 131, 155, 42), 
+                                  onPrimary: Colors
+                                      .white, 
+                                  surface: Color(
+                                      0xFFC9D1B3), 
+                                  onSurface: Colors
+                                      .black, 
+                                ),
+                                buttonTheme: const ButtonThemeData(
+                                  textTheme: ButtonTextTheme
+                                      .primary, 
+                                ),
+                              ),
+                              child: child!,
+                            );
+                          },
+                          context: context,
+                          initialDate: selectedDate,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+
+                        if (pickedDate != null) {
+                          setState(() {
+                            selectedDate = pickedDate;
+                          });
+                        }
+                      },
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          DateFormat('yyyy-MM-dd').format(selectedDate),
+                          style: const TextStyle(
+                              fontSize: 15, color: Colors.black),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 30),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(),
+                    onPressed: guardarJornal,
+                    child: const Text('Guardar'),
+                  ),
             ],
           ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
+        ))
+    );
+  }
 }
