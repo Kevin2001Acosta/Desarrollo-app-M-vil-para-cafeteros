@@ -230,7 +230,7 @@ class _RecogidaPageState extends State<RecogidaPage> {
         floatingActionButton: FloatingActionButton.extended(
   backgroundColor: Theme.of(context).colorScheme.surface,
   onPressed: () { 
-    Navigator.push(context, MaterialPageRoute(builder: (context) => VistaRecogidasPage()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => VistaRecogidasPage(idCosecha: idCosecha!)));
   },
   label: const Text('Ver recogidas', style: TextStyle(fontSize: 16)),
   icon: const Icon(Icons.history_sharp),
