@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:cafetero/Models/recogida_model.dart';
 import 'package:cafetero/DataBase/Dao/recogida_dao.dart';
+import 'package:cafetero/Screens/pagos_recogidas_page.dart';
 
 class VistaRecogidasPage extends StatefulWidget {
   final int idCosecha;
@@ -195,9 +196,13 @@ class _VistaRecogidasPageState extends State<VistaRecogidasPage> {
                 ),
               ))),
           DataCell(InkWell(
-              onTap: () {
-                // Define your onTap action here
-                print("SI");
+                onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PagosRecogidasPage(
+                              idRecogida: recogida.idRecogida!,
+                            )));
               },
               child: const SizedBox(
                 width: 90,

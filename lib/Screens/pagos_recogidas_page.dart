@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:cafetero/DataBase/Dao/recogida_dao.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class PagosRecogidasPage extends StatefulWidget {
   final int idRecogida;
@@ -31,16 +32,11 @@ class _PagosRecogidasPage extends State<PagosRecogidasPage> {
   }
 
   Future<void> getPagosTrabajadores() async {
-    try {
       final pagos = await RecogidaDao().pagosRecogida(widget.idRecogida);
-      print('Datos de pagos recogidos: $pagos');
       setState(() {
         pagosTrabajadores = pagos;
           rowColors = List.generate(pagos.length, (index) => _getRowColor(index));
-      });
-    } catch (e) {
-      print('Error al obtener pagos: $e');
-    }
+      });   
   }
 
   Color _getRowColor(int index) {
@@ -126,12 +122,35 @@ class _PagosRecogidasPage extends State<PagosRecogidasPage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
-          'PAGOS DE JORNALES',
+          'PAGOS DE RECOGIDAS',
           style: TextStyle(color: Colors.white),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: DataTable2(
+      body: pagosTrabajadores.isEmpty
+          ? const Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.black,
+                      size: 25,
+                    ),
+                    SizedBox(width: 8),
+                    AutoSizeText(
+                      'No hay pagos para los recogidas',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                      maxLines: 2,
+                      minFontSize: 18.0,
+                      maxFontSize: 25.0,
+                    ),
+                  ],
+                ),
+              )
+          : DataTable2(
         columnSpacing: 5,
         headingRowHeight: 80,
         dataRowHeight: 60,

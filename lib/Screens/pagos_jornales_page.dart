@@ -135,7 +135,7 @@ class _PagosJornalesPageState extends State<PagosJornalesPage> {
                     ),
                     SizedBox(width: 8),
                     AutoSizeText(
-                      'No pagos para los jornales',
+                      'No hay pagos para los jornales',
                       style: TextStyle(
                         color: Colors.black,
                       ),
