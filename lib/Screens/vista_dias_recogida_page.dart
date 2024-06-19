@@ -5,7 +5,7 @@ import 'package:intl/intl.dart'; // Asegúrate de tener este paquete
 class VistaDiasRecogidaPage extends StatefulWidget {
   final int? idRecogida;
 
-  const VistaDiasRecogidaPage({Key? key, required this.idRecogida}) : super(key: key);
+  const VistaDiasRecogidaPage({super.key, required this.idRecogida});
 
   @override
   State<VistaDiasRecogidaPage> createState() => _VistaDiasRecogidaPageState();
@@ -33,6 +33,7 @@ class _VistaDiasRecogidaPageState extends State<VistaDiasRecogidaPage> {
       setState(() {
         _isLoading = false;
       });
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Error al cargar los datos: $error'),
       ));
@@ -70,7 +71,9 @@ class _VistaDiasRecogidaPageState extends State<VistaDiasRecogidaPage> {
                       color: Colors.white,
                     ),
                     label: Text(
-                      _isDescending ? 'Ordenar descendente' : 'Ordenar ascendente',
+                      _isDescending
+                          ? 'Ordenar descendente'
+                          : 'Ordenar ascendente',
                       style: const TextStyle(fontSize: 15, color: Colors.white),
                     ),
                   ),
@@ -129,7 +132,8 @@ class _VistaDiasRecogidaPageState extends State<VistaDiasRecogidaPage> {
     }).toList();
   }
 
-  Widget _buildJornalCard(String nombre, String fecha, double kilosTrabajador, double pago) {
+  Widget _buildJornalCard(
+      String nombre, String fecha, double kilosTrabajador, double pago) {
     return Card(
       color: const Color.fromARGB(255, 205, 218, 166),
       shape: RoundedRectangleBorder(
@@ -220,7 +224,7 @@ class _VistaDiasRecogidaPageState extends State<VistaDiasRecogidaPage> {
                           style: TextStyle(color: Colors.black),
                         ),
                         TextSpan(
-                          text: pago.toString(),
+                          text: NumberFormat('#,##0').format(pago),
                           style: const TextStyle(color: Colors.black),
                         ),
                       ],
