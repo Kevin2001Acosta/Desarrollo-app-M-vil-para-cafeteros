@@ -19,6 +19,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cafetero/Screens/vista_jornales_semana_page.dart';
 import 'package:cafetero/Screens/precio_cafe_page.dart';
 
+
 // url de pdf info café: https://federaciondecafeteros.org/app/uploads/2019/10/precio_cafe.pdf
 
 class MyHomePage extends StatelessWidget {
@@ -464,15 +465,17 @@ class MyHomePage extends StatelessWidget {
             Stack(alignment: Alignment.bottomRight, children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(bottom: 70.0),
-            child: FloatingActionButton(
+            child: FloatingActionButton.extended(
               heroTag: null,
               backgroundColor: Theme.of(context).colorScheme.surface,
               onPressed: () => iniciarCosecha(context),
               tooltip: 'Empezar Cosecha',
-              child: const Icon(Icons.agriculture_rounded),
+              label: Text('Empezar Cosecha'), 
+              icon: Icon(Icons.agriculture_rounded), 
             ),
+            
           ),
-          FloatingActionButton(
+          FloatingActionButton.extended(
               heroTag: null,
               backgroundColor: Theme.of(context).colorScheme.secondary,
               onPressed: () async {
@@ -482,7 +485,9 @@ class MyHomePage extends StatelessWidget {
                 await finalizarCosecha(context, recogidaIniciada);
               },
               tooltip: 'Finalizar Cosecha',
-              child: const Icon(Icons.agriculture_sharp)),
+              label: Text('Finalizar Cosecha'), 
+              icon: Icon(Icons.agriculture_rounded),  
+              ),
         ]));
   }
 }
