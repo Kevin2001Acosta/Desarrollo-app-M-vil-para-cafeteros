@@ -5,7 +5,8 @@ import 'package:cafetero/Models/recogida_model.dart';
 import 'package:cafetero/DataBase/Dao/recogida_dao.dart';
 
 class VistaRecogidasPage extends StatefulWidget {
-  const VistaRecogidasPage({Key? key}) : super(key: key);
+  final int idCosecha;
+  const VistaRecogidasPage({super.key, required this.idCosecha});
 
   @override
   State<VistaRecogidasPage> createState() => _VistaRecogidasPageState();
@@ -25,7 +26,8 @@ class _VistaRecogidasPageState extends State<VistaRecogidasPage> {
 
   Future<void> cargarRecogidas() async {
     await initializeDateFormatting('es_ES', null);
-    List<RecogidaModel> recogidasBD = await RecogidaDao().readAll();
+    List<RecogidaModel> recogidasBD =
+        await RecogidaDao().readRecogidaCosecha(widget.idCosecha);
 
     setState(() {
       recogidas = recogidasBD;
@@ -88,8 +90,8 @@ class _VistaRecogidasPageState extends State<VistaRecogidasPage> {
         decoration: const BoxDecoration(
             border: Border(top: BorderSide(color: Colors.black, width: 1.0))),
         child: DataTable(
-          headingRowColor: MaterialStateProperty.resolveWith<Color?>(
-              (Set<MaterialState> states) => const Color.fromARGB(255, 255, 255, 255)),
+          headingRowColor: WidgetStateColor.resolveWith(
+              (states) => const Color.fromARGB(255, 255, 255, 255)),
           sortColumnIndex: _sortColumnIndex,
           sortAscending: _sortAscending,
           columns: getColumns(columns),
@@ -110,7 +112,8 @@ class _VistaRecogidasPageState extends State<VistaRecogidasPage> {
               children: [
                 Text(
                   column,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const Icon(
                   Icons.filter_list,
@@ -166,13 +169,7 @@ class _VistaRecogidasPageState extends State<VistaRecogidasPage> {
           isOdd ? Colors.white : const Color.fromARGB(255, 205, 218, 166);
       isOdd = !isOdd;
       return DataRow(
-        color: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-          if (states.contains(MaterialState.selected)) {
-            return Theme.of(context).colorScheme.primary.withOpacity(0.08);
-          }
-          return color; // Use the default value.
-        }),
+        color: WidgetStateColor.resolveWith((states) => color),
         cells: [
           DataCell(SizedBox(
             width: 20,
@@ -214,4 +211,3 @@ class _VistaRecogidasPageState extends State<VistaRecogidasPage> {
     }).toList();
   }
 }
-

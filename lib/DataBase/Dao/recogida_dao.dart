@@ -43,7 +43,7 @@ class RecogidaDao {
   }
 
   Future<List<Map<String, dynamic>>> pagosRecogida(int id) async {
-  return await database.rawQuery('''
+    return await database.rawQuery('''
     SELECT 
       Trabajador.id_trabajador, 
       Trabajador.nombre,
@@ -64,8 +64,11 @@ class RecogidaDao {
     ORDER BY 
       Trabajador.nombre;
   ''', [id]);
-}
+  }
 
-
-  
+  Future<List<RecogidaModel>> readRecogidaCosecha(int id) async {
+    final data = await database
+        .query('Recogida', where: 'id_cosecha = ?', whereArgs: [id]);
+    return data.map((e) => RecogidaModel.fromJson(e)).toList();
+  }
 }
