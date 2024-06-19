@@ -5,7 +5,6 @@ import 'package:cafetero/Models/gastos_model.dart';
 import 'package:cafetero/Models/recogida_model.dart';
 import 'package:cafetero/Models/trabaja_model.dart';
 import 'package:cafetero/Screens/home_page.dart';
-import 'package:cafetero/Screens/pagos_recogidas_page.dart';
 import 'package:cafetero/Screens/vista_recogidas_page.dart';
 import 'package:cafetero/Widgets/recogida_dia_trabajo.dart';
 import 'package:cafetero/Widgets/recogida_kilos_trabajo.dart';
